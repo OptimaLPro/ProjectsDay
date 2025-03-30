@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { Button } from "../ui/button";
+import { Briefcase, Crown, House, Users } from "lucide-react";
+import HeaderButton from "./HeaderButton";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -9,19 +11,15 @@ const Header = () => {
   };
 
   return (
-    <header className="bg-primary text-primary-foreground py-6">
+    <header className="bg-[#ffffffc4] py-2 z-10 text-[#131313] relative rounded-[40px] mx-20 px-2 shadow-md">
       <div className="container mx-auto px-4">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             <div>
-              <img src="/images/logo.png" alt="Logo" className="h-15 w-auto" />
+              <img src="/images/logo.png" alt="Logo" className="h-14 w-auto" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold">Project Showcase</h1>
-
-              <p className="text-primary-foreground/80 mt-1">
-                Discover amazing student projects
-              </p>
+              <h1 className="text-3xl font-bold">Projects Day</h1>
             </div>
           </div>
           <div className="md:hidden">
@@ -35,14 +33,12 @@ const Header = () => {
           <div
             className={`${
               isMenuOpen ? "block" : "hidden"
-            } md:flex items-center gap-2`}
+            } md:flex items-center gap-3`}
           >
-            <Button variant="secondary">Home</Button>
-            <Button variant="secondary">Instructors</Button>
-            <Button variant="secondary">Internships</Button>
-            <Button variant="secondary" className="font-bold">
-              Winners Projects
-            </Button>
+            <HeaderButton name="Home" icon={<House />} />
+            <HeaderButton name="Projects" icon={<Briefcase />} />
+            <HeaderButton name="Instructors" icon={<Users />} />
+            <HeaderButton name="Internships" icon={<Briefcase />} />
           </div>
         </div>
       </div>
