@@ -1,10 +1,12 @@
-import { useState } from "react";
 import "./App.css";
+import Router from "../Router";
+import Header from "./components/Header/Header";
 
 function App() {
   return (
     <>
-      <div className="text-5xl">asd</div>
+      <Header />
+      <Router />
     </>
   );
 }

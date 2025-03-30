@@ -10,7 +10,7 @@ const projects = [
   {
     id: 1,
     name: "WavesSaves",
-    image: "/placeholder.svg?height=400&width=600",
+    image: "/images/1.jpg",
     category: "Environment",
     description: "Ocean conservation project tracking wave patterns",
     link: "#",
@@ -18,7 +18,7 @@ const projects = [
   {
     id: 2,
     name: "BookShare",
-    image: "/placeholder.svg?height=400&width=600",
+    image: "/images/2.jpg",
     category: "Education",
     description: "Community book sharing platform",
     link: "#",
@@ -26,7 +26,7 @@ const projects = [
   {
     id: 3,
     name: "Menahem",
-    image: "/placeholder.svg?height=400&width=600",
+    image: "/images/3.jpg",
     category: "Pets",
     description: "Organize your pets with the push of a button",
     link: "#",
@@ -34,7 +34,7 @@ const projects = [
   {
     id: 4,
     name: "FinTrack",
-    image: "/placeholder.svg?height=400&width=600",
+    image: "/images/4.jpg",
     category: "Finance",
     description: "Personal finance tracking application",
     link: "#",
@@ -42,7 +42,7 @@ const projects = [
   {
     id: 5,
     name: "EcoHome",
-    image: "/placeholder.svg?height=400&width=600",
+    image: "/images/5.jpg",
     category: "Environment",
     description: "Smart home energy conservation system",
     link: "#",
@@ -50,7 +50,7 @@ const projects = [
   {
     id: 6,
     name: "MediSync",
-    image: "/placeholder.svg?height=400&width=600",
+    image: "/images/6.jpg",
     category: "Health",
     description: "Medical appointment scheduling platform",
     link: "#",
@@ -60,7 +60,7 @@ const projects = [
 // Categories for filtering
 const categories = ["All", "Environment", "Education", "Pets", "Finance", "Health"]
 
-export default function ProjectShowcase() {
+const Home = () => {
   const [searchQuery, setSearchQuery] = useState("")
   const [activeCategory, setActiveCategory] = useState("All")
 
@@ -76,24 +76,7 @@ export default function ProjectShowcase() {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="bg-primary text-primary-foreground py-6">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div>
-              <h1 className="text-3xl font-bold">Project Showcase</h1>
-              <p className="text-primary-foreground/80 mt-1">Discover amazing student projects</p>
-            </div>
-            <div className="flex items-center gap-2">
-              <Button variant="secondary">Home</Button>
-              <Button variant="secondary">Instructors</Button>
-              <Button variant="secondary">Internships</Button>
-              <Button variant="secondary" className="font-bold">
-                Winners Projects
-              </Button>
-            </div>
-          </div>
-        </div>
-      </header>
+      
 
       <main className="container mx-auto px-4 py-12">
         <div className="flex flex-col md:flex-row gap-6 mb-10">
@@ -110,7 +93,7 @@ export default function ProjectShowcase() {
           <Tabs defaultValue="All" className="w-full md:w-2/3" onValueChange={setActiveCategory}>
             <TabsList className="w-full grid grid-cols-3 md:grid-cols-6">
               {categories.map((category) => (
-                <TabsTrigger key={category} value={category} className="text-sm">
+                <TabsTrigger key={category} value={category} className="text-sm cursor-pointer" >
                   {category}
                 </TabsTrigger>
               ))}
@@ -127,7 +110,7 @@ export default function ProjectShowcase() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredProjects.map((project) => (
               <a href={project.link} key={project.id} className="group">
-                <Card className="overflow-hidden transition-all duration-300 hover:shadow-lg h-full flex flex-col">
+                <Card className="overflow-hidden transition-all duration-300 hover:shadow-lg h-full flex flex-col py-0">
                   <div className="relative aspect-video overflow-hidden">
                     <img
                       src={project.image || "/placeholder.svg"}
@@ -161,3 +144,4 @@ export default function ProjectShowcase() {
   )
 }
 
+export default Home
