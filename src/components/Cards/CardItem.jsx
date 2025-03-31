@@ -17,7 +17,7 @@ const CardItem = ({ project }) => {
         </div>
       </div>
       <CardContent className="flex-grow pt-4">
-        <div className="inline-block px-2 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary mb-2">
+        <div className="inline-block px-2 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary mb-2 capitalize">
           {project.category}
         </div>
         <h3 className="font-bold text-xl">{project.name}</h3>

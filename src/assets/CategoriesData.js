@@ -1,8 +1,9 @@
 export const categories = [
   "All",
-  "Environment",
-  "Education",
-  "Pets",
-  "Finance",
-  "Health",
+  "data science",
+  "nlp",
+  "fullstack",
+  "deep learning",
+  "cyber",
+  "fintech",
 ];

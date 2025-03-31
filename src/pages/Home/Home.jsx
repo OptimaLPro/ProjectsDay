@@ -19,8 +19,8 @@ const Home = () => {
   return (
     <>
       <div className="min-h-screen bg-background">
-        <main className="container mx-auto px-4 py-12">
-          <div className="flex flex-col md:flex-row gap-6 mb-10">
+        <main className="container mx-auto px-5 lg:px-4">
+          <div className="flex lg:flex-row gap-3 lg:gap-6 mb-12 justify-between items-center">
             <SearchBar
               searchQuery={searchQuery}
               setSearchQuery={setSearchQuery}
