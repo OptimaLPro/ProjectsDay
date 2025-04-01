@@ -55,7 +55,7 @@ export function Login() {
                     type="email"
                     placeholder="Enter your email"
                     {...field}
-                    className="bg-white"
+                    className="bg-white shadow-xl focus:ring-primary"
                   />
                 </FormControl>
                 <FormMessage />
@@ -73,7 +73,7 @@ export function Login() {
                     type="password"
                     placeholder="Enter your password"
                     {...field}
-                    className="bg-white"
+                    className="bg-white shadow-xl focus:ring-primary"
                   />
                 </FormControl>
                 {/* <FormDescription>
@@ -84,7 +84,7 @@ export function Login() {
             )}
           />
           <div className="flex items-center justify-center mt-12">
-            <Button type="submit" className="text-lg">
+            <Button type="submit" className="text-lg shadow-lg">
               Submit
             </Button>
           </div>

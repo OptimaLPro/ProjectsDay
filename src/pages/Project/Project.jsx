@@ -4,22 +4,29 @@ import { motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
+import { useQuery } from "@tanstack/react-query";
+import { getProjectById } from "@/api/projects";
+import Loader from "@/components/Loader/Loader";
+import Error from "@/components/Error/Error";
 
 const Project = () => {
   const { id } = useParams();
-  const [project, setProject] = useState(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const foundProject = projects.find(
-      (project) => project.id.toString() === id
-    );
-    if (!foundProject) {
-      navigate("/404", { replace: true });
-    } else {
-      setProject(foundProject);
-    }
-  }, [id, navigate]);
+  const { data: project, isLoading } = useQuery({
+    queryKey: ["project", id],
+    queryFn: () => getProjectById(id),
+    refetchOnWindowFocus: false,
+    staleTime: 1000 * 60 * 60, // 60 minutes
+  });
+
+  if (isLoading) {
+    return <Loader />;
+  }
+
+  if (!project) {
+    return <Error />;
+  }
 
   return (
     <div className="bg-background mt-5 max-w-[90%] mx-auto">

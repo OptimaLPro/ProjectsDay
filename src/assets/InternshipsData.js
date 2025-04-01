@@ -1,9 +1,9 @@
 export const internships = [
-  "All",
-  "Data Science",
-  "NLP",
-  "Fullstack",
-  "Deep Learning",
-  "Cyber",
-  "Fintech",
+  { name: "All" },
+  { name: "Data Science" },
+  { name: "NLP" },
+  { name: "Fullstack" },
+  { name: "Deep Learning" },
+  { name: "Cyber" },
+  { name: "Fintech" },
 ];

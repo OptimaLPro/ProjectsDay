@@ -1,4 +1,6 @@
-import React from "react";
+import { getInstructors } from "@/api/instructors";
+import Error from "@/components/Error/Error";
+import Loader from "@/components/Loader/Loader";
 import {
   Dialog,
   DialogContent,
@@ -7,13 +9,32 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { instructors } from "@/assets/InstructorsData";
+import { useQuery } from "@tanstack/react-query";
 
 const Instructors = () => {
+  const {
+    data: instructorsData,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["instructors"],
+    queryFn: getInstructors,
+    refetchOnWindowFocus: false,
+    staleTime: 1000 * 60 * 60,
+  });
+
+  if (isLoading) {
+    return <Loader />;
+  }
+
+  if (isError) {
+    return <Error />;
+  }
+
   return (
     <main className="mx-auto mt-5 px-5 lg:px-4 max-w-[90%]">
       <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-12 relative">
-        {instructors.map((instructor) => (
+        {instructorsData.map((instructor) => (
           <Dialog key={instructor.id}>
             <DialogTrigger className="cursor-pointer flex flex-col lg:items-center">
               <img

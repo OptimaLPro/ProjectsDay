@@ -1,4 +1,4 @@
-import { CircleX, Search, X } from "lucide-react";
+import { Search, X } from "lucide-react";
 import { Combobox } from "../ui/combobox";
 import { Input } from "../ui/input";
 import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
@@ -49,11 +49,11 @@ const SearchBar = ({
         <TabsList className="w-full grid grid-cols-3 lg:grid-cols-7 relative">
           {internships.map((internship) => (
             <TabsTrigger
-              key={internship}
-              value={internship}
+              key={internship.name}
+              value={internship.name}
               className="text-sm cursor-pointer capitalize"
             >
-              {internship}
+              {internship.name}
             </TabsTrigger>
           ))}
         </TabsList>

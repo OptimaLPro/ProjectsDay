@@ -5,7 +5,7 @@ import { Link } from "react-router";
 
 const CardItem = ({ project }) => {
   return (
-    <Link to={`/projects/${project.id}`} className="group">
+    <Link to={`/projects/${project._id}`} className="group">
       <Card className="overflow-hidden transition-all duration-300 hover:shadow-lg h-full flex flex-col py-0 gap-0">
         <div className="relative aspect-video overflow-hidden">
           <img
@@ -24,7 +24,9 @@ const CardItem = ({ project }) => {
           </div>
           <h3 className="font-bold text-xl">{project.name}</h3>
           <p className="text-muted-foreground mt-2 text-sm">
-            {project.description.length > 150 ? `${project.description.slice(0, 150)}...` : project.description}
+            {project.description.length > 150
+              ? `${project.description.slice(0, 150)}...`
+              : project.description}
           </p>
         </CardContent>
         <CardFooter className="pt-0 pb-4 mt-6 flex justify-end text-gray-400">

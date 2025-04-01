@@ -46,8 +46,8 @@ export function Combobox({
             <CommandGroup>
               {internships.map((internship) => (
                 <CommandItem
-                  key={internship}
-                  value={internship}
+                  key={internship.name}
+                  value={internship.name}
                   onSelect={(currentValue) => {
                     setActiveInternship(currentValue);
                     setValue(currentValue);
@@ -57,10 +57,10 @@ export function Combobox({
                   <Check
                     className={cn(
                       "mr-2 h-4 w-4",
-                      value === internship ? "opacity-100" : "opacity-0"
+                      value === internship.name ? "opacity-100" : "opacity-0"
                     )}
                   />
-                  {internship}
+                  {internship.name}
                 </CommandItem>
               ))}
             </CommandGroup>
