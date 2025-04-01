@@ -12,8 +12,8 @@ import { instructors } from "@/assets/InstructorsData";
 const Instructors = () => {
   return (
     <div className="bg-background">
-      <main className="container mx-auto px-5 lg:px-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-12 items-center relative">
+      <main className="container mx-auto mt-5 px-5 lg:px-4">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-12 items-center relative">
           {instructors.map((instructor) => (
             <Dialog key={instructor.id}>
               <DialogTrigger className="cursor-pointer items-center justify-center flex flex-col">

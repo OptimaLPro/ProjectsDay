@@ -1,7 +1,6 @@
-import * as React from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
+import * as React from "react";
 
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -16,41 +15,17 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
 
-const  internships = [
-  {
-    value: "All",
-    label: "All",
-  },
-  {
-    value: "data science",
-    label: "Data Science",
-  },
-  {
-    value: "nlp",
-    label: "NLP",
-  },
-  {
-    value: "fullstack",
-    label: "Fullstack",
-  },
-  {
-    value: "deep learning",
-    label: "Deep Learning",
-  },
-  {
-    value: "cyber",
-    label: "Cyber",
-  },
-  {
-    value: "fintech",
-    label: "Fintech",
-  },
-];
-
-export function Combobox() {
+export function Combobox({
+  internships,
+  activeInternship,
+  setActiveInternship,
+  setSearchQuery,
+  searchQuery,
+}) {
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState("");
+  const [value, setValue] = React.useState(activeInternship);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -59,11 +34,9 @@ export function Combobox() {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-fit justify-between bg-[#ffffffc4]"
+          className="w-fit justify-between bg-[#ffffffc4] shadow-md"
         >
-          {value
-            ?  internships.find(( internship) =>  internship.value === value)?.label
-            : "Filter"}
+          {activeInternship || "Filter"}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -73,22 +46,25 @@ export function Combobox() {
           <CommandList>
             <CommandEmpty>No internship found.</CommandEmpty>
             <CommandGroup>
-              { internships.map(( internship) => (
+              {internships.map((internship) => (
                 <CommandItem
-                  key={ internship.value}
-                  value={ internship.value}
+                  key={internship}
+                  value={internship}
                   onSelect={(currentValue) => {
-                    setValue(currentValue === value ? "" : currentValue);
+                    setActiveInternship(
+                      currentValue
+                    );
+                    setValue(currentValue);
                     setOpen(false);
                   }}
                 >
                   <Check
                     className={cn(
                       "mr-2 h-4 w-4",
-                      value ===  internship.value ? "opacity-100" : "opacity-0"
+                      value === internship ? "opacity-100" : "opacity-0"
                     )}
                   />
-                  { internship.label}
+                  {internship}
                 </CommandItem>
               ))}
             </CommandGroup>

@@ -6,14 +6,14 @@ import Aurora from "./components/ui/Aurora";
 function App() {
   return (
     <>
-      {/* <div className="z-[-10]">
+      <div className="z-[-10]">
         <Aurora
           colorStops={["#9443fc", "#4e59f0", "#2bbba4"]}
           blend={1}
           amplitude={1.0}
           speed={0.1}
         />
-      </div> */}
+      </div>
       <div className="lg:pt-10 pt-5 px-5">
         <Header />
       </div>

@@ -1,20 +1,20 @@
-import { Search } from "lucide-react";
-import React from "react";
+import { CircleX, Search } from "lucide-react";
+import { Combobox } from "../ui/combobox";
 import { Input } from "../ui/input";
 import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
-import { Combobox } from "../ui/combobox";
 
 const SearchBar = ({
   searchQuery,
   setSearchQuery,
-  setActiveCategory,
-  categories,
+  activeInternship,
+  setActiveInternship,
+  internships,
 }) => {
   const handleTabChange = (value) => {
     if (value === "All") {
-      setActiveCategory("All"); // Reset or handle "all" explicitly
+      setActiveInternship("All"); // Reset or handle "all" explicitly
     } else {
-      setActiveCategory(value);
+      setActiveInternship(value);
     }
   };
 
@@ -24,27 +24,36 @@ const SearchBar = ({
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-5 w-5" />
         <Input
           placeholder="Search..."
-          className="pl-10 bg-[#ffffffc4]"
+          className="pl-10 bg-[#ffffffc4] shadow-md"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
+        <CircleX
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground h-6 w-6 opacity-70 hover:opacity-100 transition-all duration-200"
+          onClick={() => setSearchQuery("")}
+          style={{ cursor: "pointer" }}
+        />
       </div>
       <div className="block lg:hidden relative ">
-        <Combobox/>
+        <Combobox
+          internships={internships}
+          activeInternship={activeInternship}
+          setActiveInternship={setActiveInternship}
+        />
       </div>
       <Tabs
-        defaultValue="All"
+        value={activeInternship}
         className="w-full lg:w-2/3 hidden lg:block"
         onValueChange={handleTabChange}
       >
         <TabsList className="w-full grid grid-cols-3 lg:grid-cols-7 relative">
-          {categories.map((category) => (
+          {internships.map((internship) => (
             <TabsTrigger
-              key={category}
-              value={category}
+              key={internship}
+              value={internship}
               className="text-sm cursor-pointer capitalize"
             >
-              {category}
+              {internship}
             </TabsTrigger>
           ))}
         </TabsList>

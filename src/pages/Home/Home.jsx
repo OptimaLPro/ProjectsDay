@@ -1,4 +1,4 @@
-import { categories } from "@/assets/CategoriesData";
+import { internships } from "@/assets/InternshipsData";
 import { projects } from "@/assets/ProjectsData";
 import Cards from "@/components/Cards/Cards";
 import NoFoundProjects from "@/components/NoFoundProjects/NoFoundProjects";
@@ -8,12 +8,12 @@ import { useState } from "react";
 
 const Home = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [activeCategory, setActiveCategory] = useState("All");
+  const [activeInternship, setActiveInternship] = useState("All");
 
   const filteredProjects = filterProjects(
     projects,
     searchQuery,
-    activeCategory
+    activeInternship
   );
 
   return (
@@ -24,8 +24,9 @@ const Home = () => {
             <SearchBar
               searchQuery={searchQuery}
               setSearchQuery={setSearchQuery}
-              setActiveCategory={setActiveCategory}
-              categories={categories}
+              activeInternship={activeInternship}
+              setActiveInternship={setActiveInternship}
+              internships={internships}
             />
           </div>
           {filteredProjects.length === 0 ? (
