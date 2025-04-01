@@ -20,7 +20,7 @@ const Home = () => {
     <>
       <div className="min-h-screen bg-background">
         <main className="container mx-auto px-5 lg:px-4">
-          <div className="flex lg:flex-row gap-3 lg:gap-6 mb-12 justify-between items-center">
+          <div className="flex lg:flex-row gap-3 lg:gap-6 mb-6 justify-between items-center p-1">
             <SearchBar
               searchQuery={searchQuery}
               setSearchQuery={setSearchQuery}

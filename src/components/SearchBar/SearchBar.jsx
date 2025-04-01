@@ -1,4 +1,4 @@
-import { CircleX, Search } from "lucide-react";
+import { CircleX, Search, X } from "lucide-react";
 import { Combobox } from "../ui/combobox";
 import { Input } from "../ui/input";
 import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
@@ -28,8 +28,8 @@ const SearchBar = ({
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
-        <CircleX
-          className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground h-6 w-6 opacity-70 hover:opacity-100 transition-all duration-200"
+        <X
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 h-6 w-6 opacity-70 hover:opacity-100 transition-all duration-200"
           onClick={() => setSearchQuery("")}
           style={{ cursor: "pointer" }}
         />

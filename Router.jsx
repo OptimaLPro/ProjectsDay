@@ -1,10 +1,16 @@
 import Home from "@/pages/Home/Home";
 import Instructors from "@/pages/Instructors/Instructors";
 import Project from "@/pages/Project/Project";
-import React from "react";
+import React, { useEffect } from "react";
 import { Route, Routes } from "react-router";
 
 const Router = () => {
+
+  useEffect(() => {
+    document.documentElement.scrollTo(0, 0);
+  }
+  , []);
+
   return (
     <div className="pt-5 lg:py-12">
       <Routes>

@@ -21,8 +21,6 @@ export function Combobox({
   internships,
   activeInternship,
   setActiveInternship,
-  setSearchQuery,
-  searchQuery,
 }) {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState(activeInternship);
@@ -34,7 +32,7 @@ export function Combobox({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-fit justify-between bg-[#ffffffc4] shadow-md"
+          className="w-fit justify-between bg-[#ffffffc4] shadow-md text-gray-600"
         >
           {activeInternship || "Filter"}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -51,9 +49,7 @@ export function Combobox({
                   key={internship}
                   value={internship}
                   onSelect={(currentValue) => {
-                    setActiveInternship(
-                      currentValue
-                    );
+                    setActiveInternship(currentValue);
                     setValue(currentValue);
                     setOpen(false);
                   }}
