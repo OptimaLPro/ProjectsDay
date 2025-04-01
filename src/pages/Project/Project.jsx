@@ -37,7 +37,7 @@ const Project = () => {
             <div className="flex flex-col gap-4 mt-6 lg:w-1/2 lg:pl-6">
               <h1 className="text-2xl font-bold">{project?.name}</h1>
               <div className="w-fit mt-2 inline-block px-2 py-1 rounded-full text-xs  font-medium bg-primary/10 text-primary mb-2 capitalize">
-                {project.internship}
+                {project?.internship}
               </div>
               <p>{project?.description}</p>
               <div className="flex gap-2">
