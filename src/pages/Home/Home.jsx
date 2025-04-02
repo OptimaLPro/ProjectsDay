@@ -2,28 +2,20 @@ import { getInternships } from "@/api/internships";
 import { getProjects } from "@/api/projects";
 import Cards from "@/components/Cards/Cards";
 import Error from "@/components/Error/Error";
+import InPlaceLoader from "@/components/Loader/InPlaceLoader";
 import Loader from "@/components/Loader/Loader";
 import NoFoundProjects from "@/components/NoFoundProjects/NoFoundProjects";
 import SearchBar from "@/components/SearchBar/SearchBar";
 import { filterProjects } from "@/utils/general";
-import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { useState, useEffect } from "react";
+import { useInView } from "react-intersection-observer";
 
 const Home = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeInternship, setActiveInternship] = useState("All");
 
-  const {
-    data: projectsData,
-    isLoading: projectsLoading,
-    isError: projectError,
-  } = useQuery({
-    queryKey: ["projects"],
-    queryFn: getProjects,
-    refetchOnWindowFocus: false,
-    staleTime: 1000 * 60 * 60, // 60 minutes
-  });
-
+  // טעינת internships ללא אינפיניט סקרול
   const {
     data: internshipsData,
     isLoading: internshipsLoading,
@@ -32,8 +24,31 @@ const Home = () => {
     queryKey: ["internships"],
     queryFn: getInternships,
     refetchOnWindowFocus: false,
-    staleTime: 1000 * 60 * 60, // 60 minutes
+    staleTime: 1000 * 60 * 60,
   });
+
+  const {
+    data: projectsData,
+    isLoading: projectsLoading,
+    isError: projectError,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery({
+    queryKey: ["projects"],
+    queryFn: ({ pageParam = 0 }) => getProjects(pageParam),
+    getNextPageParam: (lastPage) => lastPage.nextPage ?? undefined,
+    refetchOnWindowFocus: false,
+    staleTime: 1000 * 60 * 60,
+  });
+
+  const { ref, inView } = useInView();
+
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   if (projectsLoading || internshipsLoading) {
     return <Loader />;
@@ -43,8 +58,10 @@ const Home = () => {
     return <Error />;
   }
 
+  const allProjects = projectsData.pages.flatMap((page) => page.projects);
+
   const filteredProjects = filterProjects(
-    projectsData,
+    allProjects,
     searchQuery,
     activeInternship
   );
@@ -64,7 +81,18 @@ const Home = () => {
         {filteredProjects.length === 0 ? (
           <NoFoundProjects />
         ) : (
-          <Cards projects={filteredProjects} />
+          <>
+            <Cards projects={filteredProjects} />
+            <div ref={ref} className="py-4 text-center">
+              {isFetchingNextPage ? (
+                <Loader />
+              ) : hasNextPage ? (
+                <InPlaceLoader />
+              ) : (
+                <div className="text-gray-400">The End</div>
+              )}
+            </div>
+          </>
         )}
       </main>
     </div>

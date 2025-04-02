@@ -4,6 +4,7 @@ import Project from "@/pages/Project/Project";
 import React, { useEffect } from "react";
 import { Route, Routes } from "react-router";
 import { Login } from "@/pages/Login/Login";
+import AddProject from "@/pages/AddProject/AddProject";
 
 const Router = () => {
   useEffect(() => {
@@ -17,6 +18,7 @@ const Router = () => {
         <Route path="/projects/:id" element={<Project />} />
         <Route path="/instructors" element={<Instructors />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/add-project" element={<AddProject />} />
         <Route path="*" element={<div>404 Not Found</div>} />
       </Routes>
     </div>
