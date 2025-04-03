@@ -1,6 +1,3 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -11,7 +8,13 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
+import { z } from "zod";
+import api from "../../api/api.js"; // מוודא שיש לך axios instance
 
 const formSchema = z.object({
   email: z.string().email({
@@ -24,16 +27,33 @@ const formSchema = z.object({
 
 export function Login() {
   const navigate = useNavigate();
+  const [error, setError] = useState("");
+
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: "asd@asd.com",
-      password: "123123",
+      password: "123456",
+    },
+  });
+
+  const loginMutation = useMutation({
+    mutationFn: (values) =>
+      api.post("/auth/login", values).then((res) => res.data),
+    onSuccess: (data) => {
+      localStorage.setItem("token", data.token);
+      navigate("/dashboard");
+    },
+    onError: (error) => {
+      const message =
+        error?.response?.data?.error || "Something went wrong, try again.";
+      setError(message);
     },
   });
 
   function onSubmit(values) {
-    navigate("/dashboard");
+    setError("");
+    loginMutation.mutate(values);
   }
 
   return (
@@ -72,16 +92,22 @@ export function Login() {
                     className="bg-white shadow-xl focus:ring-primary"
                   />
                 </FormControl>
-                {/* <FormDescription>
-                                    Choose a strong password to keep your account secure.
-                                </FormDescription> */}
                 <FormMessage />
               </FormItem>
             )}
           />
+
+          {error && (
+            <p className="text-red-500 text-center text-sm mt-2">{error}</p>
+          )}
+
           <div className="flex items-center justify-center mt-12">
-            <Button type="submit" className="text-lg shadow-lg">
-              Submit
+            <Button
+              type="submit"
+              className="text-lg shadow-lg"
+              disabled={loginMutation.isPending}
+            >
+              {loginMutation.isPending ? "Logging in..." : "Submit"}
             </Button>
           </div>
         </form>
