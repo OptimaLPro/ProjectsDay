@@ -6,8 +6,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/context/AuthContext";
-import { useNavigate } from "react-router";
 import { User } from "lucide-react";
+import { useNavigate } from "react-router";
 
 const AvatarProfile = () => {
   const { user, logout } = useAuth();
@@ -40,6 +40,12 @@ const AvatarProfile = () => {
         {user ? (
           <>
             <div className="text-sm py-2 text-gray-500">{user.email}</div>
+            <DropdownMenuItem
+              className=" cursor-pointer"
+              onClick={() => navigate("/dashboard")}
+            >
+              Dashboard
+            </DropdownMenuItem>
             <DropdownMenuItem
               className="text-red-600 cursor-pointer"
               onClick={handleLogout}

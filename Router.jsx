@@ -7,6 +7,7 @@ import { Login } from "@/pages/Login/Login";
 import AddProject from "@/pages/AddProject/AddProject";
 import Dashboard from "@/pages/Dashboard/Dashboard";
 import Register from "@/pages/Register/Register";
+import UpdateProject from "@/pages/UpdateProject/UpdateProject";
 
 const Router = () => {
   useEffect(() => {
@@ -22,7 +23,11 @@ const Router = () => {
         <Route path="/projects/:id" element={<Project />} />
         <Route path="/instructors" element={<Instructors />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/add-project" element={<AddProject />} />
+        <Route path="/dashboard/add-project" element={<AddProject />} />
+        <Route
+          path="/dashboard/update-project/:id"
+          element={<UpdateProject />}
+        />
         <Route path="*" element={<div>404 Not Found</div>} />
       </Routes>
     </div>

@@ -1,4 +1,6 @@
+import api from "@/api/api";
 import Error from "@/components/Error/Error";
+import GenericFormField from "@/components/GenericFormField/GenericFormField";
 import Loader from "@/components/Loader/Loader";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
@@ -13,15 +15,23 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { useInstructors } from "@/hooks/useInstructors";
 import { useInternships } from "@/hooks/useInternships";
-import { addProjectSchema } from "@/schemas/addProjectSchema";
+import { useMyProject } from "@/hooks/useMyProject";
+import { updateProjectSchema } from "@/schemas/updateProjectSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Delete, Plus } from "lucide-react";
+import { Delete, Save } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
-import GenericFormField from "@/components/GenericFormField/GenericFormField";
 import { useNavigate } from "react-router";
 
-export function AddProject() {
+export function UpdateProject() {
+  const [didReset, setDidReset] = useState(false);
   const navigate = useNavigate();
+  const {
+    data: projectData,
+    isLoading: projectLoading,
+    error: projectError,
+  } = useMyProject();
+
   const {
     data: internshipsData,
     isLoading: internshipsLoading,
@@ -35,7 +45,7 @@ export function AddProject() {
   } = useInstructors();
 
   const form = useForm({
-    resolver: zodResolver(addProjectSchema),
+    resolver: zodResolver(updateProjectSchema),
     defaultValues: {
       name: "",
       internship: "",
@@ -52,47 +62,69 @@ export function AddProject() {
     name: "members",
   });
 
-  const onSubmit = async (values) => {
-    const imageFile = values.image[0];
+  useEffect(() => {
+    if (
+      !didReset &&
+      projectData?.project &&
+      internshipsData?.length > 0 &&
+      instructorsData?.length > 0
+    ) {
+      const { name, internship, description, instructor, year, members } =
+        projectData.project;
 
+      const internshipObj = internshipsData.find((i) => i.name === internship);
+      const instructorObj = instructorsData.find((i) => i.name === instructor);
+
+      form.reset({
+        name,
+        internship: internshipObj?.name ?? "",
+        description,
+        instructor: instructorObj?.name ?? "",
+        year,
+        image: undefined,
+        members,
+      });
+
+      setDidReset(true);
+    }
+  }, [projectData, internshipsData, instructorsData, didReset, form]);
+
+  const onSubmit = async (values) => {
+    const imageFile = values.image?.[0];
     const formData = new FormData();
+
     formData.append("name", values.name);
     formData.append("internship", values.internship);
     formData.append("description", values.description);
     formData.append("instructor", values.instructor);
     formData.append("year", String(values.year));
-    formData.append("image", imageFile);
     formData.append("members", JSON.stringify(values.members));
+    if (imageFile) {
+      formData.append("image", imageFile);
+    }
 
     try {
-      const response = await fetch("/api/projects/create", {
-        method: "POST",
-        body: formData,
-      });
-
-      if (!response.ok) {
-        throw new Error("Error creating project");
-      }
-
-      const data = await response.json();
-      console.log("Project created successfully:", data);
-      navigate("/");
+      const response = await api.put(
+        `/projects/${projectData.project._id}`,
+        formData
+      );
+      console.log("Project updated:", response.data);
+      navigate("/dashboard");
     } catch (error) {
-      console.error("Failed to create project:", error);
+      console.error("Failed to update project:", error);
     }
   };
 
-  if (internshipsLoading || instructorsLoading) {
+  if (projectError || internshipsError || instructorsError) return <Error />;
+  if (projectLoading || internshipsLoading || instructorsLoading || !didReset) {
     return <Loader />;
-  }
-
-  if (internshipsError || instructorsError) {
-    return <Error />;
   }
 
   return (
     <div className="relative mx-auto w-[80%] max-w-[600px] mt-4">
-      <h1 className="text-2xl font-bold text-center mb-8">Add New Project</h1>
+      <h1 className="text-2xl font-bold text-center mb-8">
+        Update Your Project
+      </h1>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <GenericFormField
@@ -104,30 +136,35 @@ export function AddProject() {
               <Input
                 {...field}
                 placeholder="Enter project name"
-                className="bg-white shadow-xl focus:ring-primary"
+                className="bg-white shadow-xl"
               />
             )}
           </GenericFormField>
+
           <GenericFormField
             name="internship"
             control={form.control}
             label="Internship"
           >
-            {(field) => (
-              <Select value={field.value} onValueChange={field.onChange}>
-                <SelectTrigger className="bg-white shadow-xl focus:ring-primary">
-                  <SelectValue placeholder="Select internship" />
-                </SelectTrigger>
-                <SelectContent>
-                  {internshipsData?.map((internship) => (
-                    <SelectItem key={internship.id} value={internship.name}>
-                      {internship.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            )}
+            {(field) => {
+              console.log("💥 internship field.value:", field.value);
+              return (
+                <Select value={field.value} onValueChange={field.onChange}>
+                  <SelectTrigger className="bg-white shadow-xl">
+                    <SelectValue placeholder="Select internship" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {internshipsData?.map((internship) => (
+                      <SelectItem key={internship.id} value={internship.name}>
+                        {internship.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              );
+            }}
           </GenericFormField>
+
           <GenericFormField
             name="description"
             control={form.control}
@@ -136,19 +173,23 @@ export function AddProject() {
             {(field) => (
               <Textarea
                 {...field}
-                placeholder="Enter project description"
-                className="bg-white shadow-xl focus:ring-primary"
+                placeholder="Description"
+                className="bg-white shadow-xl"
               />
             )}
           </GenericFormField>
+
           <GenericFormField
             name="instructor"
             control={form.control}
             label="Instructor"
           >
             {(field) => (
-              <Select value={field.value} onValueChange={field.onChange}>
-                <SelectTrigger className="bg-white shadow-xl focus:ring-primary">
+              <Select
+                onValueChange={field.onChange}
+                value={field.value || undefined}
+              >
+                <SelectTrigger className="bg-white shadow-xl">
                   <SelectValue placeholder="Select instructor" />
                 </SelectTrigger>
                 <SelectContent>
@@ -161,31 +202,33 @@ export function AddProject() {
               </Select>
             )}
           </GenericFormField>
+
           <GenericFormField name="year" control={form.control} label="Year">
             {(field) => (
               <Input
                 {...field}
                 type="number"
-                placeholder="Enter year"
                 disabled
-                className="bg-white shadow-xl focus:ring-primary"
+                className="bg-white shadow-xl"
               />
             )}
           </GenericFormField>
+
           <GenericFormField
             name="image"
             control={form.control}
-            label="Project Image"
+            label="Change Image (Optional)"
           >
             {(field) => (
               <Input
                 type="file"
                 accept="image/*"
                 onChange={(e) => field.onChange(e.target.files)}
-                className="bg-white shadow-xl focus:ring-primary"
+                className="bg-white shadow-xl"
               />
             )}
           </GenericFormField>
+
           <div>
             <h2 className="text-xl font-semibold mb-2">Team Members</h2>
             {fields.map((item, index) => (
@@ -198,8 +241,8 @@ export function AddProject() {
                   {(field) => (
                     <Input
                       {...field}
-                      placeholder="Enter member name"
-                      className="bg-white shadow-xl focus:ring-primary"
+                      placeholder="Name"
+                      className="bg-white shadow-xl"
                     />
                   )}
                 </GenericFormField>
@@ -211,42 +254,24 @@ export function AddProject() {
                   {(field) => (
                     <Input
                       {...field}
-                      type="email"
-                      placeholder="Enter member email"
-                      className="bg-white shadow-xl focus:ring-primary"
+                      placeholder="Email"
+                      className="bg-white shadow-xl"
                     />
                   )}
                 </GenericFormField>
-                <Button
-                  variant="destructive"
-                  className="mt-4"
-                  onClick={() => remove(index)}
-                >
-                  <div className="flex items-center gap-2">
-                    <Delete />
-                    Remove Member
-                  </div>
+                <Button variant="destructive" onClick={() => remove(index)}>
+                  <Delete className="w-4 h-4" /> Remove
                 </Button>
               </div>
             ))}
-            <div className="flex justify-end">
-              <Button onClick={() => append({ name: "", email: "" })}>
-                <div className="flex items-center gap-2">
-                  <Plus />
-                  Add Member
-                </div>
-              </Button>
-            </div>
-            {/* Display error if members array is empty */}
-            {form.formState.errors.members && (
-              <p className="mt-2 text-sm text-red-600">
-                {form.formState.errors.members.message}
-              </p>
-            )}
+            <Button onClick={() => append({ name: "", email: "" })}>
+              Add Member
+            </Button>
           </div>
-          <div className="flex items-center justify-center mt-12">
+
+          <div className="flex justify-center mt-8">
             <Button type="submit" className="text-lg shadow-lg">
-              Submit
+              <Save className="w-4 h-4 mr-2" /> Save Changes
             </Button>
           </div>
         </form>
@@ -255,4 +280,4 @@ export function AddProject() {
   );
 }
 
-export default AddProject;
+export default UpdateProject;

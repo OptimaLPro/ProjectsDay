@@ -1,12 +1,11 @@
+import { getInternships } from "@/api/internships";
 import { useQuery } from "@tanstack/react-query";
-import api from "@/api/api";
 
 export const useInternships = () => {
   return useQuery({
     queryKey: ["internships"],
-    queryFn: async () => {
-      const res = await api.get("/internships");
-      return res.data;
-    },
+    queryFn: getInternships,
+    refetchOnWindowFocus: false,
+    staleTime: 1000 * 60 * 60,
   });
 };

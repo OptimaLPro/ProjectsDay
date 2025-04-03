@@ -77,6 +77,7 @@ export default function Register() {
                     {...field}
                     type="email"
                     placeholder="Enter your email"
+                    className="bg-white shadow-xl"
                   />
                 </FormControl>
                 <FormMessage />
@@ -94,6 +95,7 @@ export default function Register() {
                     {...field}
                     type="password"
                     placeholder="Enter password"
+                    className="bg-white shadow-xl"
                   />
                 </FormControl>
                 <FormMessage />
@@ -111,8 +113,8 @@ export default function Register() {
                   defaultValue={field.value}
                 >
                   <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select role" />
+                    <SelectTrigger className="bg-white shadow-xl">
+                      <SelectValue placeholder="Select role"  />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
@@ -132,7 +134,7 @@ export default function Register() {
                 <FormLabel>Internship</FormLabel>
                 <Select onValueChange={field.onChange} value={field.value}>
                   <FormControl>
-                    <SelectTrigger>
+                    <SelectTrigger className="bg-white shadow-xl">
                       <SelectValue placeholder="Select internship" />
                     </SelectTrigger>
                   </FormControl>

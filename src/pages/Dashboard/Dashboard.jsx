@@ -51,7 +51,7 @@ const Dashboard = () => {
                 </Button>
               </Link>
             ) : (
-              <Link to={`/dashboard/update-project`}>
+              <Link to={`/dashboard/update-project/${data?.project._id}`}>
                 <Button className="gap-2">
                   <Edit className="h-4 w-4" />
                   <div>Update Project</div>

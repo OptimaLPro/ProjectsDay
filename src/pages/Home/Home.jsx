@@ -6,7 +6,7 @@ import InPlaceLoader from "@/components/Loader/InPlaceLoader";
 import Loader from "@/components/Loader/Loader";
 import NoFoundProjects from "@/components/NoFoundProjects/NoFoundProjects";
 import SearchBar from "@/components/SearchBar/SearchBar";
-import { filterProjects } from "@/utils/general";
+import { filterProjects } from "@/lib/general";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
 import { useInView } from "react-intersection-observer";
