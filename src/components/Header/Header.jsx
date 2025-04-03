@@ -4,9 +4,11 @@ import HeaderButton from "./HeaderButton";
 import { Link } from "react-router";
 import DrawerMenu from "../DrawerMenu/DrawerMenu";
 import AvatarProfile from "./AvatarProfile";
+import { useAuth } from "@/context/AuthContext";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { user, logout } = useAuth();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -18,7 +20,7 @@ const Header = () => {
         <div className="lg:hidden absolute left-4">
           <DrawerMenu isOpen={isMenuOpen} toggleMenu={toggleMenu} />
         </div>
-        <div className="flex items-center gap-4 ">
+        <div className="flex items-center gap-4">
           <div>
             <Link to="/">
               <img
@@ -41,10 +43,21 @@ const Header = () => {
             icon={<Users />}
             link="instructors"
           />
-          <HeaderButton name="Login" icon={<LogIn />} link="login" />
-          <div className="lg:block hidden ">
-            <AvatarProfile/>
-          </div>
+          {!user ? (
+            <HeaderButton name="Login" icon={<LogIn />} link="login" />
+          ) : (
+            <>
+              <HeaderButton
+                name="Logout"
+                icon={<LogIn />}
+                link="#"
+                onClick={logout}
+              />
+              <div className="hidden lg:block ">
+                <AvatarProfile />
+              </div>
+            </>
+          )}
         </div>
         <div className="lg:hidden absolute right-4">
           <AvatarProfile />

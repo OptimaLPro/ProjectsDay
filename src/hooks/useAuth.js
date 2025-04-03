@@ -18,8 +18,3 @@ export const useLogin = () =>
       localStorage.setItem("token", data.token);
     },
   });
-
-  export const logout = () => {
-    localStorage.removeItem("token");
-  };
-  

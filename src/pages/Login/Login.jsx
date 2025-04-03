@@ -13,26 +13,21 @@ import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
-import { z } from "zod";
-import api from "../../api/api.js"; // מוודא שיש לך axios instance
+import api from "../../api/api.js";
+import { useAuth } from "@/context/AuthContext"; // 👈 הוספה חשובה
+import { loginScheme } from "@/schemas/loginSchema.js";
 
-const formSchema = z.object({
-  email: z.string().email({
-    message: "Please enter a valid email address.",
-  }),
-  password: z.string().min(6, {
-    message: "Password must be at least 6 characters.",
-  }),
-});
+
 
 export function Login() {
   const navigate = useNavigate();
   const [error, setError] = useState("");
+  const { login } = useAuth(); // 👈 נשתמש בקונטקסט כדי לעדכן את המשתמש
 
   const form = useForm({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(loginScheme),
     defaultValues: {
-      email: "asd@asd.com",
+      email: "nati@gmail.com",
       password: "123456",
     },
   });
@@ -41,7 +36,7 @@ export function Login() {
     mutationFn: (values) =>
       api.post("/auth/login", values).then((res) => res.data),
     onSuccess: (data) => {
-      localStorage.setItem("token", data.token);
+      login(data.token); // 👈 זה יפעיל את setUser בקונטקסט
       navigate("/dashboard");
     },
     onError: (error) => {
