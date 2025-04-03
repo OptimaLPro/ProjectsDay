@@ -5,6 +5,8 @@ import React, { useEffect } from "react";
 import { Route, Routes } from "react-router";
 import { Login } from "@/pages/Login/Login";
 import AddProject from "@/pages/AddProject/AddProject";
+import Dashboard from "@/pages/Dashboard/Dashboard";
+import Register from "@/pages/Register/Register";
 
 const Router = () => {
   useEffect(() => {
@@ -15,9 +17,11 @@ const Router = () => {
     <div className="pt-5 lg:py-12">
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
         <Route path="/projects/:id" element={<Project />} />
         <Route path="/instructors" element={<Instructors />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/add-project" element={<AddProject />} />
         <Route path="*" element={<div>404 Not Found</div>} />
       </Routes>
