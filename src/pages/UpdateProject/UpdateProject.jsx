@@ -115,7 +115,6 @@ export function UpdateProject() {
     }
   };
 
-
   if (projectError || internshipsError || instructorsError) return <Error />;
   if (projectLoading || internshipsLoading || instructorsLoading || !didReset) {
     return <Loader />;
@@ -148,7 +147,6 @@ export function UpdateProject() {
             label="Internship"
           >
             {(field) => {
-              console.log("💥 internship field.value:", field.value);
               return (
                 <Select value={field.value} onValueChange={field.onChange}>
                   <SelectTrigger className="bg-white shadow-xl">

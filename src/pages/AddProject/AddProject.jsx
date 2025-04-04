@@ -19,6 +19,7 @@ import { Delete, Plus } from "lucide-react";
 import { useFieldArray, useForm } from "react-hook-form";
 import GenericFormField from "@/components/GenericFormField/GenericFormField";
 import { useNavigate } from "react-router";
+import api from "@/api/api";
 
 export function AddProject() {
   const navigate = useNavigate();
@@ -65,7 +66,7 @@ export function AddProject() {
     formData.append("members", JSON.stringify(values.members));
 
     try {
-      const response = await fetch("/api/projects/create", {
+      const response = await api.get("/projects/create", {
         method: "POST",
         body: formData,
       });

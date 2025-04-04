@@ -14,7 +14,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
 import api from "../../api/api.js";
-import { useAuth } from "@/context/AuthContext"; // 👈 הוספה חשובה
+import { useAuth } from "@/context/AuthContext";
 import { loginScheme } from "@/schemas/loginSchema.js";
 
 
@@ -22,7 +22,7 @@ import { loginScheme } from "@/schemas/loginSchema.js";
 export function Login() {
   const navigate = useNavigate();
   const [error, setError] = useState("");
-  const { login } = useAuth(); // 👈 נשתמש בקונטקסט כדי לעדכן את המשתמש
+  const { login } = useAuth();
 
   const form = useForm({
     resolver: zodResolver(loginScheme),
@@ -36,7 +36,7 @@ export function Login() {
     mutationFn: (values) =>
       api.post("/auth/login", values).then((res) => res.data),
     onSuccess: (data) => {
-      login(data.token); // 👈 זה יפעיל את setUser בקונטקסט
+      login(data.token);
       navigate("/dashboard");
     },
     onError: (error) => {
