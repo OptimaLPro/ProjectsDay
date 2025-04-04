@@ -1,5 +1,6 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { queryClient } from "@/lib/react-query";
 import { jwtDecode } from "jwt-decode";
+import { createContext, useContext, useEffect, useState } from "react";
 
 const AuthContext = createContext();
 
@@ -30,6 +31,7 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     localStorage.removeItem("token");
     setUser(null);
+    queryClient.removeQueries(["myProject"]);
   };
 
   return (

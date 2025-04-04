@@ -115,6 +115,7 @@ export function UpdateProject() {
     }
   };
 
+
   if (projectError || internshipsError || instructorsError) return <Error />;
   if (projectLoading || internshipsLoading || instructorsLoading || !didReset) {
     return <Loader />;

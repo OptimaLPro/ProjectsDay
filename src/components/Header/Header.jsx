@@ -47,12 +47,7 @@ const Header = () => {
             <HeaderButton name="Login" icon={<LogIn />} link="login" />
           ) : (
             <>
-              <HeaderButton
-                name="Logout"
-                icon={<LogIn />}
-                link="#"
-                onClick={logout}
-              />
+              <HeaderButton name="Logout" icon={<LogIn />} link="#" onClick={logout} />
               <div className="hidden lg:block ">
                 <AvatarProfile />
               </div>

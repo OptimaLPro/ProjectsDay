@@ -2,10 +2,11 @@ import React from "react";
 import { Button } from "../ui/button";
 import { Link } from "react-router";
 
-const HeaderButton = ({ name, icon, link }) => {
+const HeaderButton = ({ name, icon, link, onClick }) => {
   return (
     <Link to={"/" + link}>
       <Button
+        onClick={onClick}
         variant="secondary"
         className="rounded-[30px] pl-1 pr-3 text-lg bg-white"
       >

@@ -49,7 +49,7 @@ const Instructors = () => {
             <DialogContent className="max-h-[80vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>{instructor.name}</DialogTitle>
-                <DialogDescription>
+                <DialogDescription className={"text-[#131313]"}>
                   <img
                     src={instructor.image || "/instructors/default.jpg"}
                     alt={instructor.name}

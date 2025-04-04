@@ -24,10 +24,7 @@ const Router = () => {
         <Route path="/instructors" element={<Instructors />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/dashboard/add-project" element={<AddProject />} />
-        <Route
-          path="/dashboard/update-project/:id"
-          element={<UpdateProject />}
-        />
+        <Route path="/dashboard/update-project" element={<UpdateProject />} />
         <Route path="*" element={<div>404 Not Found</div>} />
       </Routes>
     </div>

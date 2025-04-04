@@ -1,8 +1,8 @@
-import axios from "axios";
+import api from "./api";
 
 export const getInstructors = async () => {
   try {
-    const response = await axios.get("/api/instructors");
+    const response = await api.get("/api/instructors");
     return response.data;
   } catch (error) {
     console.error("Error fetching instructors:", error);
