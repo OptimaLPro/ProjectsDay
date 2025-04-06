@@ -10,6 +10,8 @@ import Register from "@/pages/Register/Register";
 import UpdateProject from "@/pages/UpdateProject/UpdateProject";
 import { ProtectedRoute } from "@/hooks/ProtectedRoute";
 import Unauthorized from "@/pages/Unauthorized/Unauthorized";
+import AuthUsers from "@/pages/AuthUsers/AuthUsers";
+import AdminUpdateProjects from "@/pages/AdminUpdateProjects/AdminUpdateProjects";
 
 const Router = () => {
   useEffect(() => {
@@ -28,10 +30,20 @@ const Router = () => {
         <Route path="/unauthorized" element={<Unauthorized />} />
 
         {/* Protected routes (student) */}
-        <Route element={<ProtectedRoute allowedRoles={["student"]} />}>
+        <Route element={<ProtectedRoute allowedRoles={["student", "admin"]} />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/dashboard/add-project" element={<AddProject />} />
           <Route path="/dashboard/update-project" element={<UpdateProject />} />
+        </Route>
+
+        {/* Protected routes (admin) */}
+        <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard/auth-users" element={<AuthUsers />} />
+          <Route
+            path="/dashboard/update-projects"
+            element={<AdminUpdateProjects />}
+          />
         </Route>
 
         {/* 404 */}
