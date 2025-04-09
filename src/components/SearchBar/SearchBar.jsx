@@ -12,7 +12,7 @@ const SearchBar = ({
 }) => {
   const handleTabChange = (value) => {
     if (value === "All") {
-      setActiveInternship("All"); // Reset or handle "all" explicitly
+      setActiveInternship("All");
     } else {
       setActiveInternship(value);
     }
@@ -46,7 +46,12 @@ const SearchBar = ({
         className="w-full lg:w-2/3 hidden lg:block"
         onValueChange={handleTabChange}
       >
-        <TabsList className="w-full grid grid-cols-3 lg:grid-cols-7 relative">
+        <TabsList
+          className="w-full grid relative"
+          style={{
+            gridTemplateColumns: `repeat(${internships.length}, minmax(0, 1fr))`,
+          }}
+        >
           {internships.map((internship) => (
             <TabsTrigger
               key={internship.name}

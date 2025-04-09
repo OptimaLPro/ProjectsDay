@@ -11,23 +11,18 @@ import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 import { useAuth } from "@/context/AuthContext";
+import { useInternships } from "@/hooks/useInternships";
 
 const Home = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeInternship, setActiveInternship] = useState("All");
   const { year, isLoadingYear } = useAuth();
 
-  // טעינת internships ללא אינפיניט סקרול
   const {
     data: internshipsData,
     isLoading: internshipsLoading,
     isError: internshipError,
-  } = useQuery({
-    queryKey: ["internships"],
-    queryFn: getInternships,
-    refetchOnWindowFocus: false,
-    staleTime: 1000 * 60 * 60,
-  });
+  } = useInternships();
 
   const {
     data: projectsData,

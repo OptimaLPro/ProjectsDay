@@ -48,6 +48,9 @@ const Dashboard = () => {
               <Link to="/dashboard/change-yearbook">
                 <Button className="gap-2">Change Yearbook</Button>
               </Link>
+              <Link to="/dashboard/manage-internships">
+                <Button className="gap-2">Manage Internships</Button>
+              </Link>
               <Button
                 variant="outline"
                 className="gap-2"

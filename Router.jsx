@@ -13,6 +13,7 @@ import Unauthorized from "@/pages/Unauthorized/Unauthorized";
 import AuthUsers from "@/pages/AuthUsers/AuthUsers";
 import AdminUpdateProjects from "@/pages/AdminUpdateProjects/AdminUpdateProjects";
 import ChangeYearbook from "@/pages/ChangeYearbook/ChangeYearbook";
+import AdminManageInternships from "@/pages/AdminManageInternships/AdminManageInternships";
 
 const Router = () => {
   useEffect(() => {
@@ -45,7 +46,14 @@ const Router = () => {
             path="/dashboard/update-projects"
             element={<AdminUpdateProjects />}
           />
-          <Route path="/dashboard/change-yearbook" element={<ChangeYearbook />} />
+          <Route
+            path="/dashboard/change-yearbook"
+            element={<ChangeYearbook />}
+          />
+          <Route
+            path="/dashboard/manage-internships"
+            element={<AdminManageInternships />}
+          />
         </Route>
 
         {/* 404 */}
