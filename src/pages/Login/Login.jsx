@@ -16,6 +16,9 @@ import { useNavigate } from "react-router";
 import api from "../../api/api.js";
 import { useAuth } from "@/context/AuthContext";
 import { loginScheme } from "@/schemas/loginSchema.js";
+const DEFAULT_USERNAME = import.meta.env.VITE_DEFAULT_USERNAME;
+const DEFAULT_PASSWORD = import.meta.env.VITE_DEFAULT_PASSWORD;
+
 
 
 
@@ -27,8 +30,8 @@ export function Login() {
   const form = useForm({
     resolver: zodResolver(loginScheme),
     defaultValues: {
-      email: "nati@gmail.com",
-      password: "123456",
+      email: DEFAULT_USERNAME,
+      password: DEFAULT_PASSWORD,
     },
   });
 

@@ -12,6 +12,7 @@ import { ProtectedRoute } from "@/hooks/ProtectedRoute";
 import Unauthorized from "@/pages/Unauthorized/Unauthorized";
 import AuthUsers from "@/pages/AuthUsers/AuthUsers";
 import AdminUpdateProjects from "@/pages/AdminUpdateProjects/AdminUpdateProjects";
+import ChangeYearbook from "@/pages/ChangeYearbook/ChangeYearbook";
 
 const Router = () => {
   useEffect(() => {
@@ -44,6 +45,7 @@ const Router = () => {
             path="/dashboard/update-projects"
             element={<AdminUpdateProjects />}
           />
+          <Route path="/dashboard/change-yearbook" element={<ChangeYearbook />} />
         </Route>
 
         {/* 404 */}

@@ -10,10 +10,12 @@ import { filterProjects } from "@/lib/general";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
 import { useInView } from "react-intersection-observer";
+import { useAuth } from "@/context/AuthContext";
 
 const Home = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeInternship, setActiveInternship] = useState("All");
+  const { year, isLoadingYear } = useAuth();
 
   // טעינת internships ללא אינפיניט סקרול
   const {
@@ -35,8 +37,9 @@ const Home = () => {
     hasNextPage,
     isFetchingNextPage,
   } = useInfiniteQuery({
-    queryKey: ["projects"],
-    queryFn: ({ pageParam = 0 }) => getProjects(pageParam),
+    queryKey: ["projects", year],
+    enabled: !!year,
+    queryFn: ({ pageParam = 0 }) => getProjects(pageParam, year),
     getNextPageParam: (lastPage) => lastPage.nextPage ?? undefined,
     refetchOnWindowFocus: false,
     staleTime: 1000 * 60 * 60,
@@ -50,7 +53,7 @@ const Home = () => {
     }
   }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  if (projectsLoading || internshipsLoading) {
+  if (isLoadingYear || projectsLoading || internshipsLoading) {
     return <Loader />;
   }
 
