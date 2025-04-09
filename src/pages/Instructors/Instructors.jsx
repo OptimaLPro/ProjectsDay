@@ -10,20 +10,24 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useQuery } from "@tanstack/react-query";
+import { useAuth } from "@/context/AuthContext";
 
 const Instructors = () => {
+  const { year, isLoadingYear } = useAuth();
+
   const {
     data: instructorsData,
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["instructors"],
-    queryFn: getInstructors,
+    queryKey: ["instructors", year],
+    enabled: !!year, // טוען רק כשיש שנה
+    queryFn: () => getInstructors(year),
     refetchOnWindowFocus: false,
     staleTime: 1000 * 60 * 60,
   });
 
-  if (isLoading) {
+  if (isLoading || isLoadingYear) {
     return <Loader />;
   }
 
