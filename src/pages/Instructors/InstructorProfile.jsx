@@ -1,18 +1,14 @@
 import { useParams } from "react-router";
-import { useInstructors } from "@/hooks/useInstructors";
+import { useInstructorById } from "@/hooks/useInstructorById";
 import Loader from "@/components/Loader/Loader";
 import Error from "@/components/Error/Error";
 
 const InstructorProfile = () => {
   const { id } = useParams();
-  const { data: instructors, isLoading, isError } = useInstructors();
+  const { data: instructor, isLoading, isError } = useInstructorById(id);
 
   if (isLoading) return <Loader />;
-  if (isError) return <Error />;
-
-  const instructor = instructors.find((i) => i._id === id);
-
-  if (!instructor) return <Error message="Instructor not found" />;
+  if (isError || !instructor) return <Error message="Instructor not found" />;
 
   const image =
     instructor.image && instructor.image !== ""
@@ -20,7 +16,7 @@ const InstructorProfile = () => {
       : "/images/default.jpg";
 
   return (
-    <main className="mx-auto mt-5 px-5 max-w-2xl">
+    <main className="mx-auto mt-5 px-5 max-w-2xl relative">
       <div className="flex flex-col items-center gap-4">
         <img
           src={image}

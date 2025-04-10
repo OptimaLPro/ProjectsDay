@@ -39,6 +39,11 @@ const Header = () => {
         <div className="hidden lg:flex items-center gap-3 lg:justify-end">
           <HeaderButton name="Home" icon={<House />} link="" />
           <HeaderButton
+            name="Internships"
+            icon={<Briefcase />}
+            link="internships"
+          />
+          <HeaderButton
             name="Instructors"
             icon={<Users />}
             link="instructors"
@@ -47,7 +52,12 @@ const Header = () => {
             <HeaderButton name="Login" icon={<LogIn />} link="login" />
           ) : (
             <>
-              <HeaderButton name="Logout" icon={<LogIn />} link="#" onClick={logout} />
+              <HeaderButton
+                name="Logout"
+                icon={<LogIn />}
+                link="#"
+                onClick={logout}
+              />
               <div className="hidden lg:block ">
                 <AvatarProfile />
               </div>

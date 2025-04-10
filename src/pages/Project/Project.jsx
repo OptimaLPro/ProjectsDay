@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
 import { Link, useNavigate, useParams } from "react-router";
 import { useInstructors } from "@/hooks/useInstructors";
+import { useInternships } from "@/hooks/useInternships";
 import { useUsersByEmails } from "@/hooks/useUsersByEmails";
 
 const Project = () => {
@@ -14,6 +15,7 @@ const Project = () => {
 
   const { data: project, isLoading } = useProjectById(id);
   const { data: instructors } = useInstructors();
+  const { data: internships } = useInternships();
   const memberEmails = project?.members?.map((m) => m.email);
   const { data: users = [] } = useUsersByEmails(memberEmails);
 
@@ -21,17 +23,17 @@ const Project = () => {
     (i) => i.name === project?.instructor
   );
 
+  const internshipObj = internships?.find(
+    (i) => i.name === project?.internship
+  );
+
   const instructorImage =
     instructorObj?.image && instructorObj.image !== ""
       ? instructorObj.image
       : "/images/default.jpg";
 
-  if (isLoading) {
+  if (isLoading || !project || !instructors || !internships) {
     return <Loader />;
-  }
-
-  if (!project) {
-    return <Error />;
   }
 
   return (
@@ -47,12 +49,20 @@ const Project = () => {
             <Card className="overflow-hidden transition-all border-0 duration-300 hover:shadow-xl shadow-xl h-full flex flex-col py-0 lg:w-1/2 relative">
               <img src={project?.image} alt={project?.name} />
             </Card>
+
             <div className="flex flex-col gap-4 mt-6 lg:w-1/2 lg:pl-6">
               <h1 className="text-2xl font-bold">{project?.name}</h1>
-              <div className="w-fit mt-2 inline-block px-2 py-1 rounded-full text-xs  font-medium bg-primary/10 text-primary mb-2 capitalize">
+
+              {/* 🔗 קישור לעמוד ההתמחות */}
+              <Link
+                to={`/internships/${internshipObj?._id}`}
+                className="w-fit mt-2 inline-block px-2 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary mb-2 capitalize hover:underline transition"
+              >
                 {project?.internship}
-              </div>
+              </Link>
+
               <p>{project?.description}</p>
+
               <div className="flex gap-2">
                 <div className="flex items-center gap-2">
                   <p className="font-semibold">Instructor:</p>
@@ -69,6 +79,7 @@ const Project = () => {
                   </Link>
                 </div>
               </div>
+
               <div>
                 <h2 className="font-semibold">Members:</h2>
                 <ul className="flex flex-col gap-3">
@@ -97,6 +108,7 @@ const Project = () => {
               </div>
             </div>
           </div>
+
           <div className="flex justify-center items-center">
             <ArrowLeft
               onClick={() => navigate(-1)}

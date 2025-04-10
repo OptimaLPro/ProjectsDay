@@ -28,6 +28,9 @@ const DrawerMenu = ({ isOpen, toggleMenu }) => {
           <Link to="/" onClick={toggleMenu}>
             <p className="text-lg ">Home</p>
           </Link>
+          <Link to="/internships" onClick={toggleMenu}>
+            <p className="text-lg ">Internships</p>
+          </Link>
           <Link to="/instructors" onClick={toggleMenu}>
             <p className="text-lg">Instructors</p>
           </Link>

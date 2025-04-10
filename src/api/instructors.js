@@ -9,3 +9,8 @@ export const getInstructors = async (year) => {
     throw error;
   }
 };
+
+export const getInstructorById = async (id) => {
+  const res = await api.get(`/instructors/${id}`);
+  return res.data;
+};

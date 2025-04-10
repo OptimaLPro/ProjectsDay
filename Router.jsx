@@ -16,6 +16,8 @@ import ChangeYearbook from "@/pages/ChangeYearbook/ChangeYearbook";
 import AdminManageInternships from "@/pages/AdminManageInternships/AdminManageInternships";
 import AdminManageInstructors from "@/pages/AdminManageInstructors/AdminManageInstructors";
 import InstructorProfile from "@/pages/Instructors/InstructorProfile";
+import Internships from "@/pages/Internships/Internships";
+import InternshipProfile from "@/pages/Internships/InternshipProfile";
 
 const Router = () => {
   useEffect(() => {
@@ -30,6 +32,8 @@ const Router = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/projects/:id" element={<Project />} />
+        <Route path="/internships" element={<Internships />} />
+        <Route path="/internships/:id" element={<InternshipProfile />} />
         <Route path="/instructors" element={<Instructors />} />
         <Route path="/instructors/:id" element={<InstructorProfile />} />
         <Route path="/unauthorized" element={<Unauthorized />} />
