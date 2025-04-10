@@ -37,7 +37,7 @@ export default function Internships() {
           >
             <Link to={`/internships/${internship._id}`}>
               <Card className="p-6 shadow-lg hover:shadow-xl transition-all">
-                <h2 className="text-xl font-semibold mb-2">
+                <h2 className="text-2xl font-semibold mb-2">
                   {internship.name}
                 </h2>
 

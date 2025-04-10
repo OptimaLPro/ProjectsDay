@@ -90,6 +90,7 @@ export default function AuthUsers() {
       <table className="w-full border text-sm bg-white shadow-lg">
         <thead>
           <tr className="bg-gray-100">
+            <th className="border px-2 py-1 text-center">Image</th>
             <th className="border px-2 py-1">Email</th>
             <th className="border px-2 py-1">Role</th>
             <th className="border px-2 py-1">Internship</th>
@@ -100,6 +101,13 @@ export default function AuthUsers() {
         <tbody>
           {filteredUsers.map((user) => (
             <tr key={user._id}>
+              <td className="border px-2 py-1 text-center">
+                <img
+                  src={user.image || "/images/default.jpg"}
+                  alt={user.email}
+                  className="w-10 h-10 rounded-full object-cover mx-auto"
+                />
+              </td>
               <td className="border px-2 py-1">{user.email}</td>
               <td className="border px-2 py-1">{user.role}</td>
               <td className="border px-2 py-1">{user.internship}</td>

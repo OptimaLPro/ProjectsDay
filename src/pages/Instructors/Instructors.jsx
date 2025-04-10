@@ -33,7 +33,7 @@ const Instructors = () => {
         ([internshipName, instructors], groupIdx) => (
           <div key={internshipName} className="mb-12">
             {groupIdx > 0 && <Separator className="my-8" />}
-            <h2 className="text-xl font-semibold mb-6">{internshipName}</h2>
+            <h2 className="text-2xl font-semibold mb-6">{internshipName}</h2>
 
             <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-10">
               {instructors.map((instructor, index) => (
