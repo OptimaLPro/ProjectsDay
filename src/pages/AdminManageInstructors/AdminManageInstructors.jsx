@@ -22,6 +22,7 @@ export default function AdminManageInstructors() {
   const [openDialog, setOpenDialog] = useState(false);
   const [editData, setEditData] = useState(null);
   const [selectedYears, setSelectedYears] = useState([]);
+  const [imageFile, setImageFile] = useState(null);
 
   const { data: instructors, isLoading, isError } = useQuery({
     queryKey: ["instructors-all"],
@@ -30,26 +31,37 @@ export default function AdminManageInstructors() {
 
   const mutation = useMutation({
     mutationFn: (formData) => {
-      return api.put(`/instructors/${formData._id}`, formData);
+      return api.put(`/instructors/${formData.get("_id")}`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["instructors-all"]);
       setOpenDialog(false);
       setEditData(null);
       setSelectedYears([]);
+      setImageFile(null);
     },
   });
 
-  const handleSave = (e) => {
+  const handleSave = async (e) => {
     e.preventDefault();
     const form = e.target;
-    const formData = {
-      _id: editData._id,
-      name: form.name.value,
-      description: form.description.value,
-      image: form.image.value,
-      years: selectedYears,
-    };
+    const formData = new FormData();
+
+    formData.append("_id", editData._id);
+    formData.append("name", form.name.value);
+    formData.append("description", form.description.value);
+    formData.append("years", JSON.stringify(selectedYears));
+
+    if (imageFile) {
+      formData.append("image", imageFile);
+    } else {
+      formData.append("image", editData.image); // keep original URL
+    }
+
     mutation.mutate(formData);
   };
 
@@ -59,6 +71,7 @@ export default function AdminManageInstructors() {
     } else {
       setSelectedYears([]);
     }
+    setImageFile(null); // reset file on new open
   }, [editData]);
 
   const toggleYear = (year) => {
@@ -114,6 +127,7 @@ export default function AdminManageInstructors() {
           if (!open) {
             setEditData(null);
             setSelectedYears([]);
+            setImageFile(null);
           }
         }}
       >
@@ -128,11 +142,13 @@ export default function AdminManageInstructors() {
               defaultValue={editData?.name || ""}
               required
             />
+
             <Input
-              name="image"
-              placeholder="Image URL"
-              defaultValue={editData?.image || ""}
+              type="file"
+              accept="image/*"
+              onChange={(e) => setImageFile(e.target.files[0])}
             />
+
             <Textarea
               name="description"
               placeholder="Instructor description"

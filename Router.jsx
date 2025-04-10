@@ -14,6 +14,7 @@ import AuthUsers from "@/pages/AuthUsers/AuthUsers";
 import AdminUpdateProjects from "@/pages/AdminUpdateProjects/AdminUpdateProjects";
 import ChangeYearbook from "@/pages/ChangeYearbook/ChangeYearbook";
 import AdminManageInternships from "@/pages/AdminManageInternships/AdminManageInternships";
+import AdminManageInstructors from "@/pages/AdminManageInstructors/AdminManageInstructors";
 
 const Router = () => {
   useEffect(() => {
@@ -53,6 +54,10 @@ const Router = () => {
           <Route
             path="/dashboard/manage-internships"
             element={<AdminManageInternships />}
+          />
+          <Route
+            path="/dashboard/manage-instructors"
+            element={<AdminManageInstructors />}
           />
         </Route>
 

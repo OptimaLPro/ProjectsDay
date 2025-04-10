@@ -45,11 +45,14 @@ const Dashboard = () => {
               <Link to="/dashboard/update-projects">
                 <Button className="gap-2">Update Projects</Button>
               </Link>
-              <Link to="/dashboard/change-yearbook">
-                <Button className="gap-2">Change Yearbook</Button>
+              <Link to="manage-instructors">
+                <Button className="gap-2">Manage Instructors</Button>
               </Link>
               <Link to="/dashboard/manage-internships">
                 <Button className="gap-2">Manage Internships</Button>
+              </Link>
+              <Link to="/dashboard/change-yearbook">
+                <Button className="gap-2">Change Yearbook</Button>
               </Link>
               <Button
                 variant="outline"
