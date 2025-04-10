@@ -1,13 +1,12 @@
-import Error from "@/components/Error/Error";
 import Loader from "@/components/Loader/Loader";
+import BackButton from "@/components/ui/BackButton";
 import { Card } from "@/components/ui/card";
-import { useProjectById } from "@/hooks/useProjectsById";
-import { motion } from "framer-motion";
-import { ArrowLeft } from "lucide-react";
-import { Link, useNavigate, useParams } from "react-router";
 import { useInstructors } from "@/hooks/useInstructors";
 import { useInternships } from "@/hooks/useInternships";
+import { useProjectById } from "@/hooks/useProjectsById";
 import { useUsersByEmails } from "@/hooks/useUsersByEmails";
+import { motion } from "framer-motion";
+import { Link, useNavigate, useParams } from "react-router";
 
 const Project = () => {
   const { id } = useParams();
@@ -45,7 +44,7 @@ const Project = () => {
           exit={{ opacity: 0, y: -10 }}
           transition={{ duration: 0.3 }}
         >
-          <div className="lg:flex lg:items-center lg:justify-between mb-12 lg:gap-12">
+          <div className="lg:flex lg:items-center lg:justify-between lg:gap-12">
             <Card className="overflow-hidden transition-all border-0 duration-300 hover:shadow-xl shadow-xl h-full flex flex-col py-0 lg:w-1/2 relative">
               <img src={project?.image} alt={project?.name} />
             </Card>
@@ -108,13 +107,7 @@ const Project = () => {
               </div>
             </div>
           </div>
-
-          <div className="flex justify-center items-center">
-            <ArrowLeft
-              onClick={() => navigate(-1)}
-              className="mb-12 w-10 h-10 p-2 text-gray-600 bg-gray-300 rounded-full flex items-center justify-center shadow-md hover:bg-gray-300 transition pointer duration-200 cursor-pointer"
-            />
-          </div>
+          <BackButton />
         </motion.div>
       </main>
     </div>

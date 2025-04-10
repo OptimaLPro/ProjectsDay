@@ -3,6 +3,7 @@ import { useInternships } from "@/hooks/useInternships";
 import { useInstructors } from "@/hooks/useInstructors";
 import Loader from "@/components/Loader/Loader";
 import Error from "@/components/Error/Error";
+import BackButton from "@/components/ui/BackButton";
 
 export default function InternshipProfile() {
   const { id } = useParams();
@@ -45,6 +46,7 @@ export default function InternshipProfile() {
       <p className="text-gray-800 whitespace-pre-line text-justify leading-relaxed">
         {internship.description}
       </p>
+      <BackButton />
     </main>
   );
 }

@@ -2,6 +2,7 @@ import { useParams } from "react-router";
 import { useInstructorById } from "@/hooks/useInstructorById";
 import Loader from "@/components/Loader/Loader";
 import Error from "@/components/Error/Error";
+import BackButton from "@/components/ui/BackButton";
 
 const InstructorProfile = () => {
   const { id } = useParams();
@@ -24,10 +25,28 @@ const InstructorProfile = () => {
           className="h-48 w-48 object-cover rounded-lg shadow-md"
         />
         <h1 className="text-2xl font-bold">{instructor.name}</h1>
+        <div className="mb-4 text-center">
+          {Array.isArray(instructor.internships) &&
+          instructor.internships.length > 0 ? (
+            <ul className="flex flex-wrap gap-2 justify-center">
+              {instructor.internships.map((name) => (
+                <li
+                  key={name}
+                  className="bg-gray-200 text-sm px-3 py-1 rounded-full"
+                >
+                  {name}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <span className="text-gray-600 text-sm">Other</span>
+          )}
+        </div>
         <p className="text-gray-700 whitespace-pre-line text-center">
           {instructor.description}
         </p>
       </div>
+      <BackButton />
     </main>
   );
 };

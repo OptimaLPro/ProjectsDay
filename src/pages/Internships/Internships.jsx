@@ -25,7 +25,7 @@ export default function Internships() {
   );
 
   return (
-    <main className="max-w-6xl mx-auto mt-10 px-5 relative">
+    <main className="max-w-6xl mx-auto mt-5 px-5 relative">
       <h1 className="text-3xl font-bold text-center mb-10">Internships</h1>
       <div className="grid gap-8 grid-cols-1 md:grid-cols-2">
         {filteredInternships.map((internship, index) => (
