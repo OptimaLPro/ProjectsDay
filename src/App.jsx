@@ -2,6 +2,7 @@ import "./App.css";
 import Router from "../Router";
 import Header from "./components/Header/Header";
 import Aurora from "./components/ui/Aurora";
+import NetBackground from "./components/NetBackground";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           speed={0.1}
         />
       </div>
+      <NetBackground />
       <div className="lg:pt-10 pt-5 px-5">
         <Header />
       </div>

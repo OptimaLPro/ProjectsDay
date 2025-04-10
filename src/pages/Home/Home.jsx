@@ -56,7 +56,7 @@ const Home = () => {
   );
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       <main className="container mx-auto px-5 lg:px-4">
         <div className="flex lg:flex-row gap-3 lg:gap-6 mb-12 justify-between items-center">
           <SearchBar

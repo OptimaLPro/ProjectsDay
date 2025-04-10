@@ -8,6 +8,13 @@ import { useUsersByEmails } from "@/hooks/useUsersByEmails";
 import { motion } from "framer-motion";
 import { Link, useParams } from "react-router";
 import ProjectMedia from "./ProjectMedia";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import AwardsBar from "@/components/AwardsBar";
 
 const Project = () => {
   const { id } = useParams();
@@ -36,7 +43,7 @@ const Project = () => {
   }
 
   return (
-    <div className="bg-background mt-5 max-w-[90%] mx-auto">
+    <div className=" mt-5 max-w-[90%] mx-auto">
       <main className="container mx-auto px-5 lg:px-4 relative">
         <motion.div
           initial={{ opacity: 0, y: 10 }}
@@ -50,15 +57,20 @@ const Project = () => {
             </Card>
 
             <div className="flex flex-col gap-4 mt-6 lg:w-1/2 lg:pl-6">
-              <h1 className="text-2xl font-bold">{project?.name}</h1>
-
-              <Link
-                to={`/internships/${internshipObj?._id}`}
-                className="w-fit mt-2 inline-block px-2 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary mb-2 capitalize hover:underline transition"
-              >
-                {project?.internship}
-              </Link>
-
+              <div className="flex items-center justify-between">
+                <div className="flex flex-col">
+                  <h1 className="text-2xl font-bold">{project?.name}</h1>
+                  <Link
+                    to={`/internships/${internshipObj?._id}`}
+                    className="w-fit mt-2 inline-block px-2 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary mb-2 capitalize hover:underline transition"
+                  >
+                    {project?.internship}
+                  </Link>
+                </div>
+                <div>
+                  <AwardsBar project={project} size={70} />
+                </div>
+              </div>
               <p className="font-semibold">{project?.short_description}</p>
               <p>{project?.description}</p>
 

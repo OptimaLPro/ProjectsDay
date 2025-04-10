@@ -34,7 +34,7 @@ const Dashboard = () => {
 
   if (user?.role === "admin") {
     return (
-      <div className="bg-background mt-5 max-w-[90%] mx-auto">
+      <div className=" mt-5 max-w-[90%] mx-auto">
         <main className="container mx-auto px-5 lg:px-4 relative">
           <div className="flex flex-col md:items-center justify-between mb-8 gap-4">
             <h1 className="text-2xl font-bold text-center">Admin Dashboard</h1>
@@ -71,7 +71,7 @@ const Dashboard = () => {
 
   if (user?.role === "student") {
     return (
-      <div className="bg-background mt-5 max-w-[90%] mx-auto">
+      <div className=" mt-5 max-w-[90%] mx-auto">
         <main className="container mx-auto px-5 lg:px-4 relative">
           <div className="flex flex-col md:items-center justify-between mb-8 gap-4">
             <h1 className="text-2xl font-bold text-center">
