@@ -1,3 +1,4 @@
+import AwardsBar from "@/components/AwardsBar";
 import Loader from "@/components/Loader/Loader";
 import BackButton from "@/components/ui/BackButton";
 import { Card } from "@/components/ui/card";
@@ -8,13 +9,6 @@ import { useUsersByEmails } from "@/hooks/useUsersByEmails";
 import { motion } from "framer-motion";
 import { Link, useParams } from "react-router";
 import ProjectMedia from "./ProjectMedia";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import AwardsBar from "@/components/AwardsBar";
 
 const Project = () => {
   const { id } = useParams();
@@ -43,7 +37,7 @@ const Project = () => {
   }
 
   return (
-    <div className=" mt-5 max-w-[95%] mx-auto">
+    <div className="mt-5 max-w-[90%] lg:max-w-[95%] mx-auto">
       <main className="container mx-auto  relative">
         <motion.div
           initial={{ opacity: 0, y: 10 }}
@@ -51,7 +45,7 @@ const Project = () => {
           exit={{ opacity: 0, y: -10 }}
           transition={{ duration: 0.3 }}
         >
-          <div className="lg:flex lg:items-center lg:justify-between lg:gap-12  bg-white/30 backdrop-blur-md border border-white/30 rounded-xl shadow-lg py-4 pl-8 pr-2">
+          <div className="lg:flex lg:items-center lg:justify-between lg:gap-12  bg-white/30 backdrop-blur-md border border-white/30 rounded-xl shadow-lg py-4 lg:pl-8 px-3 lg:px-0 lg:pr-2">
             <Card className="overflow-hidden transition-all border-0 duration-300 hover:shadow-xl shadow-xl h-full flex flex-col py-0 lg:w-1/2 relative ">
               <img src={project?.image} alt={project?.name} />
             </Card>

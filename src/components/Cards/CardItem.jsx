@@ -29,7 +29,7 @@ const CardItem = ({ project }) => {
               </div>
               <h3 className="font-bold text-xl">{project.name}</h3>
             </div>
-            <AwardsBar project={project} />
+            <AwardsBar project={project} openDialog={false} />
           </div>
 
           <p className="text-muted-foreground mt-2 text-sm">
