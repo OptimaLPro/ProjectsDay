@@ -24,7 +24,7 @@ const CardItem = ({ project }) => {
           </div>
           <h3 className="font-bold text-xl">{project.name}</h3>
           <p className="text-muted-foreground mt-2 text-sm">
-            {project.description.length > 150
+            {project.short_description.length > 150
               ? `${project.description.slice(0, 150)}...`
               : project.description}
           </p>

@@ -6,11 +6,11 @@ import { useInternships } from "@/hooks/useInternships";
 import { useProjectById } from "@/hooks/useProjectsById";
 import { useUsersByEmails } from "@/hooks/useUsersByEmails";
 import { motion } from "framer-motion";
-import { Link, useNavigate, useParams } from "react-router";
+import { Link, useParams } from "react-router";
+import ProjectMedia from "./ProjectMedia";
 
 const Project = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
 
   const { data: project, isLoading } = useProjectById(id);
   const { data: instructors } = useInstructors();
@@ -52,7 +52,6 @@ const Project = () => {
             <div className="flex flex-col gap-4 mt-6 lg:w-1/2 lg:pl-6">
               <h1 className="text-2xl font-bold">{project?.name}</h1>
 
-              {/* 🔗 קישור לעמוד ההתמחות */}
               <Link
                 to={`/internships/${internshipObj?._id}`}
                 className="w-fit mt-2 inline-block px-2 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary mb-2 capitalize hover:underline transition"
@@ -60,6 +59,7 @@ const Project = () => {
                 {project?.internship}
               </Link>
 
+              <p className="font-semibold">{project?.short_description}</p>
               <p>{project?.description}</p>
 
               <div className="flex gap-2">
@@ -107,6 +107,11 @@ const Project = () => {
               </div>
             </div>
           </div>
+
+          {(project?.youtube || project?.gallery?.length > 0) && (
+            <ProjectMedia project={project} />
+          )}
+
           <BackButton />
         </motion.div>
       </main>
