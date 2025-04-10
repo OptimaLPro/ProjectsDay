@@ -6,6 +6,14 @@ import * as XLSX from "xlsx";
 import AddUserForm from "../AddUserForm/AddUserForm";
 import EditUserDialog from "@/components/EditUserDialog/EditUserDialog";
 import DeleteUserDialog from "@/components/DeleteUserDialog/DeleteUserDialog";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 export default function AuthUsers() {
   const [users, setUsers] = useState([]);
@@ -111,48 +119,50 @@ export default function AuthUsers() {
         </div>
       )}
 
-      <table className="w-full border text-sm bg-white shadow-lg">
-        <thead>
-          <tr className="bg-gray-100">
-            <th className="border px-2 py-1 text-center">Image</th>
-            <th className="border px-2 py-1">Email</th>
-            <th className="border px-2 py-1">Role</th>
-            <th className="border px-2 py-1">Internship</th>
-            <th className="border px-2 py-1">Year</th>
-            <th className="border px-2 py-1">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredUsers.map((user) => (
-            <tr key={user._id}>
-              <td className="border px-2 py-1 text-center">
-                <img
-                  src={user.image || "/images/default.jpg"}
-                  alt={user.email}
-                  className="w-10 h-10 rounded-full object-cover mx-auto"
-                />
-              </td>
-              <td className="border px-2 py-1">{user.email}</td>
-              <td className="border px-2 py-1">{user.role}</td>
-              <td className="border px-2 py-1">{user.internship}</td>
-              <td className="border px-2 py-1">{user.year}</td>
-              <td className="border px-2 py-1 text-center">
-                <Button size="sm" onClick={() => openEditDialog(user)}>
-                  Edit
-                </Button>
-                <Button
-                  size="sm"
-                  variant="destructive"
-                  onClick={() => openDeleteDialog(user)}
-                  className="ml-2"
-                >
-                  Delete
-                </Button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <div className="rounded-md border">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="text-center">Image</TableHead>
+              <TableHead>Email</TableHead>
+              <TableHead>Role</TableHead>
+              <TableHead>Internship</TableHead>
+              <TableHead>Year</TableHead>
+              <TableHead className="text-center">Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {filteredUsers.map((user) => (
+              <TableRow key={user._id}>
+                <TableCell className="text-center">
+                  <img
+                    src={user.image || "/images/default.jpg"}
+                    alt={user.email}
+                    className="w-10 h-10 rounded-full object-cover mx-auto"
+                  />
+                </TableCell>
+                <TableCell>{user.email}</TableCell>
+                <TableCell>{user.role}</TableCell>
+                <TableCell>{user.internship}</TableCell>
+                <TableCell>{user.year}</TableCell>
+                <TableCell className="text-center">
+                  <Button size="sm" onClick={() => openEditDialog(user)}>
+                    Edit
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="destructive"
+                    className="ml-2"
+                    onClick={() => openDeleteDialog(user)}
+                  >
+                    Delete
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
 
       {dialogType === "edit" && selectedUser && (
         <EditUserDialog

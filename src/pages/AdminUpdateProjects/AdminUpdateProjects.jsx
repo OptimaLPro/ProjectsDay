@@ -7,6 +7,14 @@ import DeleteProjectDialog from "./DeleteProjectDialog";
 import Loader from "@/components/Loader/Loader";
 import Error from "@/components/Error/Error";
 import { Input } from "@/components/ui/input";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 export default function AdminUpdateProjects() {
   const [selectedProject, setSelectedProject] = useState(null);
@@ -65,73 +73,75 @@ export default function AdminUpdateProjects() {
           placeholder="Search by name"
           value={filterName}
           onChange={(e) => setFilterName(e.target.value)}
-          className={"bg-white shadow-lg"}
+          className="bg-white shadow-lg"
         />
         <Input
           placeholder="Search by member"
           value={filterMember}
           onChange={(e) => setFilterMember(e.target.value)}
-          className={"bg-white shadow-lg"}
+          className="bg-white shadow-lg"
         />
         <Input
           placeholder="Search by internship"
           value={filterInternship}
           onChange={(e) => setFilterInternship(e.target.value)}
-          className={"bg-white shadow-lg"}
+          className="bg-white shadow-lg"
         />
       </div>
 
-      <table className="w-full border text-sm bg-white shadow-lg">
-        <thead>
-          <tr className="bg-gray-100">
-            <th className="border px-2 py-1">Title</th>
-            <th className="border px-2 py-1">Internship</th>
-            <th className="border px-2 py-1">Year</th>
-            <th className="border px-2 py-1">Students</th>
-            <th className="border px-2 py-1">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredProjects.map((project) => (
-            <tr key={project._id}>
-              <td
-                className="border px-2 py-1 max-w-[200px] truncate"
-                title={project.name}
-              >
-                {project.name}
-              </td>
-              <td
-                className="border px-2 py-1 max-w-[150px] truncate"
-                title={project.internship}
-              >
-                {project.internship}
-              </td>
-              <td className="border px-2 py-1">{project.year}</td>
-              <td
-                className="border px-2 py-1 max-w-[250px] truncate"
-                title={project.members
-                  ?.map((m) => m.name || m.email)
-                  .join(", ")}
-              >
-                {project.members?.map((m) => m.name || m.email).join(", ")}
-              </td>
-              <td className="border px-2 py-1 text-center">
-                <Button size="sm" onClick={() => openEditDialog(project)}>
-                  Edit
-                </Button>
-                <Button
-                  size="sm"
-                  variant="destructive"
-                  onClick={() => openDeleteDialog(project)}
-                  className="ml-2"
+      <div className="rounded-md border">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Title</TableHead>
+              <TableHead>Internship</TableHead>
+              <TableHead>Year</TableHead>
+              <TableHead>Students</TableHead>
+              <TableHead className="text-center">Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {filteredProjects.map((project) => (
+              <TableRow key={project._id}>
+                <TableCell
+                  className="max-w-[200px] truncate"
+                  title={project.name}
                 >
-                  Delete
-                </Button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+                  {project.name}
+                </TableCell>
+                <TableCell
+                  className="max-w-[150px] truncate"
+                  title={project.internship}
+                >
+                  {project.internship}
+                </TableCell>
+                <TableCell>{project.year}</TableCell>
+                <TableCell
+                  className="max-w-[250px] truncate"
+                  title={project.members
+                    ?.map((m) => m.name || m.email)
+                    .join(", ")}
+                >
+                  {project.members?.map((m) => m.name || m.email).join(", ")}
+                </TableCell>
+                <TableCell className="text-center">
+                  <Button size="sm" onClick={() => openEditDialog(project)}>
+                    Edit
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="destructive"
+                    className="ml-2"
+                    onClick={() => openDeleteDialog(project)}
+                  >
+                    Delete
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
 
       {dialogType === "edit" && selectedProject && (
         <EditProjectDialog

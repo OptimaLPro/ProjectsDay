@@ -7,6 +7,14 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import InstructorEditDialog from "./InstructorEditDialog";
 import DeleteInstructorDialog from "./DeleteInstructorDialog";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 const DEFAULT_YEARS = [2024, 2025, 2026];
 
@@ -21,7 +29,8 @@ export default function AdminManageInstructors() {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [instructorToDelete, setInstructorToDelete] = useState(null);
 
-  const { data: internshipsData = [], isLoading: loadingInternships } = useInternships();
+  const { data: internshipsData = [], isLoading: loadingInternships } =
+    useInternships();
 
   const {
     data: instructors,
@@ -98,7 +107,9 @@ export default function AdminManageInstructors() {
 
   return (
     <div className="max-w-5xl mx-auto mt-10 relative">
-      <h1 className="text-2xl font-bold text-center mb-6">Manage Instructors</h1>
+      <h1 className="text-2xl font-bold text-center mb-6">
+        Manage Instructors
+      </h1>
 
       <Button
         onClick={() => {
@@ -109,64 +120,60 @@ export default function AdminManageInstructors() {
       >
         Add Instructor
       </Button>
-
-      <table className="w-full border text-sm bg-white shadow-lg">
-        <thead className="bg-gray-100">
-          <tr>
-            <th className="border px-2 py-1 text-center">Image</th>
-            <th className="border px-2 py-1">Name</th>
-            <th className="border px-2 py-1">Years</th>
-            <th className="border px-2 py-1">Internships</th>
-            <th className="border px-2 py-1">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {instructors.map((instructor) => {
-            const filteredInternships =
-              instructor.internships?.filter((i) => i !== "All") || [];
-            return (
-              <tr key={instructor._id}>
-                <td className="border px-2 py-1 text-center">
-                  <img
-                    src={instructor.image || "/images/default.jpg"}
-                    alt={instructor.name}
-                    className="w-12 h-12 rounded-full object-cover mx-auto"
-                  />
-                </td>
-                <td className="border px-2 py-1">{instructor.name}</td>
-                <td className="border px-2 py-1">
-                  {instructor.years?.join(", ") || "—"}
-                </td>
-                <td className="border px-2 py-1">
-                  {filteredInternships.join(", ") || "—"}
-                </td>
-                <td className="border px-2 py-1 text-center">
-                  <Button
-                    size="sm"
-                    onClick={() => {
-                      setEditData(instructor);
-                      setOpenDialog(true);
-                    }}
-                  >
-                    Edit
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="destructive"
-                    className="ml-2"
-                    onClick={() => {
-                      setInstructorToDelete(instructor);
-                      setDeleteDialogOpen(true);
-                    }}
-                  >
-                    Delete
-                  </Button>
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+      <div className="rounded-md border mt-4">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="text-center">Image</TableHead>
+              <TableHead>Name</TableHead>
+              <TableHead>Years</TableHead>
+              <TableHead>Internships</TableHead>
+              <TableHead className="text-center">Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {instructors.map((instructor) => {
+              const filteredInternships =
+                instructor.internships?.filter((i) => i !== "All") || [];
+              return (
+                <TableRow key={instructor._id}>
+                  <TableCell className="text-center">
+                    <img
+                      src={instructor.image || "/images/default.jpg"}
+                      alt={instructor.name}
+                      className="w-12 h-12 rounded-full object-cover mx-auto"
+                    />
+                  </TableCell>
+                  <TableCell>{instructor.name}</TableCell>
+                  <TableCell>{instructor.years?.join(", ") || "—"}</TableCell>
+                  <TableCell>{filteredInternships.join(", ") || "—"}</TableCell>
+                  <TableCell className="flex gap-2 justify-center">
+                    <Button
+                      size="sm"
+                      onClick={() => {
+                        setEditData(instructor);
+                        setOpenDialog(true);
+                      }}
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="destructive"
+                      onClick={() => {
+                        setInstructorToDelete(instructor);
+                        setDeleteDialogOpen(true);
+                      }}
+                    >
+                      Delete
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+      </div>
 
       <InstructorEditDialog
         open={openDialog}

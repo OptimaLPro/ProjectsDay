@@ -6,6 +6,14 @@ import Loader from "@/components/Loader/Loader";
 import Error from "@/components/Error/Error";
 import InternshipEditDialog from "./InternshipEditDialog";
 import DeleteInternshipDialog from "./DeleteInternshipDialog";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 const DEFAULT_YEARS = [2024, 2025, 2026];
 
@@ -95,51 +103,51 @@ export default function AdminManageInternships() {
         Add Internship
       </Button>
 
-      <table className="w-full border text-sm bg-white shadow-lg">
-        <thead className="bg-gray-100">
-          <tr>
-            <th className="border px-2 py-1">Name</th>
-            <th className="border px-2 py-1">Instructor</th>
-            <th className="border px-2 py-1">Years</th>
-            <th className="border px-2 py-1">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {internships
-            .filter((intern) => intern.name !== "All")
-            .map((intern) => (
-              <tr key={intern._id}>
-                <td className="border px-2 py-1">{intern.name}</td>
-                <td className="border px-2 py-1">{intern.instructor}</td>
-                <td className="border px-2 py-1">
-                  {intern.years?.join(", ") || "—"}
-                </td>
-                <td className="border px-2 py-1 text-center">
-                  <Button
-                    size="sm"
-                    onClick={() => {
-                      setEditData(intern);
-                      setOpenDialog(true);
-                    }}
-                  >
-                    Edit
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="destructive"
-                    className="ml-2"
-                    onClick={() => {
-                      setInternshipToDelete(intern);
-                      setDeleteDialogOpen(true);
-                    }}
-                  >
-                    Delete
-                  </Button>
-                </td>
-              </tr>
-            ))}
-        </tbody>
-      </table>
+      <div className="rounded-md border">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Name</TableHead>
+              <TableHead>Instructor</TableHead>
+              <TableHead>Years</TableHead>
+              <TableHead className="text-center">Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {internships
+              .filter((intern) => intern.name !== "All")
+              .map((intern) => (
+                <TableRow key={intern._id}>
+                  <TableCell>{intern.name}</TableCell>
+                  <TableCell>{intern.instructor}</TableCell>
+                  <TableCell>{intern.years?.join(", ") || "—"}</TableCell>
+                  <TableCell className="text-center">
+                    <Button
+                      size="sm"
+                      onClick={() => {
+                        setEditData(intern);
+                        setOpenDialog(true);
+                      }}
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="destructive"
+                      className="ml-2"
+                      onClick={() => {
+                        setInternshipToDelete(intern);
+                        setDeleteDialogOpen(true);
+                      }}
+                    >
+                      Delete
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+          </TableBody>
+        </Table>
+      </div>
 
       <InternshipEditDialog
         open={openDialog}
