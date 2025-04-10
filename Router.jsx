@@ -15,6 +15,7 @@ import AdminUpdateProjects from "@/pages/AdminUpdateProjects/AdminUpdateProjects
 import ChangeYearbook from "@/pages/ChangeYearbook/ChangeYearbook";
 import AdminManageInternships from "@/pages/AdminManageInternships/AdminManageInternships";
 import AdminManageInstructors from "@/pages/AdminManageInstructors/AdminManageInstructors";
+import InstructorProfile from "@/pages/Instructors/InstructorProfile";
 
 const Router = () => {
   useEffect(() => {
@@ -30,6 +31,7 @@ const Router = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/projects/:id" element={<Project />} />
         <Route path="/instructors" element={<Instructors />} />
+        <Route path="/instructors/:id" element={<InstructorProfile />} />
         <Route path="/unauthorized" element={<Unauthorized />} />
 
         {/* Protected routes (student) */}

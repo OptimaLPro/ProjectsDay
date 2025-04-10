@@ -1,22 +1,20 @@
-import { getInternships } from "@/api/internships";
-import { getProjects } from "@/api/projects";
 import Cards from "@/components/Cards/Cards";
 import Error from "@/components/Error/Error";
 import InPlaceLoader from "@/components/Loader/InPlaceLoader";
 import Loader from "@/components/Loader/Loader";
 import NoFoundProjects from "@/components/NoFoundProjects/NoFoundProjects";
 import SearchBar from "@/components/SearchBar/SearchBar";
-import { filterProjects } from "@/lib/general";
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
-import { useState, useEffect } from "react";
-import { useInView } from "react-intersection-observer";
 import { useAuth } from "@/context/AuthContext";
 import { useInternships } from "@/hooks/useInternships";
+import { useProjects } from "@/hooks/useProjects";
+import { filterProjects } from "@/lib/general";
+import { useEffect, useState } from "react";
+import { useInView } from "react-intersection-observer";
 
 const Home = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeInternship, setActiveInternship] = useState("All");
-  const { year, isLoadingYear } = useAuth();
+  const { isLoadingYear } = useAuth();
 
   const {
     data: internshipsData,
@@ -31,14 +29,7 @@ const Home = () => {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useInfiniteQuery({
-    queryKey: ["projects", year],
-    enabled: !!year,
-    queryFn: ({ pageParam = 0 }) => getProjects(pageParam, year),
-    getNextPageParam: (lastPage) => lastPage.nextPage ?? undefined,
-    refetchOnWindowFocus: false,
-    staleTime: 1000 * 60 * 60,
-  });
+  } = useProjects();
 
   const { ref, inView } = useInView();
 

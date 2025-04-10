@@ -72,7 +72,6 @@ export default function AuthUsers() {
     <div className="relative max-w-6xl mx-auto mt-10">
       <h1 className="text-2xl font-bold text-center mb-6">Authorized Users</h1>
 
-      {/* 🔍 חיפוש */}
       <div className="flex gap-4 mb-4 justify-center">
         <Input
           placeholder="Search by email"

@@ -1,4 +1,4 @@
-import api from "@/api/api"; // משתמש באינסטנס עם Authorization אוטומטי
+import api from "@/api/api";
 
 export const getProjects = async (page = 0, year) => {
   const res = await api.get(`/projects?page=${page}&year=${year}`);

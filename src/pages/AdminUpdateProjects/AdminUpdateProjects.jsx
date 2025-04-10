@@ -60,7 +60,6 @@ export default function AdminUpdateProjects() {
     <div className="relative max-w-6xl mx-auto mt-10">
       <h1 className="text-2xl font-bold text-center mb-6">Manage Projects</h1>
 
-      {/* 🔍 שדות חיפוש */}
       <div className="flex flex-col md:flex-row gap-4 mb-6 justify-between">
         <Input
           placeholder="Search by name"

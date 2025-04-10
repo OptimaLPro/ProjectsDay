@@ -1,24 +1,30 @@
-import { projects } from "@/assets/ProjectsData";
+import Error from "@/components/Error/Error";
+import Loader from "@/components/Loader/Loader";
 import { Card } from "@/components/ui/card";
+import { useProjectById } from "@/hooks/useProjectsById";
 import { motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router";
-import { useQuery } from "@tanstack/react-query";
-import { getProjectById } from "@/api/projects";
-import Loader from "@/components/Loader/Loader";
-import Error from "@/components/Error/Error";
+import { Link, useNavigate, useParams } from "react-router";
+import { useInstructors } from "@/hooks/useInstructors";
+import { useUsersByEmails } from "@/hooks/useUsersByEmails";
 
 const Project = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const { data: project, isLoading } = useQuery({
-    queryKey: ["project", id],
-    queryFn: () => getProjectById(id),
-    refetchOnWindowFocus: false,
-    staleTime: 1000 * 60 * 60, // 60 minutes
-  });
+  const { data: project, isLoading } = useProjectById(id);
+  const { data: instructors } = useInstructors();
+  const memberEmails = project?.members?.map((m) => m.email);
+  const { data: users = [] } = useUsersByEmails(memberEmails);
+
+  const instructorObj = instructors?.find(
+    (i) => i.name === project?.instructor
+  );
+
+  const instructorImage =
+    instructorObj?.image && instructorObj.image !== ""
+      ? instructorObj.image
+      : "/images/default.jpg";
 
   if (isLoading) {
     return <Loader />;
@@ -48,18 +54,45 @@ const Project = () => {
               </div>
               <p>{project?.description}</p>
               <div className="flex gap-2">
-                <p className="font-semibold">Instructor:</p>
-                {project?.instructor}
+                <div className="flex items-center gap-2">
+                  <p className="font-semibold">Instructor:</p>
+                  <Link
+                    to={`/instructors/${instructorObj?._id}`}
+                    className="flex items-center gap-2 hover:underline hover:text-primary transition"
+                  >
+                    <img
+                      src={instructorImage}
+                      alt={project?.instructor}
+                      className="w-10 h-10 rounded-full object-cover shadow-lg border-[1px] border-gray-300"
+                    />
+                    <span>{project?.instructor}</span>
+                  </Link>
+                </div>
               </div>
               <div>
                 <h2 className="font-semibold">Members:</h2>
-                <ul className="list-disc list-inside">
-                  {project?.members?.map((member, index) => (
-                    <li key={index}>
-                      {member.name}{" "}
-                      <span className="text-sm">({member.email})</span>
-                    </li>
-                  ))}
+                <ul className="flex flex-col gap-3">
+                  {project?.members?.map((member, index) => {
+                    const user = users.find((u) => u.email === member.email);
+                    const image =
+                      user?.image && user.image !== ""
+                        ? user.image
+                        : "/images/default.jpg";
+
+                    return (
+                      <li key={index} className="flex items-center gap-3">
+                        <img
+                          src={image}
+                          alt={member.name}
+                          className="w-8 h-8 rounded-full object-cover shadow-lg border-[1px] border-gray-300"
+                        />
+                        <span className="font-medium">{member.name}</span>
+                        <span className="text-sm text-muted-foreground">
+                          ({member.email})
+                        </span>
+                      </li>
+                    );
+                  })}
                 </ul>
               </div>
             </div>
