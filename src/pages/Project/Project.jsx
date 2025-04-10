@@ -43,20 +43,20 @@ const Project = () => {
   }
 
   return (
-    <div className=" mt-5 max-w-[90%] mx-auto">
-      <main className="container mx-auto px-5 lg:px-4 relative">
+    <div className=" mt-5 max-w-[95%] mx-auto">
+      <main className="container mx-auto  relative">
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
           transition={{ duration: 0.3 }}
         >
-          <div className="lg:flex lg:items-center lg:justify-between lg:gap-12">
-            <Card className="overflow-hidden transition-all border-0 duration-300 hover:shadow-xl shadow-xl h-full flex flex-col py-0 lg:w-1/2 relative">
+          <div className="lg:flex lg:items-center lg:justify-between lg:gap-12  bg-white/30 backdrop-blur-md border border-white/30 rounded-xl shadow-lg py-4 pl-8 pr-2">
+            <Card className="overflow-hidden transition-all border-0 duration-300 hover:shadow-xl shadow-xl h-full flex flex-col py-0 lg:w-1/2 relative ">
               <img src={project?.image} alt={project?.name} />
             </Card>
 
-            <div className="flex flex-col gap-4 mt-6 lg:w-1/2 lg:pl-6">
+            <div className="flex flex-col gap-4 lg:w-1/2  lg:mt-0 mt-4">
               <div className="flex items-center justify-between">
                 <div className="flex flex-col">
                   <h1 className="text-2xl font-bold">{project?.name}</h1>

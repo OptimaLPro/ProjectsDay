@@ -36,12 +36,12 @@ export default function Internships() {
             transition={{ delay: index * 0.1 }}
           >
             <Link to={`/internships/${internship._id}`}>
-              <Card className="p-6 shadow-lg hover:shadow-xl transition-all">
+              <Card className="p-6 shadow-xl hover:shadow-2xl backdrop-blur-md bg-white/40 border border-white/30 transition-all">
                 <h2 className="text-2xl font-semibold mb-2">
                   {internship.name}
                 </h2>
 
-                <div className="flex items-center gap-3 mb-4 transition">
+                <div className="flex items-center gap-3 mb-4">
                   <img
                     src={getInstructorImage(internship.instructor)}
                     alt={internship.instructor}
@@ -55,7 +55,7 @@ export default function Internships() {
                   </div>
                 </div>
 
-                <p className="text-sm text-gray-700 whitespace-pre-line">
+                <p className="text-sm text-gray-800 whitespace-pre-line text-justify leading-relaxed">
                   {internship.description}
                 </p>
               </Card>
