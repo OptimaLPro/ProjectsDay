@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -7,7 +8,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -15,16 +15,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useAuth } from "@/context/AuthContext";
+import { useInternships } from "@/hooks/useInternships";
+import { registerSchema } from "@/schemas/registerSchema.js";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
-import { useState } from "react";
-import { z } from "zod";
 import api from "../../api/api.js";
-import { useInternships } from "@/hooks/useInternships";
-import { useAuth } from "@/context/AuthContext";
-import { registerSchema } from "@/schemas/registerSchema.js";
 
 export default function Register() {
   const navigate = useNavigate();

@@ -63,9 +63,10 @@ export default function AuthUsers() {
     setDialogType(null);
   };
 
-  const filteredUsers = users.filter((user) =>
-    user.email.toLowerCase().includes(searchEmail.toLowerCase()) &&
-    user.internship.toLowerCase().includes(searchInternship.toLowerCase())
+  const filteredUsers = users.filter(
+    (user) =>
+      user.email.toLowerCase().includes(searchEmail.toLowerCase()) &&
+      user.internship.toLowerCase().includes(searchInternship.toLowerCase())
   );
 
   return (
@@ -86,6 +87,29 @@ export default function AuthUsers() {
           className="max-w-xs bg-white shadow-lg"
         />
       </div>
+
+      <div className="my-8 flex gap-4 justify-center items-center">
+        <Button onClick={() => setShowAddForm((prev) => !prev)}>
+          {showAddForm ? "Cancel" : "Add Single User"}
+        </Button>
+
+        <Button variant="outline" onClick={() => fileInputRef.current?.click()}>
+          Upload Users from Excel
+        </Button>
+        <input
+          type="file"
+          accept=".xlsx"
+          ref={fileInputRef}
+          onChange={handleExcelUpload}
+          className="hidden"
+        />
+      </div>
+
+      {showAddForm && (
+        <div className="my-8">
+          <AddUserForm onSuccess={fetchUsers} />
+        </div>
+      )}
 
       <table className="w-full border text-sm bg-white shadow-lg">
         <thead>
@@ -129,29 +153,6 @@ export default function AuthUsers() {
           ))}
         </tbody>
       </table>
-
-      <div className="mt-8 flex gap-4 justify-center items-center">
-        <Button onClick={() => setShowAddForm((prev) => !prev)}>
-          {showAddForm ? "Cancel" : "Add Single User"}
-        </Button>
-
-        <Button variant="outline" onClick={() => fileInputRef.current?.click()}>
-          Upload Users from Excel
-        </Button>
-        <input
-          type="file"
-          accept=".xlsx"
-          ref={fileInputRef}
-          onChange={handleExcelUpload}
-          className="hidden"
-        />
-      </div>
-
-      {showAddForm && (
-        <div className="mt-8">
-          <AddUserForm onSuccess={fetchUsers} />
-        </div>
-      )}
 
       {dialogType === "edit" && selectedUser && (
         <EditUserDialog

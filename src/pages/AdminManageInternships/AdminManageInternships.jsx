@@ -2,17 +2,10 @@ import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "@/api/api";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
 import Loader from "@/components/Loader/Loader";
 import Error from "@/components/Error/Error";
+import InternshipEditDialog from "./InternshipEditDialog";
+import DeleteInternshipDialog from "./DeleteInternshipDialog";
 
 const DEFAULT_YEARS = [2024, 2025, 2026];
 
@@ -21,6 +14,10 @@ export default function AdminManageInternships() {
   const [openDialog, setOpenDialog] = useState(false);
   const [editData, setEditData] = useState(null);
   const [selectedYears, setSelectedYears] = useState([]);
+  const [selectedInstructor, setSelectedInstructor] = useState("");
+
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [internshipToDelete, setInternshipToDelete] = useState(null);
 
   const {
     data: internships,
@@ -32,11 +29,11 @@ export default function AdminManageInternships() {
   });
 
   const mutation = useMutation({
-    mutationFn: (formData) => {
-      if (formData._id) {
-        return api.put(`/internships/${formData._id}`, formData);
+    mutationFn: ({ id, data }) => {
+      if (id) {
+        return api.put(`/internships/${id}`, data);
       } else {
-        return api.post("/internships", formData);
+        return api.post("/internships", data);
       }
     },
     onSuccess: () => {
@@ -44,18 +41,25 @@ export default function AdminManageInternships() {
       setOpenDialog(false);
       setEditData(null);
       setSelectedYears([]);
+      setSelectedInstructor("");
     },
   });
 
-  const handleSave = (e) => {
-    e.preventDefault();
-    const form = e.target;
-    const formData = {
-      name: form.name.value,
-      years: selectedYears,
-    };
-    if (editData?._id) formData._id = editData._id;
-    mutation.mutate(formData);
+  const handleSave = (data) => {
+    if (data._id) {
+      mutation.mutate({ id: data._id, data });
+    } else {
+      mutation.mutate({ data });
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await api.delete(`/internships/${id}`);
+      queryClient.invalidateQueries(["internships-all"]);
+    } catch (err) {
+      console.error("Failed to delete internship", err);
+    }
   };
 
   useEffect(() => {
@@ -63,6 +67,12 @@ export default function AdminManageInternships() {
       setSelectedYears(editData.years);
     } else {
       setSelectedYears([]);
+    }
+
+    if (editData?.instructor) {
+      setSelectedInstructor(editData.instructor);
+    } else {
+      setSelectedInstructor("");
     }
   }, [editData]);
 
@@ -89,6 +99,7 @@ export default function AdminManageInternships() {
         <thead className="bg-gray-100">
           <tr>
             <th className="border px-2 py-1">Name</th>
+            <th className="border px-2 py-1">Instructor</th>
             <th className="border px-2 py-1">Years</th>
             <th className="border px-2 py-1">Actions</th>
           </tr>
@@ -99,6 +110,7 @@ export default function AdminManageInternships() {
             .map((intern) => (
               <tr key={intern._id}>
                 <td className="border px-2 py-1">{intern.name}</td>
+                <td className="border px-2 py-1">{intern.instructor}</td>
                 <td className="border px-2 py-1">
                   {intern.years?.join(", ") || "—"}
                 </td>
@@ -112,56 +124,43 @@ export default function AdminManageInternships() {
                   >
                     Edit
                   </Button>
+                  <Button
+                    size="sm"
+                    variant="destructive"
+                    className="ml-2"
+                    onClick={() => {
+                      setInternshipToDelete(intern);
+                      setDeleteDialogOpen(true);
+                    }}
+                  >
+                    Delete
+                  </Button>
                 </td>
               </tr>
             ))}
         </tbody>
       </table>
 
-      <Dialog
+      <InternshipEditDialog
         open={openDialog}
-        onOpenChange={(open) => {
-          setOpenDialog(open);
-          if (!open) {
-            setEditData(null);
-            setSelectedYears([]);
-          }
-        }}
-      >
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>
-              {editData ? "Edit Internship" : "Add Internship"}
-            </DialogTitle>
-          </DialogHeader>
-          <form onSubmit={handleSave} className="flex flex-col gap-4">
-            <Input
-              name="name"
-              placeholder="Internship name"
-              defaultValue={editData?.name || ""}
-              required
-            />
+        onClose={() => setOpenDialog(false)}
+        onSave={handleSave}
+        editData={editData}
+        years={DEFAULT_YEARS}
+        selectedYears={selectedYears}
+        setSelectedYears={setSelectedYears}
+        selectedInstructor={selectedInstructor}
+        setSelectedInstructor={setSelectedInstructor}
+        mutation={mutation}
+      />
 
-            <div className="flex flex-col gap-2">
-              {DEFAULT_YEARS.map((year) => (
-                <label key={year} className="flex items-center gap-2">
-                  <Checkbox
-                    checked={selectedYears.includes(year)}
-                    onCheckedChange={() => toggleYear(year)}
-                  />
-                  {year}
-                </label>
-              ))}
-            </div>
-
-            <DialogFooter>
-              <Button type="submit" disabled={mutation.isPending}>
-                {mutation.isPending ? "Saving..." : "Save"}
-              </Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
+      <DeleteInternshipDialog
+        open={deleteDialogOpen}
+        onClose={() => setDeleteDialogOpen(false)}
+        instructor={internshipToDelete}
+        onConfirm={handleDelete}
+        entityName="Internship"
+      />
     </div>
   );
 }

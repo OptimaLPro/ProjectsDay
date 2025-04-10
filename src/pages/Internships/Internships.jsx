@@ -41,13 +41,7 @@ export default function Internships() {
                   {internship.name}
                 </h2>
 
-                <Link
-                  to={`/instructors/${
-                    instructors.find((i) => i.name === internship.instructor)
-                      ?._id
-                  }`}
-                  className="flex items-center gap-3 mb-4 hover:underline hover:text-primary transition"
-                >
+                <div className="flex items-center gap-3 mb-4 transition">
                   <img
                     src={getInstructorImage(internship.instructor)}
                     alt={internship.instructor}
@@ -59,7 +53,7 @@ export default function Internships() {
                     </p>
                     <p>{internship.instructor}</p>
                   </div>
-                </Link>
+                </div>
 
                 <p className="text-sm text-gray-700 whitespace-pre-line">
                   {internship.description}
