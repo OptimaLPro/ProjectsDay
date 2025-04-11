@@ -3,19 +3,12 @@ import api from "@/api/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import * as XLSX from "xlsx";
-import AddUserForm from "../AddUserForm/AddUserForm";
+import AddUserForm from "./AddUserForm";
 import EditUserDialog from "@/components/EditUserDialog/EditUserDialog";
 import DeleteUserDialog from "@/components/DeleteUserDialog/DeleteUserDialog";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import AdminManageUsersTable from "./AdminManageUsersTable";
 
-export default function AuthUsers() {
+export default function AdminManageUsers() {
   const [users, setUsers] = useState([]);
   const [showAddForm, setShowAddForm] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -119,65 +112,14 @@ export default function AuthUsers() {
         </div>
       )}
 
-      <div className="rounded-md bg-white border">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="text-center">Image</TableHead>
-              <TableHead>Email</TableHead>
-              <TableHead>Role</TableHead>
-              <TableHead>Internship</TableHead>
-              <TableHead>Year</TableHead>
-              <TableHead className="text-center">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {filteredUsers.map((user) => (
-              <TableRow key={user._id}>
-                <TableCell className="text-center">
-                  <img
-                    src={user.image || "/images/default.jpg"}
-                    alt={user.email}
-                    className="w-10 h-10 rounded-full object-cover mx-auto"
-                  />
-                </TableCell>
-                <TableCell>{user.email}</TableCell>
-                <TableCell>{user.role}</TableCell>
-                <TableCell>{user.internship}</TableCell>
-                <TableCell>{user.year}</TableCell>
-                <TableCell className="text-center">
-                  <Button size="sm" onClick={() => openEditDialog(user)}>
-                    Edit
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="destructive"
-                    className="ml-2"
-                    onClick={() => openDeleteDialog(user)}
-                  >
-                    Delete
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
+      <AdminManageUsersTable users={filteredUsers} onEdit={openEditDialog} onDelete={openDeleteDialog} />
 
       {dialogType === "edit" && selectedUser && (
-        <EditUserDialog
-          user={selectedUser}
-          onClose={closeDialog}
-          onSave={fetchUsers}
-        />
+        <EditUserDialog user={selectedUser} onClose={closeDialog} onSave={fetchUsers} />
       )}
 
       {dialogType === "delete" && selectedUser && (
-        <DeleteUserDialog
-          user={selectedUser}
-          onClose={closeDialog}
-          onDelete={fetchUsers}
-        />
+        <DeleteUserDialog user={selectedUser} onClose={closeDialog} onDelete={fetchUsers} />
       )}
     </div>
   );

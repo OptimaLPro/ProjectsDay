@@ -3,6 +3,7 @@ import Error from "@/components/Error/Error";
 import GenericFormField from "@/components/GenericFormField/GenericFormField";
 import Loader from "@/components/Loader/Loader";
 import { Button } from "@/components/ui/button";
+import EmailAutocomplete from "@/components/ui/EmailAutocomplete";
 import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
@@ -16,6 +17,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useInstructors } from "@/hooks/useInstructors";
 import { useInternships } from "@/hooks/useInternships";
 import { useMyProject } from "@/hooks/useMyProject";
+import { useUserEmails } from "@/hooks/useUserEmails";
 import { updateProjectSchema } from "@/schemas/updateProjectSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Delete, Save } from "lucide-react";
@@ -23,7 +25,7 @@ import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
 
-export function UpdateProject() {
+export function UserUpdateProject() {
   const [didReset, setDidReset] = useState(false);
   const navigate = useNavigate();
   const {
@@ -43,6 +45,8 @@ export function UpdateProject() {
     isLoading: instructorsLoading,
     isError: instructorsError,
   } = useInstructors();
+
+  const { data: userList = [] } = useUserEmails();
 
   const form = useForm({
     resolver: zodResolver(updateProjectSchema),
@@ -153,13 +157,25 @@ export function UpdateProject() {
       </h1>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          <GenericFormField name="name" control={form.control} label="Project Name">
+          <GenericFormField
+            name="name"
+            control={form.control}
+            label="Project Name"
+          >
             {(field) => (
-              <Input {...field} placeholder="Enter project name" className="bg-white shadow-xl" />
+              <Input
+                {...field}
+                placeholder="Enter project name"
+                className="bg-white shadow-xl"
+              />
             )}
           </GenericFormField>
 
-          <GenericFormField name="internship" control={form.control} label="Internship">
+          <GenericFormField
+            name="internship"
+            control={form.control}
+            label="Internship"
+          >
             {(field) => (
               <Select value={field.value} onValueChange={field.onChange}>
                 <SelectTrigger className="bg-white shadow-xl">
@@ -176,34 +192,68 @@ export function UpdateProject() {
             )}
           </GenericFormField>
 
-          <GenericFormField name="description" control={form.control} label="Description">
+          <GenericFormField
+            name="description"
+            control={form.control}
+            label="Description"
+          >
             {(field) => (
-              <Textarea {...field} placeholder="Description" className="bg-white shadow-xl" />
+              <Textarea
+                {...field}
+                placeholder="Description"
+                className="bg-white shadow-xl"
+              />
             )}
           </GenericFormField>
 
-          <GenericFormField name="short_description" control={form.control} label="Short Description">
+          <GenericFormField
+            name="short_description"
+            control={form.control}
+            label="Short Description"
+          >
             {(field) => (
-              <Textarea {...field} placeholder="Brief summary..." className="bg-white shadow-xl" />
+              <Textarea
+                {...field}
+                placeholder="Brief summary..."
+                className="bg-white shadow-xl"
+              />
             )}
           </GenericFormField>
 
-          <GenericFormField name="youtube" control={form.control} label="YouTube Link">
+          <GenericFormField
+            name="youtube"
+            control={form.control}
+            label="YouTube Link"
+          >
             {(field) => (
-              <Input {...field} placeholder="https://youtube.com/..." className="bg-white shadow-xl" />
+              <Input
+                {...field}
+                placeholder="https://youtube.com/..."
+                className="bg-white shadow-xl"
+              />
             )}
           </GenericFormField>
 
-          <GenericFormField name="gallery" control={form.control} label="Gallery (remove existing)">
+          <GenericFormField
+            name="gallery"
+            control={form.control}
+            label="Gallery (remove existing)"
+          >
             {(field) => (
               <div className="flex flex-wrap gap-4">
                 {field.value?.map((url, index) => (
                   <div key={index} className="relative w-32 h-20">
-                    <img src={url} alt={`gallery-${index}`} className="w-full h-full object-cover rounded shadow" />
+                    <img
+                      src={url}
+                      alt={`gallery-${index}`}
+                      className="w-full h-full object-cover rounded shadow"
+                    />
                     <button
                       type="button"
                       onClick={() => {
-                        const updated = field.value.filter((_, i) => i !== index);
+                        const updated = field.value.filter(
+                          (_, i) => i !== index
+                        );
                         field.onChange(updated);
                       }}
                       className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs"
@@ -216,7 +266,11 @@ export function UpdateProject() {
             )}
           </GenericFormField>
 
-          <GenericFormField name="newGallery" control={form.control} label="Add New Gallery Images">
+          <GenericFormField
+            name="newGallery"
+            control={form.control}
+            label="Add New Gallery Images"
+          >
             {(field) => (
               <Input
                 type="file"
@@ -228,9 +282,16 @@ export function UpdateProject() {
             )}
           </GenericFormField>
 
-          <GenericFormField name="instructor" control={form.control} label="Instructor">
+          <GenericFormField
+            name="instructor"
+            control={form.control}
+            label="Instructor"
+          >
             {(field) => (
-              <Select onValueChange={field.onChange} value={field.value || undefined}>
+              <Select
+                onValueChange={field.onChange}
+                value={field.value || undefined}
+              >
                 <SelectTrigger className="bg-white shadow-xl">
                   <SelectValue placeholder="Select instructor" />
                 </SelectTrigger>
@@ -246,10 +307,21 @@ export function UpdateProject() {
           </GenericFormField>
 
           <GenericFormField name="year" control={form.control} label="Year">
-            {(field) => <Input {...field} type="number" disabled className="bg-white shadow-xl" />}
+            {(field) => (
+              <Input
+                {...field}
+                type="number"
+                disabled
+                className="bg-white shadow-xl"
+              />
+            )}
           </GenericFormField>
 
-          <GenericFormField name="image" control={form.control} label="Change Image (Optional)">
+          <GenericFormField
+            name="image"
+            control={form.control}
+            label="Change Image (Optional)"
+          >
             {(field) => (
               <Input
                 type="file"
@@ -264,22 +336,31 @@ export function UpdateProject() {
             <h2 className="text-xl font-semibold mb-2">Team Members</h2>
             {fields.map((item, index) => (
               <div key={item.id} className="mb-4 space-y-2 border p-4 rounded">
-                <GenericFormField name={`members.${index}.name`} control={form.control} label="Member Name">
+                <GenericFormField
+                  name={`members.${index}`}
+                  control={form.control}
+                  label="Member Email"
+                >
                   {(field) => (
-                    <Input {...field} placeholder="Name" className="bg-white shadow-xl" />
+                    <EmailAutocomplete
+                      users={userList}
+                      value={field.value}
+                      onChange={field.onChange}
+                    />
                   )}
                 </GenericFormField>
-                <GenericFormField name={`members.${index}.email`} control={form.control} label="Member Email">
-                  {(field) => (
-                    <Input {...field} placeholder="Email" className="bg-white shadow-xl" />
-                  )}
-                </GenericFormField>
-                <Button variant="destructive" onClick={() => remove(index)}>
+                <Button
+                  variant="destructive"
+                  type="button"
+                  onClick={() => remove(index)}
+                >
                   <Delete className="w-4 h-4" /> Remove
                 </Button>
               </div>
             ))}
-            <Button onClick={() => append({ name: "", email: "" })}>Add Member</Button>
+            <Button type="button" onClick={() => append("")}>
+              Add Member
+            </Button>
           </div>
 
           <div className="flex justify-center mt-8">
@@ -293,4 +374,4 @@ export function UpdateProject() {
   );
 }
 
-export default UpdateProject;
+export default UserUpdateProject;

@@ -10,23 +10,39 @@ const StudentDashboard = ({ hasProject, onLogout }) => {
           <h1 className="text-2xl font-bold text-center">Student Dashboard</h1>
           <div className="flex gap-3 flex-col justify-center items-center mt-12">
             {!hasProject ? (
-              <Link to="/dashboard/add-project">
-                <Button className="gap-2">
-                  <Plus className="h-4 w-4" />
-                  Add Project
-                </Button>
-              </Link>
+              <>
+                <Link to="/dashboard/add-project">
+                  <Button className="gap-2">
+                    <Plus className="h-4 w-4" />
+                    Add Project
+                  </Button>
+                </Link>
+                <Link to="/dashboard/assign-project">
+                  <Button className="gap-2">
+                    <Plus className="h-4 w-4" />
+                    Assign Project
+                  </Button>
+                </Link>
+              </>
             ) : (
-              <Link to="/dashboard/update-project">
-                <Button className="gap-2">
-                  <Edit className="h-4 w-4" />
-                  <div>Update Project</div>
-                </Button>
-              </Link>
+              <>
+                <Link to="/dashboard/update-project">
+                  <Button className="gap-2">
+                    <Edit className="h-4 w-4" />
+                    Update Project
+                  </Button>
+                </Link>
+                <Link to="/dashboard/unassign-project">
+                  <Button variant="destructive" className="gap-2">
+                    <Edit className="h-4 w-4" />
+                    Unassign Project
+                  </Button>
+                </Link>
+              </>
             )}
             <Button variant="outline" className="gap-2" onClick={onLogout}>
               <LogOut className="h-4 w-4" />
-              <div>Logout</div>
+              Logout
             </Button>
           </div>
         </div>

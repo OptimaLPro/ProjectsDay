@@ -1,19 +1,12 @@
-import { useState, useEffect } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "@/api/api";
-import { Button } from "@/components/ui/button";
-import Loader from "@/components/Loader/Loader";
 import Error from "@/components/Error/Error";
-import InternshipEditDialog from "./InternshipEditDialog";
+import Loader from "@/components/Loader/Loader";
+import { Button } from "@/components/ui/button";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
+import AdminInternshipsTable from "./AdminInternshipsTable";
 import DeleteInternshipDialog from "./DeleteInternshipDialog";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import InternshipEditDialog from "./InternshipEditDialog";
 
 const DEFAULT_YEARS = [2024, 2025, 2026];
 
@@ -27,11 +20,7 @@ export default function AdminManageInternships() {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [internshipToDelete, setInternshipToDelete] = useState(null);
 
-  const {
-    data: internships,
-    isLoading,
-    isError,
-  } = useQuery({
+  const { data: internships, isLoading, isError } = useQuery({
     queryKey: ["internships-all"],
     queryFn: () => api.get("/internships").then((res) => res.data),
   });
@@ -84,12 +73,6 @@ export default function AdminManageInternships() {
     }
   }, [editData]);
 
-  const toggleYear = (year) => {
-    setSelectedYears((prev) =>
-      prev.includes(year) ? prev.filter((y) => y !== year) : [...prev, year]
-    );
-  };
-
   if (isLoading) return <Loader />;
   if (isError) return <Error />;
 
@@ -103,51 +86,17 @@ export default function AdminManageInternships() {
         Add Internship
       </Button>
 
-      <div className="rounded-md bg-white border">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Instructor</TableHead>
-              <TableHead>Years</TableHead>
-              <TableHead className="text-center">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {internships
-              .filter((intern) => intern.name !== "All")
-              .map((intern) => (
-                <TableRow key={intern._id}>
-                  <TableCell>{intern.name}</TableCell>
-                  <TableCell>{intern.instructor}</TableCell>
-                  <TableCell>{intern.years?.join(", ") || "—"}</TableCell>
-                  <TableCell className="text-center">
-                    <Button
-                      size="sm"
-                      onClick={() => {
-                        setEditData(intern);
-                        setOpenDialog(true);
-                      }}
-                    >
-                      Edit
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="destructive"
-                      className="ml-2"
-                      onClick={() => {
-                        setInternshipToDelete(intern);
-                        setDeleteDialogOpen(true);
-                      }}
-                    >
-                      Delete
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-          </TableBody>
-        </Table>
-      </div>
+      <AdminInternshipsTable
+        internships={internships}
+        onEdit={(intern) => {
+          setEditData(intern);
+          setOpenDialog(true);
+        }}
+        onDelete={(intern) => {
+          setInternshipToDelete(intern);
+          setDeleteDialogOpen(true);
+        }}
+      />
 
       <InternshipEditDialog
         open={openDialog}

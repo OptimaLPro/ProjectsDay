@@ -10,6 +10,5 @@ export const useMyProject = () => {
     queryFn: checkMyProject,
     enabled: !!user,
     refetchOnWindowFocus: false,
-    staleTime: 1000 * 60 * 60,
   });
 };

@@ -13,7 +13,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "
 import Loader from "@/components/Loader/Loader";
 import Error from "@/components/Error/Error";
 
-export default function ChangeYearbook() {
+export default function AdminChangeYearbook() {
   const queryClient = useQueryClient();
   const [selectedYearbookId, setSelectedYearbookId] = useState("");
   const [showDialog, setShowDialog] = useState(false);

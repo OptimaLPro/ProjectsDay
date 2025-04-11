@@ -10,7 +10,6 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem("token"));
   const [isLoadingUser, setIsLoadingUser] = useState(true);
 
-  // 🎓 Yearbook
   const [year, setYear] = useState(null);
   const [isLoadingYear, setIsLoadingYear] = useState(true);
 
@@ -18,7 +17,7 @@ export const AuthProvider = ({ children }) => {
     if (token) {
       try {
         const decoded = jwtDecode(token);
-        setUser({ email: decoded.email, id: decoded.id, role: decoded.role });
+        setUser(decoded);
       } catch (err) {
         console.error("Invalid token");
         setToken(null);
@@ -67,9 +66,9 @@ export const AuthProvider = ({ children }) => {
         logout,
         isLoadingUser,
         getRole,
-        year,          
-        setYear,       
-        isLoadingYear, 
+        year,
+        setYear,
+        isLoadingYear,
       }}
     >
       {children}

@@ -21,7 +21,7 @@ import GenericFormField from "@/components/GenericFormField/GenericFormField";
 import { useNavigate } from "react-router";
 import api from "@/api/api";
 
-export function AddProject() {
+export function UserAddProject() {
   const navigate = useNavigate();
   const {
     data: internshipsData,
@@ -256,4 +256,4 @@ export function AddProject() {
   );
 }
 
-export default AddProject;
+export default UserAddProject;

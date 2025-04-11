@@ -1,18 +1,11 @@
-import { useState } from "react";
-import { useQueryClient, useMutation } from "@tanstack/react-query";
 import api from "@/api/api";
-import { useAwards } from "@/hooks/useAwards";
-import Loader from "@/components/Loader/Loader";
 import Error from "@/components/Error/Error";
+import Loader from "@/components/Loader/Loader";
 import { Button } from "@/components/ui/button";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { useAwards } from "@/hooks/useAwards";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import AdminAwardTable from "./AdminAwardTable";
 import AwardEditDialog from "./AwardEditDialog";
 import DeleteAwardDialog from "./DeleteAwardDialog";
 
@@ -74,57 +67,17 @@ export default function AdminManageAwards() {
         Add Award
       </Button>
 
-      <div className="rounded-md bg-white border">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Image</TableHead>
-              <TableHead>Name</TableHead>
-              <TableHead>Description</TableHead>
-              <TableHead className="text-center">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {awards.map((award) => (
-              <TableRow key={award._id}>
-                <TableCell>
-                  <img
-                    src={award.image}
-                    alt={award.name}
-                    className="w-12 h-12 object-cover rounded-full border"
-                  />
-                </TableCell>
-                <TableCell>{award.name}</TableCell>
-                <TableCell className="max-w-[250px] truncate">
-                  {award.description}
-                </TableCell>
-                <TableCell className="text-center">
-                  <Button
-                    size="sm"
-                    onClick={() => {
-                      setEditData(award);
-                      setOpenDialog(true);
-                    }}
-                  >
-                    Edit
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="destructive"
-                    className="ml-2"
-                    onClick={() => {
-                      setAwardToDelete(award);
-                      setDeleteDialogOpen(true);
-                    }}
-                  >
-                    Delete
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
+      <AdminAwardTable
+        awards={awards}
+        onEdit={(award) => {
+          setEditData(award);
+          setOpenDialog(true);
+        }}
+        onDelete={(award) => {
+          setAwardToDelete(award);
+          setDeleteDialogOpen(true);
+        }}
+      />
 
       <AwardEditDialog
         open={openDialog}
