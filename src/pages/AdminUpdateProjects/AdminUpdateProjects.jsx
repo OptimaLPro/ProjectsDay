@@ -89,7 +89,7 @@ export default function AdminUpdateProjects() {
         />
       </div>
 
-      <div className="rounded-md border">
+      <div className="rounded-md bg-white border">
         <Table>
           <TableHeader>
             <TableRow>

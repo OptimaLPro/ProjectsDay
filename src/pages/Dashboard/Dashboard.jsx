@@ -35,7 +35,7 @@ const Dashboard = () => {
     return <StudentDashboard hasProject={data?.exists} onLogout={handleLogout} />;
 
   return (
-    <div className="text-center mt-16 text-muted-foreground">
+    <div className="relative text-center mt-16 text-muted-foreground">
       Unauthorized role
     </div>
   );

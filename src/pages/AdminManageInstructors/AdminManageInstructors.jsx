@@ -120,7 +120,7 @@ export default function AdminManageInstructors() {
       >
         Add Instructor
       </Button>
-      <div className="rounded-md border mt-4">
+      <div className="rounded-md border bg-white mt-4">
         <Table>
           <TableHeader>
             <TableRow>

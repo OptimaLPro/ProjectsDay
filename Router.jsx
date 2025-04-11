@@ -18,6 +18,7 @@ import AdminManageInstructors from "@/pages/AdminManageInstructors/AdminManageIn
 import InstructorProfile from "@/pages/Instructors/InstructorProfile";
 import Internships from "@/pages/Internships/Internships";
 import InternshipProfile from "@/pages/Internships/InternshipProfile";
+import AdminManageAwards from "@/pages/AdminManageAwards/AdminManageAwards";
 
 const Router = () => {
   useEffect(() => {
@@ -64,6 +65,10 @@ const Router = () => {
           <Route
             path="/dashboard/manage-instructors"
             element={<AdminManageInstructors />}
+          />
+          <Route
+            path="/dashboard/manage-awards"
+            element={<AdminManageAwards />}
           />
         </Route>
 

@@ -103,7 +103,7 @@ export default function AdminManageInternships() {
         Add Internship
       </Button>
 
-      <div className="rounded-md border">
+      <div className="rounded-md bg-white border">
         <Table>
           <TableHeader>
             <TableRow>
