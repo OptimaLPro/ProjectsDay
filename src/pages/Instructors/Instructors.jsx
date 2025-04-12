@@ -17,7 +17,6 @@ const Instructors = () => {
   if (isLoading || internshipsLoading || isLoadingYear) return <Loader />;
   if (isError) return <Error />;
 
-  console.log(instructorsData);
   const grouped = {};
 
   for (const instructor of instructorsData) {
@@ -73,7 +72,7 @@ const Instructors = () => {
                     <img
                       src={instructor.image || "/images/default.jpg"}
                       alt={instructor.name}
-                      className="h-48 w-48 object-cover rounded-full shadow-xl border border-white/30"
+                      className="lg:h-48 lg:w-48 w-[140px] h-[140px] object-cover rounded-full shadow-xl border border-white/30"
                     />
                     <div className="text-center mt-2 font-semibold text-lg flex items-center justify-center">
                       {instructor.name}
