@@ -22,6 +22,7 @@ import { useMyProject } from "@/hooks/useMyProject";
 import { useAuth } from "@/context/AuthContext";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
+import ToastMessage from "@/components/ui/ToastMessage";
 
 export default function StudentAssignProject() {
   const { user } = useAuth();
@@ -60,16 +61,13 @@ export default function StudentAssignProject() {
       queryClient.invalidateQueries(["myProject"]);
       queryClient.invalidateQueries(["available-projects"]);
       navigate("/dashboard");
-      toast("Project assigned successfully", {
-        description: "You've been assigned to a project.",
-        duration: 5000,
+      ToastMessage({
+        type: "success",
+        message: "You've been assigned to a project.",
       });
     },
     onError: () => {
-      toast("Assignment failed", {
-        description: "Please try again.",
-        duration: 5000,
-      });
+      ToastMessage({ type: "error", message: "Please try again later." });
     },
   });
 

@@ -14,6 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import ToastMessage from "@/components/ui/ToastMessage";
 import { useInstructors } from "@/hooks/useInstructors";
 import { useInternships } from "@/hooks/useInternships";
 import { useMyProject } from "@/hooks/useMyProject";
@@ -89,8 +90,8 @@ export function UserUpdateProject() {
         members,
       } = projectData.project;
 
-      const internshipObj = internshipsData.find((i) => i.name === internship);
-      const instructorObj = instructorsData.find((i) => i.name === instructor);
+      const internshipObj = internshipsData.find((i) => i._id === internship);
+      const instructorObj = instructorsData.find((i) => i._id === instructor);
 
       form.reset({
         name,
@@ -139,8 +140,16 @@ export function UserUpdateProject() {
         formData
       );
       navigate("/dashboard");
+      ToastMessage({
+        type: "success",
+        message: "Project updated successfully.",
+      });
     } catch (error) {
       console.error("Failed to update project:", error);
+      ToastMessage({
+        type: "error",
+        message: "Failed to update project. Please try again.",
+      });
     }
   };
 
@@ -338,7 +347,10 @@ export function UserUpdateProject() {
           <div>
             <h2 className="text-xl font-semibold mb-2">Team Members</h2>
             {fields.map((item, index) => (
-              <div key={item.id} className="mb-4 space-y-2 border p-4 rounded">
+              <div
+                key={item.id}
+                className="mb-4 space-y-2 border p-4 rounded bg-white"
+              >
                 <GenericFormField
                   name={`members.${index}`}
                   control={form.control}
@@ -357,7 +369,7 @@ export function UserUpdateProject() {
                   type="button"
                   onClick={() => remove(index)}
                 >
-                  <Delete className="w-4 h-4" /> Remove
+                  <Delete className="w-4 h-4" /> Delete Member
                 </Button>
               </div>
             ))}

@@ -5,6 +5,7 @@ import Loader from "@/components/Loader/Loader";
 import Error from "@/components/Error/Error";
 import BackButton from "@/components/ui/BackButton";
 import { Card } from "@/components/ui/card";
+import { motion } from "framer-motion";
 
 export default function InternshipProfile() {
   const { id } = useParams();
@@ -25,32 +26,39 @@ export default function InternshipProfile() {
 
   return (
     <main className="max-w-3xl mx-auto mt-12 px-6 relative">
-      <Card className="backdrop-blur-md bg-white/40 border border-white/30 shadow-xl p-6">
-        <h1 className="text-4xl font-bold text-center mb-6">
-          {internship.name}
-        </h1>
-        <div className="flex items-center gap-4 mb-8 justify-center">
-          <img
-            src={instructorImage}
-            alt={instructor?.name || "Instructor"}
-            className="w-14 h-14 object-cover rounded-full border shadow"
-          />
-          <div className="text-left">
-            <p className="text-sm text-muted-foreground mb-1">Head Instructor</p>
-            <Link
-              to={`/instructors/${instructor?._id}`}
-              className="text-primary font-medium hover:underline"
-            >
-              {instructor?.name || "Unknown"}
-            </Link>
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+      >
+        <Card className="backdrop-blur-md bg-white/40 border border-white/30 shadow-xl p-6">
+          <h1 className="text-4xl font-bold text-center mb-6">
+            {internship.name}
+          </h1>
+          <div className="flex items-center gap-4 mb-8 justify-center">
+            <img
+              src={instructorImage}
+              alt={instructor?.name || "Instructor"}
+              className="w-14 h-14 object-cover rounded-full border shadow"
+            />
+            <div className="text-left">
+              <p className="text-sm text-muted-foreground mb-1">
+                Head Instructor
+              </p>
+              <Link
+                to={`/instructors/${instructor?._id}`}
+                className="text-primary font-medium hover:underline"
+              >
+                {instructor?.name || "Unknown"}
+              </Link>
+            </div>
           </div>
-        </div>
 
-        <p className="text-gray-800 whitespace-pre-line text-justify leading-relaxed">
-          {internship.description}
-        </p>
-      </Card>
-
+          <p className="text-gray-800 whitespace-pre-line text-justify leading-relaxed">
+            {internship.description}
+          </p>
+        </Card>
+      </motion.div>
       <div className="mt-4">
         <BackButton />
       </div>

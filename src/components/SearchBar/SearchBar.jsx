@@ -30,7 +30,10 @@ const SearchBar = ({
         />
         <X
           className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 h-6 w-6 opacity-70 hover:opacity-100 transition-all duration-200"
-          onClick={() => setSearchQuery("")}
+          onClick={() => {
+            setSearchQuery("");
+            setActiveInternship("All");
+          }}
           style={{ cursor: "pointer" }}
         />
       </div>

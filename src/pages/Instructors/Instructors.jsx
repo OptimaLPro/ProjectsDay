@@ -6,6 +6,7 @@ import { useInternships } from "@/hooks/useInternships";
 import { Separator } from "@/components/ui/separator";
 import { Link } from "react-router";
 import { motion } from "framer-motion";
+import { Card } from "@/components/ui/card";
 
 const Instructors = () => {
   const { year, isLoadingYear } = useAuth();
@@ -66,16 +67,18 @@ const Instructors = () => {
               >
                 <Link
                   to={`/instructors/${instructor._id}`}
-                  className="cursor-pointer flex flex-col lg:items-center"
+                  className="cursor-pointer flex flex-col lg:items-center hover:scale-105 transition-transform duration-300"
                 >
-                  <img
-                    src={instructor.image || "/images/default.jpg"}
-                    alt={instructor.name}
-                    className="h-48 w-48 object-cover rounded-lg shadow-md"
-                  />
-                  <div className="text-center mt-2 font-semibold text-lg flex items-center justify-center">
-                    {instructor.name}
-                  </div>
+                  <Card className="p-6 shadow-xl hover:shadow-2xl backdrop-blur-md bg-white/40 border border-white/30 transition-all">
+                    <img
+                      src={instructor.image || "/images/default.jpg"}
+                      alt={instructor.name}
+                      className="h-48 w-48 object-cover rounded-full shadow-xl border border-white/30"
+                    />
+                    <div className="text-center mt-2 font-semibold text-lg flex items-center justify-center">
+                      {instructor.name}
+                    </div>
+                  </Card>
                 </Link>
               </motion.div>
             ))}

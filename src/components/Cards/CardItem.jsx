@@ -16,7 +16,7 @@ const CardItem = ({ project }) => {
 
   return (
     <Link to={`/projects/${project._id}`} className="group">
-      <Card className="overflow-hidden transition-all duration-300 hover:shadow-lg h-full flex flex-col py-0 gap-0">
+      <Card className="overflow-hidden transition-all duration-300 hover:shadow-lg h-full flex flex-col py-0 gap-0 ">
         <div className="relative aspect-video overflow-hidden">
           <img
             src={project.image || "/placeholder.svg"}
@@ -28,7 +28,7 @@ const CardItem = ({ project }) => {
             <ChevronRight className="h-4 w-4" />
           </div>
         </div>
-
+        
         <CardContent className="flex-grow pt-4 ">
           <div className="flex justify-between items-center">
             <div className="flex flex-col">
@@ -41,8 +41,8 @@ const CardItem = ({ project }) => {
           </div>
 
           <p className="text-muted-foreground mt-2 text-sm">
-            {project.short_description?.length > 150
-              ? `${project.short_description.slice(0, 150)}...`
+            {project.short_description?.length > 199
+              ? `${project.short_description.slice(0, 199)}...`
               : project.short_description}
           </p>
         </CardContent>

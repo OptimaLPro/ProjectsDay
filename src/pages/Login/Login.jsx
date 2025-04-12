@@ -8,19 +8,16 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useAuth } from "@/context/AuthContext";
+import { loginScheme } from "@/schemas/loginSchema.js";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
 import api from "../../api/api.js";
-import { useAuth } from "@/context/AuthContext";
-import { loginScheme } from "@/schemas/loginSchema.js";
 const DEFAULT_USERNAME = import.meta.env.VITE_DEFAULT_USERNAME;
 const DEFAULT_PASSWORD = import.meta.env.VITE_DEFAULT_PASSWORD;
-
-
-
 
 export function Login() {
   const navigate = useNavigate();

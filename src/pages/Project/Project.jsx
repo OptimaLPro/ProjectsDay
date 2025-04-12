@@ -98,7 +98,7 @@ const Project = () => {
               </div>
 
               <div>
-                <h2 className="font-semibold">Members:</h2>
+                <h2 className="font-semibold mb-2">Members:</h2>
                 <ul className="flex flex-col gap-3">
                   {projectMembers.map((user) => {
                     const image =

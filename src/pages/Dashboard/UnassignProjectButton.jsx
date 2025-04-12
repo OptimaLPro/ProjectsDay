@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { Edit } from "lucide-react";
 import { unassignMyself } from "@/api/projects";
+import ToastMessage from "@/components/ui/ToastMessage";
 
 export default function UnassignProjectButton() {
   const [open, setOpen] = useState(false);
@@ -20,10 +21,18 @@ export default function UnassignProjectButton() {
     onSuccess: () => {
       queryClient.invalidateQueries(["myProject"]);
       setOpen(false);
+      ToastMessage({
+        type: "success",
+        message: "You have been unassigned from the project.",
+      });
     },
     onError: () => {
       alert("Failed to unassign from the project.");
       setOpen(false);
+      ToastMessage({
+        type: "error",
+        message: "Failed to unassign from the project.",
+      });
     },
   });
 
@@ -33,7 +42,11 @@ export default function UnassignProjectButton() {
 
   return (
     <>
-      <Button variant="destructive" className="gap-2" onClick={() => setOpen(true)}>
+      <Button
+        variant="destructive"
+        className="gap-2"
+        onClick={() => setOpen(true)}
+      >
         <Edit className="h-4 w-4" />
         Unassign Project
       </Button>
@@ -44,8 +57,8 @@ export default function UnassignProjectButton() {
             <DialogTitle>Are you sure?</DialogTitle>
           </DialogHeader>
           <p>
-            You are about to unassign yourself from this project.
-            This action cannot be undone.
+            You are about to unassign yourself from this project. This action
+            cannot be undone.
           </p>
           <DialogFooter className="mt-4">
             <Button variant="secondary" onClick={() => setOpen(false)}>
