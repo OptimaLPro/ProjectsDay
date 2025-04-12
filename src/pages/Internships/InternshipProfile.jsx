@@ -17,7 +17,7 @@ export default function InternshipProfile() {
   const internship = internships.find((i) => i._id === id);
   if (!internship) return <Error message="Internship not found" />;
 
-  const instructor = instructors.find((i) => i.name === internship.instructor);
+  const instructor = instructors.find((i) => i._id === internship.instructor);
   const instructorImage =
     instructor?.image && instructor.image !== ""
       ? instructor.image
@@ -32,16 +32,16 @@ export default function InternshipProfile() {
         <div className="flex items-center gap-4 mb-8 justify-center">
           <img
             src={instructorImage}
-            alt={internship.instructor}
+            alt={instructor?.name || "Instructor"}
             className="w-14 h-14 object-cover rounded-full border shadow"
           />
           <div className="text-left">
-            <p className="text-sm text-muted-foreground mb-1">Instructor</p>
+            <p className="text-sm text-muted-foreground mb-1">Head Instructor</p>
             <Link
               to={`/instructors/${instructor?._id}`}
               className="text-primary font-medium hover:underline"
             >
-              {internship.instructor}
+              {instructor?.name || "Unknown"}
             </Link>
           </div>
         </div>

@@ -7,6 +7,7 @@ import AddUserForm from "./AddUserForm";
 import EditUserDialog from "@/components/EditUserDialog/EditUserDialog";
 import DeleteUserDialog from "@/components/DeleteUserDialog/DeleteUserDialog";
 import AdminManageUsersTable from "./AdminManageUsersTable";
+import { useInternships } from "@/hooks/useInternships";
 
 export default function AdminManageUsers() {
   const [users, setUsers] = useState([]);
@@ -16,6 +17,8 @@ export default function AdminManageUsers() {
   const [searchEmail, setSearchEmail] = useState("");
   const [searchInternship, setSearchInternship] = useState("");
   const fileInputRef = useRef(null);
+
+  const { data: internships = [] } = useInternships();
 
   const fetchUsers = async () => {
     const res = await api.get("/auth/users");
@@ -64,11 +67,14 @@ export default function AdminManageUsers() {
     setDialogType(null);
   };
 
-  const filteredUsers = users.filter(
-    (user) =>
+  const filteredUsers = users.filter((user) => {
+    const internshipName =
+      internships.find((i) => i._id === user.internship)?.name || "";
+    return (
       user.email.toLowerCase().includes(searchEmail.toLowerCase()) &&
-      user.internship.toLowerCase().includes(searchInternship.toLowerCase())
-  );
+      internshipName.toLowerCase().includes(searchInternship.toLowerCase())
+    );
+  });
 
   return (
     <div className="relative max-w-6xl mx-auto mt-10">
@@ -112,14 +118,27 @@ export default function AdminManageUsers() {
         </div>
       )}
 
-      <AdminManageUsersTable users={filteredUsers} onEdit={openEditDialog} onDelete={openDeleteDialog} />
+      <AdminManageUsersTable
+        users={filteredUsers}
+        internships={internships}
+        onEdit={openEditDialog}
+        onDelete={openDeleteDialog}
+      />
 
       {dialogType === "edit" && selectedUser && (
-        <EditUserDialog user={selectedUser} onClose={closeDialog} onSave={fetchUsers} />
+        <EditUserDialog
+          user={selectedUser}
+          onClose={closeDialog}
+          onSave={fetchUsers}
+        />
       )}
 
       {dialogType === "delete" && selectedUser && (
-        <DeleteUserDialog user={selectedUser} onClose={closeDialog} onDelete={fetchUsers} />
+        <DeleteUserDialog
+          user={selectedUser}
+          onClose={closeDialog}
+          onDelete={fetchUsers}
+        />
       )}
     </div>
   );

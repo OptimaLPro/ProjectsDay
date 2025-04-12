@@ -13,6 +13,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { useInstructors } from "@/hooks/useInstructors";
 import { useInternships } from "@/hooks/useInternships";
+import { useAuth } from "@/context/AuthContext";
 import { addProjectSchema } from "@/schemas/addProjectSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Delete, Plus } from "lucide-react";
@@ -23,6 +24,8 @@ import api from "@/api/api";
 
 export function UserAddProject() {
   const navigate = useNavigate();
+  const { user } = useAuth();
+
   const {
     data: internshipsData,
     isLoading: internshipsLoading,
@@ -39,7 +42,7 @@ export function UserAddProject() {
     resolver: zodResolver(addProjectSchema),
     defaultValues: {
       name: "",
-      internship: "",
+      internship: user?.internship || "",
       description: "",
       instructor: "",
       year: new Date().getFullYear(),
@@ -66,18 +69,8 @@ export function UserAddProject() {
     formData.append("members", JSON.stringify(values.members));
 
     try {
-      const response = await api.get("/projects/create", {
-        method: "POST",
-        body: formData,
-      });
-
-      if (!response.ok) {
-        throw new Error("Error creating project");
-      }
-
-      const data = await response.json();
-      console.log("Project created successfully:", data);
-      navigate("/");
+      const response = await api.post("/projects/create", formData);
+      navigate("/dashboard");
     } catch (error) {
       console.error("Failed to create project:", error);
     }
@@ -109,13 +102,18 @@ export function UserAddProject() {
               />
             )}
           </GenericFormField>
+
           <GenericFormField
             name="internship"
             control={form.control}
             label="Internship"
           >
             {(field) => (
-              <Select value={field.value} onValueChange={field.onChange}>
+              <Select
+                value={field.value}
+                onValueChange={field.onChange}
+                disabled
+              >
                 <SelectTrigger className="bg-white shadow-xl focus:ring-primary">
                   <SelectValue placeholder="Select internship" />
                 </SelectTrigger>
@@ -129,6 +127,7 @@ export function UserAddProject() {
               </Select>
             )}
           </GenericFormField>
+
           <GenericFormField
             name="description"
             control={form.control}
@@ -142,6 +141,7 @@ export function UserAddProject() {
               />
             )}
           </GenericFormField>
+
           <GenericFormField
             name="instructor"
             control={form.control}
@@ -162,6 +162,7 @@ export function UserAddProject() {
               </Select>
             )}
           </GenericFormField>
+
           <GenericFormField name="year" control={form.control} label="Year">
             {(field) => (
               <Input
@@ -173,6 +174,7 @@ export function UserAddProject() {
               />
             )}
           </GenericFormField>
+
           <GenericFormField
             name="image"
             control={form.control}
@@ -187,6 +189,7 @@ export function UserAddProject() {
               />
             )}
           </GenericFormField>
+
           <div>
             <h2 className="text-xl font-semibold mb-2">Team Members</h2>
             {fields.map((item, index) => (
@@ -204,6 +207,7 @@ export function UserAddProject() {
                     />
                   )}
                 </GenericFormField>
+
                 <GenericFormField
                   name={`members.${index}.email`}
                   control={form.control}
@@ -218,6 +222,7 @@ export function UserAddProject() {
                     />
                   )}
                 </GenericFormField>
+
                 <Button
                   variant="destructive"
                   className="mt-4"
@@ -238,13 +243,13 @@ export function UserAddProject() {
                 </div>
               </Button>
             </div>
-            {/* Display error if members array is empty */}
             {form.formState.errors.members && (
               <p className="mt-2 text-sm text-red-600">
                 {form.formState.errors.members.message}
               </p>
             )}
           </div>
+
           <div className="flex items-center justify-center mt-12">
             <Button type="submit" className="text-lg shadow-lg">
               Submit

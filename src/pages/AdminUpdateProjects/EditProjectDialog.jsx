@@ -1,13 +1,15 @@
+import api from "@/api/api";
+import GenericFormField from "@/components/GenericFormField/GenericFormField";
+import Loader from "@/components/Loader/Loader";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Form } from "@/components/ui/form";
-import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -15,22 +17,22 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Delete, Save } from "lucide-react";
-import { useEffect, useState } from "react";
-import { useForm, useFieldArray } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { updateProjectSchema } from "@/schemas/updateProjectSchema";
-import { useInternships } from "@/hooks/useInternships";
+import { Textarea } from "@/components/ui/textarea";
 import { useInstructors } from "@/hooks/useInstructors";
-import api from "@/api/api";
-import Loader from "@/components/Loader/Loader";
-import GenericFormField from "@/components/GenericFormField/GenericFormField";
-import { useAuth } from "@/context/AuthContext";
+import { useInternships } from "@/hooks/useInternships";
+import { updateProjectSchema } from "@/schemas/updateProjectSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Delete, Save } from "lucide-react";
+import { useEffect } from "react";
+import { useFieldArray, useForm } from "react-hook-form";
+// ... כל הייבואים נשארים אותו דבר כמו אצלך
+import EmailAutocomplete from "@/components/ui/EmailAutocomplete";
+import { useUserEmails } from "@/hooks/useUserEmails";
 
 export default function EditProjectDialog({ project, onClose, onSave }) {
-  const { user } = useAuth();
   const { data: internships, isLoading: loadingInternships } = useInternships();
   const { data: instructors, isLoading: loadingInstructors } = useInstructors();
+  const { data: userList = [] } = useUserEmails();
 
   const form = useForm({
     resolver: zodResolver(updateProjectSchema),
@@ -45,7 +47,7 @@ export default function EditProjectDialog({ project, onClose, onSave }) {
       instructor: "",
       year: new Date().getFullYear(),
       image: undefined,
-      members: [{ name: "", email: "" }],
+      members: [{ email: "" }],
     },
   });
 
@@ -55,7 +57,7 @@ export default function EditProjectDialog({ project, onClose, onSave }) {
   });
 
   useEffect(() => {
-    if (project && internships && instructors) {
+    if (project && internships && instructors && userList.length > 0) {
       const {
         name,
         internship,
@@ -68,18 +70,34 @@ export default function EditProjectDialog({ project, onClose, onSave }) {
         members,
       } = project;
 
+      const internshipObj = internships.find((i) => i._id === internship);
+      const instructorObj = instructors.find((i) => i._id === instructor);
+
+      // ממפה את ObjectId לרשימת אימיילים דרך userList
+      const mappedEmails = members
+        .map((memberId) => {
+          const idStr =
+            typeof memberId === "string"
+              ? memberId
+              : memberId?.$oid || memberId?.toString();
+
+          const found = userList.find((u) => u._id === idStr);
+          return found?.email || null;
+        })
+        .filter(Boolean);
+
       form.reset({
         name,
-        internship,
+        internship: internshipObj?._id ?? "",
         description,
         short_description: short_description ?? "",
         youtube: youtube ?? "",
         gallery: gallery ?? [],
         newGallery: undefined,
-        instructor,
+        instructor: instructorObj?._id ?? "",
         year,
         image: undefined,
-        members: members.length ? members : [{ name: "", email: "" }],
+        members,
       });
     }
   }, [project, internships, instructors, form]);
@@ -126,40 +144,69 @@ export default function EditProjectDialog({ project, onClose, onSave }) {
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <GenericFormField name="name" control={form.control} label="Project Name">
+            {/* שדות רגילים (שם, תיאור וכו') */}
+            <GenericFormField
+              name="name"
+              control={form.control}
+              label="Project Name"
+            >
               {(field) => <Input {...field} placeholder="Project name" />}
             </GenericFormField>
 
-            <GenericFormField name="internship" control={form.control} label="Internship">
+            <GenericFormField
+              name="internship"
+              control={form.control}
+              label="Internship"
+            >
               {(field) => (
                 <Select value={field.value} onValueChange={field.onChange}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select internship" />
                   </SelectTrigger>
                   <SelectContent>
-                    {internships?.map((i) => (
-                      <SelectItem key={i._id} value={i.name}>
-                        {i.name}
-                      </SelectItem>
-                    ))}
+                    {internships
+                      ?.filter((i) => i.name !== "All")
+                      .map((i) => (
+                        <SelectItem key={i._id} value={i._id}>
+                          {i.name}
+                        </SelectItem>
+                      ))}
                   </SelectContent>
                 </Select>
               )}
             </GenericFormField>
 
-            <GenericFormField name="description" control={form.control} label="Description">
+            <GenericFormField
+              name="description"
+              control={form.control}
+              label="Description"
+            >
               {(field) => <Textarea {...field} placeholder="Description" />}
             </GenericFormField>
 
-            <GenericFormField name="short_description" control={form.control} label="Short Description">
+            <GenericFormField
+              name="short_description"
+              control={form.control}
+              label="Short Description"
+            >
               {(field) => <Textarea {...field} placeholder="Brief summary" />}
             </GenericFormField>
 
-            <GenericFormField name="youtube" control={form.control} label="YouTube Link">
-              {(field) => <Input {...field} placeholder="https://youtube.com/..." />}
+            <GenericFormField
+              name="youtube"
+              control={form.control}
+              label="YouTube Link"
+            >
+              {(field) => (
+                <Input {...field} placeholder="https://youtube.com/..." />
+              )}
             </GenericFormField>
 
-            <GenericFormField name="gallery" control={form.control} label="Gallery (remove existing)">
+            <GenericFormField
+              name="gallery"
+              control={form.control}
+              label="Gallery (remove existing)"
+            >
               {(field) => (
                 <div className="flex flex-wrap gap-4">
                   {field.value?.map((url, index) => (
@@ -172,7 +219,9 @@ export default function EditProjectDialog({ project, onClose, onSave }) {
                       <button
                         type="button"
                         onClick={() => {
-                          const updated = field.value.filter((_, i) => i !== index);
+                          const updated = field.value.filter(
+                            (_, i) => i !== index
+                          );
                           field.onChange(updated);
                         }}
                         className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs"
@@ -185,7 +234,11 @@ export default function EditProjectDialog({ project, onClose, onSave }) {
               )}
             </GenericFormField>
 
-            <GenericFormField name="newGallery" control={form.control} label="Add New Gallery Images">
+            <GenericFormField
+              name="newGallery"
+              control={form.control}
+              label="Add New Gallery Images"
+            >
               {(field) => (
                 <Input
                   type="file"
@@ -196,7 +249,11 @@ export default function EditProjectDialog({ project, onClose, onSave }) {
               )}
             </GenericFormField>
 
-            <GenericFormField name="instructor" control={form.control} label="Instructor">
+            <GenericFormField
+              name="instructor"
+              control={form.control}
+              label="Instructor"
+            >
               {(field) => (
                 <Select value={field.value} onValueChange={field.onChange}>
                   <SelectTrigger>
@@ -204,7 +261,7 @@ export default function EditProjectDialog({ project, onClose, onSave }) {
                   </SelectTrigger>
                   <SelectContent>
                     {instructors?.map((i) => (
-                      <SelectItem key={i._id} value={i.name}>
+                      <SelectItem key={i._id} value={i._id}>
                         {i.name}
                       </SelectItem>
                     ))}
@@ -217,7 +274,11 @@ export default function EditProjectDialog({ project, onClose, onSave }) {
               {(field) => <Input {...field} type="number" disabled />}
             </GenericFormField>
 
-            <GenericFormField name="image" control={form.control} label="Change Image (Optional)">
+            <GenericFormField
+              name="image"
+              control={form.control}
+              label="Change Image (Optional)"
+            >
               {(field) => (
                 <Input
                   type="file"
@@ -228,21 +289,35 @@ export default function EditProjectDialog({ project, onClose, onSave }) {
             </GenericFormField>
 
             <div>
-              <h2 className="text-md font-semibold mb-2">Team Members</h2>
+              <h2 className="text-xl font-semibold mb-2">Team Members</h2>
               {fields.map((item, index) => (
-                <div key={item.id} className="mb-4 border p-4 rounded space-y-2">
-                  <GenericFormField name={`members.${index}.name`} control={form.control} label="Name">
-                    {(field) => <Input {...field} placeholder="Name" />}
+                <div
+                  key={item.id}
+                  className="mb-4 space-y-2 border p-4 rounded"
+                >
+                  <GenericFormField
+                    name={`members.${index}`}
+                    control={form.control}
+                    label="Member Email"
+                  >
+                    {(field) => (
+                      <EmailAutocomplete
+                        users={userList}
+                        value={field.value}
+                        onChange={field.onChange}
+                      />
+                    )}
                   </GenericFormField>
-                  <GenericFormField name={`members.${index}.email`} control={form.control} label="Email">
-                    {(field) => <Input {...field} placeholder="Email" />}
-                  </GenericFormField>
-                  <Button type="button" variant="destructive" onClick={() => remove(index)}>
+                  <Button
+                    variant="destructive"
+                    type="button"
+                    onClick={() => remove(index)}
+                  >
                     <Delete className="w-4 h-4" /> Remove
                   </Button>
                 </div>
               ))}
-              <Button type="button" onClick={() => append({ name: "", email: "" })}>
+              <Button type="button" onClick={() => append("")}>
                 Add Member
               </Button>
             </div>

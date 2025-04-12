@@ -49,7 +49,7 @@ import {
               <img
                 src={selectedAward.image}
                 alt={selectedAward.name}
-                className="w-[100px] h-[100px] rounded-full border shadow-md"
+                className="w-[100px] h-[100px] rounded-full"
               />
               <DialogHeader className="text-center">
                 <DialogTitle className="text-xl text-center">{selectedAward.name}</DialogTitle>

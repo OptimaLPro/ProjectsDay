@@ -61,7 +61,7 @@ export function UserUpdateProject() {
       instructor: "",
       year: new Date().getFullYear(),
       image: undefined,
-      members: [{ name: "", email: "" }],
+      members: [{ email: "" }],
     },
   });
 
@@ -138,7 +138,6 @@ export function UserUpdateProject() {
         `/projects/${projectData.project._id}`,
         formData
       );
-      console.log("Project updated:", response.data);
       navigate("/dashboard");
     } catch (error) {
       console.error("Failed to update project:", error);
@@ -177,7 +176,11 @@ export function UserUpdateProject() {
             label="Internship"
           >
             {(field) => (
-              <Select value={field.value} onValueChange={field.onChange}>
+              <Select
+                value={field.value}
+                onValueChange={field.onChange}
+                disabled
+              >
                 <SelectTrigger className="bg-white shadow-xl">
                   <SelectValue placeholder="Select internship" />
                 </SelectTrigger>

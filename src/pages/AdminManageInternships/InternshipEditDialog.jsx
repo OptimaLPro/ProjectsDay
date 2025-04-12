@@ -47,7 +47,7 @@ export default function InternshipEditDialog({
     if (editData) {
       form.reset({
         name: editData.name || "",
-        instructor: editData.instructor || "",
+        instructor: editData.instructor?._id || editData.instructor || "",
         description: editData.description || "",
       });
       setSelectedYears(editData.years || []);
@@ -103,7 +103,7 @@ export default function InternshipEditDialog({
                   </SelectTrigger>
                   <SelectContent>
                     {instructors.map((inst) => (
-                      <SelectItem key={inst._id} value={inst.name}>
+                      <SelectItem key={inst._id} value={inst._id}>
                         {inst.name}
                       </SelectItem>
                     ))}

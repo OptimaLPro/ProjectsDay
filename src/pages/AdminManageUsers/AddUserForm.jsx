@@ -80,7 +80,11 @@ export default function AddUserForm({ onSuccess }) {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input type="password" placeholder="Enter password" {...field} />
+                  <Input
+                    type="password"
+                    placeholder="Enter password"
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -93,7 +97,10 @@ export default function AddUserForm({ onSuccess }) {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Role</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Select role" />
@@ -108,25 +115,29 @@ export default function AddUserForm({ onSuccess }) {
               </FormItem>
             )}
           />
-
           <FormField
             control={form.control}
             name="internship"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Internship</FormLabel>
-                <Select onValueChange={field.onChange} value={field.value}>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Select internship" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    {internships.map((item) => (
-                      <SelectItem key={item._id} value={item.name}>
-                        {item.name}
-                      </SelectItem>
-                    ))}
+                    {internships
+                      .filter((i) => i.name !== "All") // אם אתה רוצה להוריד את All גם פה
+                      .map((item) => (
+                        <SelectItem key={item._id} value={item._id}>
+                          {item.name}
+                        </SelectItem>
+                      ))}
                   </SelectContent>
                 </Select>
                 <FormMessage />

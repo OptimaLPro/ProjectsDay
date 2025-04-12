@@ -1,0 +1,143 @@
+import { useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import api from "@/api/api";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import Loader from "@/components/Loader/Loader";
+import Error from "@/components/Error/Error";
+import { useMyProject } from "@/hooks/useMyProject";
+import { useAuth } from "@/context/AuthContext";
+import { useNavigate } from "react-router";
+import { toast } from "sonner";
+
+export default function StudentAssignProject() {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const [selectedProjectId, setSelectedProjectId] = useState("");
+  const [showDialog, setShowDialog] = useState(false);
+
+  const {
+    data: myProjectData,
+    isLoading: loadingMyProject,
+    isError: errorMyProject,
+  } = useMyProject();
+
+  const {
+    data: projects,
+    isLoading: loadingProjects,
+    isError: errorProjects,
+  } = useQuery({
+    queryKey: ["available-projects"],
+    queryFn: async () => {
+      const { data } = await api.get("/projects");
+      return data.projects.filter(
+        (p) => p.internship === user?.internship && p.members.length < 4
+      );
+    },
+    enabled: !!user && myProjectData?.exists === false,
+  });
+
+  const isLoading = loadingMyProject || loadingProjects;
+  const isError = errorMyProject || errorProjects;
+
+  const mutation = useMutation({
+    mutationFn: (projectId) => api.put(`/projects/${projectId}/assign`),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["myProject"]);
+      queryClient.invalidateQueries(["available-projects"]);
+      navigate("/dashboard");
+      toast("Project assigned successfully", {
+        description: "You've been assigned to a project.",
+        duration: 5000,
+      });
+    },
+    onError: () => {
+      toast("Assignment failed", {
+        description: "Please try again.",
+        duration: 5000,
+      });
+    },
+  });
+
+  const handleConfirm = () => {
+    mutation.mutate(selectedProjectId);
+    setShowDialog(false);
+  };
+
+  if (isLoading) return <Loader />;
+  if (isError) return <Error />;
+
+  if (myProjectData?.exists) {
+    return (
+      <div className="max-w-md mx-auto mt-10 p-6 bg-white shadow-lg rounded-xl text-center">
+        <h1 className="text-xl font-semibold mb-4">Assign Project</h1>
+        <p>You are already assigned to a project.</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="max-w-md mx-auto mt-10 p-6 bg-white shadow-lg rounded-xl relative">
+      <h1 className="text-xl font-semibold mb-4 text-center">Assign Project</h1>
+
+      <div className="flex justify-center">
+        <Select
+          value={selectedProjectId}
+          onValueChange={(val) => setSelectedProjectId(val)}
+        >
+          <SelectTrigger className="w-60">
+            <SelectValue placeholder="Select a Project" />
+          </SelectTrigger>
+          <SelectContent>
+            {projects.map((p) => (
+              <SelectItem key={p._id} value={p._id}>
+                {p.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      <Button
+        onClick={() => setShowDialog(true)}
+        className="mt-4 w-full"
+        disabled={mutation.isPending || !selectedProjectId}
+      >
+        {mutation.isPending ? "Assigning..." : "Assign Me to This Project"}
+      </Button>
+
+      <Dialog open={showDialog} onOpenChange={setShowDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Are you sure?</DialogTitle>
+          </DialogHeader>
+          <p>
+            You are about to join this project. This action cannot be undone.
+          </p>
+          <DialogFooter>
+            <Button variant="secondary" onClick={() => setShowDialog(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleConfirm} disabled={mutation.isPending}>
+              {mutation.isPending ? "Assigning..." : "Yes, Assign Me"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}

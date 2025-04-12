@@ -24,3 +24,13 @@ export const checkMyProject = async () => {
     throw error;
   }
 };
+
+export const unassignMyself = async () => {
+  try {
+    const response = await api.put("/projects/unassign");
+    return response.data;
+  } catch (error) {
+    console.error("Error unassigning myself:", error);
+    throw error;
+  }
+};

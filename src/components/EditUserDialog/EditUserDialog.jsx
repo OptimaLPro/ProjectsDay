@@ -6,7 +6,13 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
 import { useForm } from "react-hook-form";
 import api from "@/api/api";
 import { useState } from "react";
@@ -87,20 +93,21 @@ export default function EditUserDialog({ user, onClose, onSave }) {
           <Input {...register("email")} placeholder="Email" />
           <Input {...register("role")} placeholder="Role" />
 
-          {/* ✅ Select for Internship */}
           <Select
-            defaultValue={user.internship}
+            defaultValue={user.internship?.toString()}
             onValueChange={(value) => setValue("internship", value)}
           >
             <SelectTrigger>
               <SelectValue placeholder="Select internship" />
             </SelectTrigger>
             <SelectContent>
-              {internships?.map((i) => (
-                <SelectItem key={i._id} value={i.name}>
-                  {i.name}
-                </SelectItem>
-              ))}
+              {internships
+                ?.filter((i) => i.name !== "All") // 🧹 מסיר את ה־"All"
+                .map((i) => (
+                  <SelectItem key={i._id} value={i._id}>
+                    {i.name}
+                  </SelectItem>
+                ))}
             </SelectContent>
           </Select>
 
@@ -110,11 +117,7 @@ export default function EditUserDialog({ user, onClose, onSave }) {
             type="password"
           />
 
-          <Input
-            type="file"
-            accept="image/*"
-            onChange={handleImageChange}
-          />
+          <Input type="file" accept="image/*" onChange={handleImageChange} />
 
           <div className="flex justify-end gap-2">
             <Button type="button" variant="ghost" onClick={onClose}>

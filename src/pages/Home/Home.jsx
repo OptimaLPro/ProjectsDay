@@ -52,7 +52,8 @@ const Home = () => {
   const filteredProjects = filterProjects(
     allProjects,
     searchQuery,
-    activeInternship
+    activeInternship,
+    internshipsData
   );
 
   return (

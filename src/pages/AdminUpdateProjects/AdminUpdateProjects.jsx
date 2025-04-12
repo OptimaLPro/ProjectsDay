@@ -1,13 +1,14 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import api from "@/api/api";
-import { Button } from "@/components/ui/button";
-import EditProjectDialog from "./EditProjectDialog";
-import DeleteProjectDialog from "./DeleteProjectDialog";
+import { Input } from "@/components/ui/input";
 import Loader from "@/components/Loader/Loader";
 import Error from "@/components/Error/Error";
-import { Input } from "@/components/ui/input";
+import EditProjectDialog from "./EditProjectDialog";
+import DeleteProjectDialog from "./DeleteProjectDialog";
 import AdminUpdateProjectsTable from "./AdminUpdateProjectsTable";
+import { useUserEmails } from "@/hooks/useUserEmails";
+import { useInternships } from "@/hooks/useInternships";
 
 export default function AdminUpdateProjects() {
   const [selectedProject, setSelectedProject] = useState(null);
@@ -16,6 +17,9 @@ export default function AdminUpdateProjects() {
   const [filterName, setFilterName] = useState("");
   const [filterMember, setFilterMember] = useState("");
   const [filterInternship, setFilterInternship] = useState("");
+
+  const { data: internships = [] } = useInternships();
+  const { data: userList = [] } = useUserEmails();
 
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["admin-projects"],
@@ -45,14 +49,24 @@ export default function AdminUpdateProjects() {
     const nameMatch = project.name
       .toLowerCase()
       .includes(filterName.toLowerCase());
+
     const internshipMatch = project.internship
       .toLowerCase()
       .includes(filterInternship.toLowerCase());
-    const members =
-      project.members?.map((m) => m.name || m.email).join(" ") || "";
-    const memberMatch = members
-      .toLowerCase()
-      .includes(filterMember.toLowerCase());
+
+    const memberDetails = project.members
+      .map((memberId) => {
+        const idStr =
+          typeof memberId === "string"
+            ? memberId
+            : memberId?.$oid || memberId?.toString();
+        const user = userList.find((u) => u._id === idStr);
+        return user ? `${user.first_name} ${user.last_name} ${user.email}` : "";
+      })
+      .join(" ")
+      .toLowerCase();
+
+    const memberMatch = memberDetails.includes(filterMember.toLowerCase());
 
     return nameMatch && internshipMatch && memberMatch;
   });
@@ -82,9 +96,11 @@ export default function AdminUpdateProjects() {
         />
       </div>
 
-      <AdminUpdateProjectsTable 
-        projects={filteredProjects} 
-        onEdit={openEditDialog} 
+      <AdminUpdateProjectsTable
+        projects={filteredProjects}
+        userList={userList}
+        internships={internships}
+        onEdit={openEditDialog}
         onDelete={openDeleteDialog}
       />
 

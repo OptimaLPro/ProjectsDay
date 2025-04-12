@@ -19,6 +19,7 @@ import { UserAddProject } from "@/pages/UserAddProject/UserAddProject";
 import { UserUpdateProject } from "@/pages/UserUpdateProject/UserUpdateProject";
 import { useEffect } from "react";
 import { Route, Routes } from "react-router";
+import StudentAssignProject from "@/pages/Dashboard/StudentAssignProject";
 
 const Router = () => {
   useEffect(() => {
@@ -45,6 +46,10 @@ const Router = () => {
           <Route
             path="/dashboard/update-project"
             element={<UserUpdateProject />}
+          />
+          <Route
+            path="/dashboard/assign-project"
+            element={<StudentAssignProject />}
           />
         </Route>
 

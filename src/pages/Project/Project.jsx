@@ -9,6 +9,7 @@ import { useUsersByEmails } from "@/hooks/useUsersByEmails";
 import { motion } from "framer-motion";
 import { Link, useParams } from "react-router";
 import ProjectMedia from "./ProjectMedia";
+import { useUserEmails } from "@/hooks/useUserEmails";
 
 const Project = () => {
   const { id } = useParams();
@@ -16,21 +17,32 @@ const Project = () => {
   const { data: project, isLoading } = useProjectById(id);
   const { data: instructors } = useInstructors();
   const { data: internships } = useInternships();
+  const { data: userList = [] } = useUserEmails();
   const memberEmails = project?.members?.map((m) => m.email);
   const { data: users = [] } = useUsersByEmails(memberEmails);
 
   const instructorObj = instructors?.find(
-    (i) => i.name === project?.instructor
+    (i) => i._id === project?.instructor || i._id?.$oid === project?.instructor
   );
 
   const internshipObj = internships?.find(
-    (i) => i.name === project?.internship
+    (i) => i._id === project?.internship || i._id?.$oid === project?.internship
   );
 
   const instructorImage =
     instructorObj?.image && instructorObj.image !== ""
       ? instructorObj.image
       : "/images/default.jpg";
+
+  const projectMembers = project?.members
+    .map((memberId) => {
+      const idStr =
+        typeof memberId === "string"
+          ? memberId
+          : memberId?.$oid || memberId?.toString();
+      return userList.find((user) => user._id === idStr);
+    })
+    .filter(Boolean); // הסרה של null במקרה שלא נמצא
 
   if (isLoading || !project || !instructors || !internships) {
     return <Loader />;
@@ -58,7 +70,7 @@ const Project = () => {
                     to={`/internships/${internshipObj?._id}`}
                     className="w-fit mt-2 inline-block px-2 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary mb-2 capitalize hover:underline transition"
                   >
-                    {project?.internship}
+                    <span>{internshipObj?.name}</span>
                   </Link>
                 </div>
                 <div>
@@ -80,7 +92,7 @@ const Project = () => {
                       alt={project?.instructor}
                       className="w-10 h-10 rounded-full object-cover shadow-lg border-[1px] border-gray-300"
                     />
-                    <span>{project?.instructor}</span>
+                    <span>{instructorObj?.name}</span>
                   </Link>
                 </div>
               </div>
@@ -88,23 +100,24 @@ const Project = () => {
               <div>
                 <h2 className="font-semibold">Members:</h2>
                 <ul className="flex flex-col gap-3">
-                  {project?.members?.map((member, index) => {
-                    const user = users.find((u) => u.email === member.email);
+                  {projectMembers.map((user) => {
                     const image =
-                      user?.image && user.image !== ""
+                      user.image && user.image !== ""
                         ? user.image
                         : "/images/default.jpg";
 
                     return (
-                      <li key={index} className="flex items-center gap-3">
+                      <li key={user._id} className="flex items-center gap-3">
                         <img
                           src={image}
-                          alt={member.name}
+                          alt={user.name}
                           className="w-8 h-8 rounded-full object-cover shadow-lg border-[1px] border-gray-300"
                         />
-                        <span className="font-medium">{member.name}</span>
+                        <span className="font-medium">
+                          {user.first_name} {user.last_name}
+                        </span>
                         <span className="text-sm text-muted-foreground">
-                          ({member.email})
+                          ({user.email})
                         </span>
                       </li>
                     );

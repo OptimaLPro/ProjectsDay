@@ -34,9 +34,9 @@ export default function InstructorEditDialog({
     );
   };
 
-  const toggleInternship = (name) => {
+  const toggleInternship = (id) => {
     setSelectedInternships((prev) =>
-      prev.includes(name) ? prev.filter((i) => i !== name) : [...prev, name]
+      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
     );
   };
 
@@ -109,8 +109,8 @@ export default function InstructorEditDialog({
               {filteredInternships.map((intern) => (
                 <label key={intern._id} className="flex items-center gap-2">
                   <Checkbox
-                    checked={selectedInternships.includes(intern.name)}
-                    onCheckedChange={() => toggleInternship(intern.name)}
+                    checked={selectedInternships.includes(intern._id)}
+                    onCheckedChange={() => toggleInternship(intern._id)}
                   />
                   {intern.name}
                 </label>

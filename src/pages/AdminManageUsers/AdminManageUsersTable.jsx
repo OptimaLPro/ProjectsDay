@@ -9,7 +9,12 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-export default function AdminManageUsersTable({ users, onEdit, onDelete }) {
+export default function AdminManageUsersTable({
+  users,
+  internships,
+  onEdit,
+  onDelete,
+}) {
   return (
     <div className="rounded-md bg-white border">
       <Table>
@@ -35,7 +40,10 @@ export default function AdminManageUsersTable({ users, onEdit, onDelete }) {
               </TableCell>
               <TableCell>{user.email}</TableCell>
               <TableCell>{user.role}</TableCell>
-              <TableCell>{user.internship}</TableCell>
+              <TableCell>
+                {internships.find((i) => i._id === user.internship)?.name ||
+                  "N/A"}
+              </TableCell>
               <TableCell>{user.year}</TableCell>
               <TableCell className="text-center">
                 <Button size="sm" onClick={() => onEdit(user)}>

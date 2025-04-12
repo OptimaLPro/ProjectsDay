@@ -11,6 +11,7 @@ import {
 
 export default function AdminInternshipsTable({
   internships,
+  instructors,
   onEdit,
   onDelete,
 }) {
@@ -31,7 +32,10 @@ export default function AdminInternshipsTable({
             .map((intern) => (
               <TableRow key={intern._id}>
                 <TableCell>{intern.name}</TableCell>
-                <TableCell>{intern.instructor}</TableCell>
+                <TableCell>
+                  {instructors.find((i) => i._id === intern.instructor)?.name ||
+                    "—"}
+                </TableCell>
                 <TableCell>{intern.years?.join(", ") || "—"}</TableCell>
                 <TableCell className="text-center">
                   <Button size="sm" onClick={() => onEdit(intern)}>

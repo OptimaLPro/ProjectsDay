@@ -2,66 +2,88 @@ import Error from "@/components/Error/Error";
 import Loader from "@/components/Loader/Loader";
 import { useAuth } from "@/context/AuthContext";
 import { useInstructors } from "@/hooks/useInstructors";
+import { useInternships } from "@/hooks/useInternships";
 import { Separator } from "@/components/ui/separator";
 import { Link } from "react-router";
 import { motion } from "framer-motion";
 
 const Instructors = () => {
-  const { isLoadingYear } = useAuth();
+  const { year, isLoadingYear } = useAuth();
   const { data: instructorsData, isLoading, isError } = useInstructors();
+  const { data: internshipsData, isLoading: internshipsLoading } =
+    useInternships();
 
-  if (isLoading || isLoadingYear) return <Loader />;
+  if (isLoading || internshipsLoading || isLoadingYear) return <Loader />;
   if (isError) return <Error />;
 
+  console.log(instructorsData);
   const grouped = {};
 
   for (const instructor of instructorsData) {
-    const keys = instructor.internships?.length
-      ? instructor.internships
-      : ["Other"];
-    for (const key of keys) {
-      if (!grouped[key]) grouped[key] = [];
-      grouped[key].push(instructor);
+    const internshipsForYear = (instructor.internships || []).filter(
+      (internId) => {
+        const internship = internshipsData.find((i) => i._id === internId);
+        return internship && internship.years.includes(year);
+      }
+    );
+
+    if (internshipsForYear.length === 0) continue; // לא רלוונטי לשנה הפעילה
+
+    for (const internshipId of internshipsForYear) {
+      if (!grouped[internshipId]) grouped[internshipId] = [];
+      grouped[internshipId].push(instructor);
     }
   }
+
+  const getInternshipNameById = (id) => {
+    if (id === "Other") return "Other";
+
+    // אם זה כבר שם של התמחות, פשוט תחזיר אותו
+    const internshipByName = internshipsData.find((i) => i.name === id);
+    if (internshipByName) return internshipByName.name;
+
+    // ואם זה ObjectId, תחפש לפי ID
+    const internshipById = internshipsData.find((i) => i._id === id);
+    return internshipById ? internshipById.name : id;
+  };
 
   return (
     <main className="mx-auto mt-5 px-5 lg:px-4 max-w-[80%] relative">
       <h1 className="text-3xl font-bold text-center mb-10">Instructors</h1>
 
-      {Object.entries(grouped).map(
-        ([internshipName, instructors], groupIdx) => (
-          <div key={internshipName} className="mb-12">
-            {groupIdx > 0 && <Separator className="my-8" />}
-            <h2 className="text-2xl font-semibold mb-6">{internshipName}</h2>
+      {Object.entries(grouped).map(([internshipId, instructors], groupIdx) => (
+        <div key={internshipId} className="mb-12">
+          {groupIdx > 0 && <Separator className="my-8" />}
+          <h2 className="text-2xl font-semibold mb-6">
+            {getInternshipNameById(internshipId)}
+          </h2>
 
-            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-10">
-              {instructors.map((instructor, index) => (
-                <motion.div
-                  key={instructor._id}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+            {instructors.map((instructor, index) => (
+              <motion.div
+                key={instructor._id}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+              >
+                <Link
+                  to={`/instructors/${instructor._id}`}
+                  className="cursor-pointer flex flex-col lg:items-center"
                 >
-                  <Link
-                    to={`/instructors/${instructor._id}`}
-                    className="cursor-pointer flex flex-col lg:items-center"
-                  >
-                    <img
-                      src={instructor.image || "/images/default.jpg"}
-                      alt={instructor.name}
-                      className="h-48 w-48 object-cover rounded-lg shadow-md"
-                    />
-                    <div className="text-center mt-2 font-semibold text-lg flex items-center justify-center">
-                      {instructor.name}
-                    </div>
-                  </Link>
-                </motion.div>
-              ))}
-            </div>
+                  <img
+                    src={instructor.image || "/images/default.jpg"}
+                    alt={instructor.name}
+                    className="h-48 w-48 object-cover rounded-lg shadow-md"
+                  />
+                  <div className="text-center mt-2 font-semibold text-lg flex items-center justify-center">
+                    {instructor.name}
+                  </div>
+                </Link>
+              </motion.div>
+            ))}
           </div>
-        )
-      )}
+        </div>
+      ))}
     </main>
   );
 };

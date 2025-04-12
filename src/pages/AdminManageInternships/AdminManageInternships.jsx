@@ -2,6 +2,7 @@ import api from "@/api/api";
 import Error from "@/components/Error/Error";
 import Loader from "@/components/Loader/Loader";
 import { Button } from "@/components/ui/button";
+import { useInstructors } from "@/hooks/useInstructors";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import AdminInternshipsTable from "./AdminInternshipsTable";
@@ -16,11 +17,16 @@ export default function AdminManageInternships() {
   const [editData, setEditData] = useState(null);
   const [selectedYears, setSelectedYears] = useState([]);
   const [selectedInstructor, setSelectedInstructor] = useState("");
-
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [internshipToDelete, setInternshipToDelete] = useState(null);
+  const { data: instructorsData = [], isLoading: loadingInstructors } =
+    useInstructors();
 
-  const { data: internships, isLoading, isError } = useQuery({
+  const {
+    data: internships,
+    isLoading,
+    isError,
+  } = useQuery({
     queryKey: ["internships-all"],
     queryFn: () => api.get("/internships").then((res) => res.data),
   });
@@ -73,7 +79,8 @@ export default function AdminManageInternships() {
     }
   }, [editData]);
 
-  if (isLoading) return <Loader />;
+  if (isLoading || loadingInstructors) return <Loader />;
+
   if (isError) return <Error />;
 
   return (
@@ -92,6 +99,7 @@ export default function AdminManageInternships() {
           setEditData(intern);
           setOpenDialog(true);
         }}
+        instructors={instructorsData}
         onDelete={(intern) => {
           setInternshipToDelete(intern);
           setDeleteDialogOpen(true);
@@ -108,6 +116,7 @@ export default function AdminManageInternships() {
         setSelectedYears={setSelectedYears}
         selectedInstructor={selectedInstructor}
         setSelectedInstructor={setSelectedInstructor}
+        instructors={instructorsData} // 👈 חדש
         mutation={mutation}
       />
 

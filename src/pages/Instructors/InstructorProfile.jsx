@@ -1,13 +1,16 @@
 import { useParams } from "react-router";
 import { useInstructorById } from "@/hooks/useInstructorById";
+import { useInternships } from "@/hooks/useInternships";
 import Loader from "@/components/Loader/Loader";
 import Error from "@/components/Error/Error";
 import BackButton from "@/components/ui/BackButton";
 import { Card } from "@/components/ui/card";
+import { Link } from "react-router";
 
 const InstructorProfile = () => {
   const { id } = useParams();
   const { data: instructor, isLoading, isError } = useInstructorById(id);
+  const { data: internships = [] } = useInternships();
 
   if (isLoading) return <Loader />;
   if (isError || !instructor) return <Error message="Instructor not found" />;
@@ -16,6 +19,13 @@ const InstructorProfile = () => {
     instructor.image && instructor.image !== ""
       ? instructor.image
       : "/images/default.jpg";
+
+  // מציאת ההתמחויות לפי ה־ObjectId
+  const instructorInternships = Array.isArray(instructor.internships)
+    ? instructor.internships
+        .map((id) => internships.find((i) => i._id === id))
+        .filter(Boolean)
+    : [];
 
   return (
     <main className="mx-auto mt-5 px-5 max-w-2xl relative">
@@ -29,16 +39,16 @@ const InstructorProfile = () => {
           <h1 className="text-2xl font-bold">{instructor.name}</h1>
 
           <div className="mb-4 text-center">
-            {Array.isArray(instructor.internships) &&
-            instructor.internships.length > 0 ? (
+            {instructorInternships.length > 0 ? (
               <ul className="flex flex-wrap gap-2 justify-center">
-                {instructor.internships.map((name) => (
-                  <li
-                    key={name}
-                    className="bg-primary/10 text-primary text-sm px-3 py-1 rounded-full"
+                {instructorInternships.map((internship) => (
+                  <Link
+                    key={internship._id}
+                    to={`/internships/${internship._id}`}
+                    className="bg-primary/10 text-primary text-sm px-3 py-1 rounded-full hover:underline transition"
                   >
-                    {name}
-                  </li>
+                    {internship.name}
+                  </Link>
                 ))}
               </ul>
             ) : (

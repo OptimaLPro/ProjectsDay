@@ -19,7 +19,6 @@ export default function EmailAutocomplete({ users, value, onChange }) {
   const filtered = users.filter((u) =>
     u.email.toLowerCase().includes(search.toLowerCase())
   );
-
   const selectedUser = users.find((u) => u._id === value);
 
   return (

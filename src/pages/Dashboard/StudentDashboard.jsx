@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Edit, LogOut, Plus } from "lucide-react";
 import { Link } from "react-router";
+import UnassignProjectButton from "./UnassignProjectButton";
 
 const StudentDashboard = ({ hasProject, onLogout }) => {
   return (
@@ -32,12 +33,7 @@ const StudentDashboard = ({ hasProject, onLogout }) => {
                     Update Project
                   </Button>
                 </Link>
-                <Link to="/dashboard/unassign-project">
-                  <Button variant="destructive" className="gap-2">
-                    <Edit className="h-4 w-4" />
-                    Unassign Project
-                  </Button>
-                </Link>
+                <UnassignProjectButton />
               </>
             )}
             <Button variant="outline" className="gap-2" onClick={onLogout}>
