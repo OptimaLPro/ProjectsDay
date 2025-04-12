@@ -102,7 +102,7 @@ export default function EditUserDialog({ user, onClose, onSave }) {
             </SelectTrigger>
             <SelectContent>
               {internships
-                ?.filter((i) => i.name !== "All") // 🧹 מסיר את ה־"All"
+                ?.filter((i) => i.name !== "All")
                 .map((i) => (
                   <SelectItem key={i._id} value={i._id}>
                     {i.name}

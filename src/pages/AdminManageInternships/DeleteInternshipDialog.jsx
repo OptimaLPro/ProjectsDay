@@ -10,9 +10,9 @@ import {
   export default function DeleteInternshipDialog({
     open,
     onClose,
-    instructor, // או internship
+    instructor,
     onConfirm,
-    entityName = "Instructor", // אפשר גם "Internship"
+    entityName = "Instructor",
   }) {
     return (
       <Dialog open={open} onOpenChange={onClose}>

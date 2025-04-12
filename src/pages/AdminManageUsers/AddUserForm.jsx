@@ -132,7 +132,7 @@ export default function AddUserForm({ onSuccess }) {
                   </FormControl>
                   <SelectContent>
                     {internships
-                      .filter((i) => i.name !== "All") // אם אתה רוצה להוריד את All גם פה
+                      .filter((i) => i.name !== "All")
                       .map((item) => (
                         <SelectItem key={item._id} value={item._id}>
                           {item.name}

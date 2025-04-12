@@ -27,7 +27,7 @@ const Instructors = () => {
       }
     );
 
-    if (internshipsForYear.length === 0) continue; // לא רלוונטי לשנה הפעילה
+    if (internshipsForYear.length === 0) continue;
 
     for (const internshipId of internshipsForYear) {
       if (!grouped[internshipId]) grouped[internshipId] = [];
@@ -38,11 +38,9 @@ const Instructors = () => {
   const getInternshipNameById = (id) => {
     if (id === "Other") return "Other";
 
-    // אם זה כבר שם של התמחות, פשוט תחזיר אותו
     const internshipByName = internshipsData.find((i) => i.name === id);
     if (internshipByName) return internshipByName.name;
 
-    // ואם זה ObjectId, תחפש לפי ID
     const internshipById = internshipsData.find((i) => i._id === id);
     return internshipById ? internshipById.name : id;
   };

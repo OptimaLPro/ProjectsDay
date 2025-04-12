@@ -42,7 +42,7 @@ const Project = () => {
           : memberId?.$oid || memberId?.toString();
       return userList.find((user) => user._id === idStr);
     })
-    .filter(Boolean); // הסרה של null במקרה שלא נמצא
+    .filter(Boolean);
 
   if (isLoading || !project || !instructors || !internships) {
     return <Loader />;

@@ -20,7 +20,6 @@ const InstructorProfile = () => {
       ? instructor.image
       : "/images/default.jpg";
 
-  // מציאת ההתמחויות לפי ה־ObjectId
   const instructorInternships = Array.isArray(instructor.internships)
     ? instructor.internships
         .map((id) => internships.find((i) => i._id === id))

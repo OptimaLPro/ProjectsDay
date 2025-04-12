@@ -25,7 +25,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Delete, Save } from "lucide-react";
 import { useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
-// ... כל הייבואים נשארים אותו דבר כמו אצלך
 import EmailAutocomplete from "@/components/ui/EmailAutocomplete";
 import { useUserEmails } from "@/hooks/useUserEmails";
 
@@ -73,7 +72,6 @@ export default function EditProjectDialog({ project, onClose, onSave }) {
       const internshipObj = internships.find((i) => i._id === internship);
       const instructorObj = instructors.find((i) => i._id === instructor);
 
-      // ממפה את ObjectId לרשימת אימיילים דרך userList
       const mappedEmails = members
         .map((memberId) => {
           const idStr =
@@ -144,7 +142,6 @@ export default function EditProjectDialog({ project, onClose, onSave }) {
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            {/* שדות רגילים (שם, תיאור וכו') */}
             <GenericFormField
               name="name"
               control={form.control}

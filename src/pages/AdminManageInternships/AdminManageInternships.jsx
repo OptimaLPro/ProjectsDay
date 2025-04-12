@@ -116,7 +116,7 @@ export default function AdminManageInternships() {
         setSelectedYears={setSelectedYears}
         selectedInstructor={selectedInstructor}
         setSelectedInstructor={setSelectedInstructor}
-        instructors={instructorsData} // 👈 חדש
+        instructors={instructorsData}
         mutation={mutation}
       />
 
