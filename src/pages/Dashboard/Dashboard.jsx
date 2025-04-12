@@ -24,15 +24,15 @@ const Dashboard = () => {
 
   if (isLoadingUser || isLoading) return <Loader />;
 
-  if (error?.response?.status === 401) {
-    logout();
-    navigate("/");
-    return null;
+  if (user?.role === "admin") {
+    return <AdminDashboard onLogout={handleLogout} />;
   }
 
-  if (user?.role === "admin") return <AdminDashboard onLogout={handleLogout} />;
-  if (user?.role === "student")
-    return <StudentDashboard hasProject={data?.exists} onLogout={handleLogout} />;
+  if (user?.role === "student") {
+    return (
+      <StudentDashboard hasProject={data?.exists} onLogout={handleLogout} />
+    );
+  }
 
   return (
     <div className="relative text-center mt-16 text-muted-foreground">

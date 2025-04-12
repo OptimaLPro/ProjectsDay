@@ -14,18 +14,23 @@ export const AuthProvider = ({ children }) => {
   const [isLoadingYear, setIsLoadingYear] = useState(true);
 
   useEffect(() => {
-    if (token) {
-      try {
-        const decoded = jwtDecode(token);
-        setUser(decoded);
-      } catch (err) {
-        console.error("Invalid token");
-        setToken(null);
-        localStorage.removeItem("token");
-      }
+    const savedToken = localStorage.getItem("token");
+    if (!savedToken) {
+      setIsLoadingUser(false);
+      return;
     }
-    setIsLoadingUser(false);
-  }, [token]);
+
+    try {
+      const decoded = jwtDecode(savedToken);
+      setUser({ email: decoded.email, id: decoded.id, role: decoded.role });
+      setToken(savedToken);
+    } catch (err) {
+      console.error("Invalid token");
+      localStorage.removeItem("token");
+    } finally {
+      setIsLoadingUser(false);
+    }
+  }, []);
 
   useEffect(() => {
     const fetchYearbook = async () => {

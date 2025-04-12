@@ -3,12 +3,12 @@ import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/context/AuthContext";
 
 export const useMyProject = () => {
-  const { user } = useAuth();
+  const { user, isLoadingUser } = useAuth();
 
   return useQuery({
     queryKey: ["myProject"],
     queryFn: checkMyProject,
-    enabled: !!user,
+    enabled: !!user && !isLoadingUser,
     refetchOnWindowFocus: false,
   });
 };

@@ -47,7 +47,7 @@ const links = [
 const AdminDashboard = ({ onLogout }) => {
   return (
     <div className="mt-5 max-w-6xl mx-auto relative">
-      <main className="container px-5 lg:px-4">
+      <main className="container mx-auto px-5 lg:px-4">
         <h1 className="text-3xl font-bold text-center mb-12">
           Admin Dashboard
         </h1>
