@@ -1,5 +1,6 @@
 import { unassignMyself } from "@/api/projects";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -42,14 +43,21 @@ export default function UnassignProjectButton() {
 
   return (
     <>
-      <Button
-        variant="destructive"
-        className="gap-2"
+      <Card
         onClick={() => setOpen(true)}
+        className="p-6 shadow-xl hover:shadow-2xl backdrop-blur-md bg-white/40 border border-white/30 transition-all"
       >
+        <CardContent className="p-6 flex flex-col items-center justify-center h-full text-center">
+          <Unlink className="h-8 w-8 mb-2"  color="red " />
+          <CardTitle className="text-lg font-semibold">
+            Unassign Project
+          </CardTitle>
+        </CardContent>
+      </Card>
+      {/* <Button variant="destructive" className="gap-2">
         <Unlink className="h-4 w-4" />
         Unassign Project
-      </Button>
+      </Button> */}
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent>

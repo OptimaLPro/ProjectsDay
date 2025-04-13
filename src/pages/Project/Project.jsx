@@ -10,6 +10,7 @@ import { motion } from "framer-motion";
 import { Link, useParams } from "react-router";
 import ProjectMedia from "./ProjectMedia";
 import { useUserEmails } from "@/hooks/useUserEmails";
+import { useEffect } from "react";
 
 const Project = () => {
   const { id } = useParams();
@@ -20,6 +21,10 @@ const Project = () => {
   const { data: userList = [] } = useUserEmails();
   const memberEmails = project?.members?.map((m) => m.email);
   const { data: users = [] } = useUsersByEmails(memberEmails);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const instructorObj = instructors?.find(
     (i) => i._id === project?.instructor || i._id?.$oid === project?.instructor
@@ -58,10 +63,13 @@ const Project = () => {
           transition={{ duration: 0.3 }}
         >
           <div className="lg:flex lg:items-center lg:justify-between lg:gap-12  bg-white/30 backdrop-blur-md border border-white/30 rounded-xl shadow-lg py-4 lg:pl-8 px-3 lg:px-0 lg:pr-2">
-            <Card className="overflow-hidden transition-all border-0 duration-300 hover:shadow-xl shadow-xl h-full flex flex-col py-0 lg:w-1/2 relative ">
-              <img src={project?.image} alt={project?.name} />
-            </Card>
-
+            <div className="lg:w-1/2">
+              <img
+                src={project?.image}
+                alt={project?.name}
+                className="rounded-xl object-contain mx-auto max-h-[500px] w-auto max-w-full shadow-xl border-[1px] border-gray-300"
+              />
+            </div>
             <div className="flex flex-col gap-4 lg:w-1/2  lg:mt-0 mt-4">
               <div className="flex items-center justify-between">
                 <div className="flex flex-col">

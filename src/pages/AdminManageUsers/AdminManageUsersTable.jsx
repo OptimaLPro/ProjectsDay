@@ -37,7 +37,7 @@ export default function AdminManageUsersTable({
                   alt={user.email}
                   className="w-10 h-10 rounded-full object-cover mx-auto"
                 />
-              </TableCell>
+            </TableCell>
               <TableCell>{user.email}</TableCell>
               <TableCell>{user.role}</TableCell>
               <TableCell>

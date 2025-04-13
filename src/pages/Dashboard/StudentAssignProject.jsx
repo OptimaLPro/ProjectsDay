@@ -23,6 +23,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useNavigate } from "react-router";
 import ToastMessage from "@/components/ui/ToastMessage";
 import { useInternships } from "@/hooks/useInternships";
+import { Card } from "@/components/ui/card";
 
 export default function StudentAssignProject() {
   const { user } = useAuth();
@@ -41,11 +42,6 @@ export default function StudentAssignProject() {
     useInternships();
 
   const userInternshipId = user?.internship;
-
-  console.log("userInternshipId", userInternshipId);
-  console.log("myProjectData", myProjectData);
-  console.log("internshipsData", internshipsData);
-  console.log("user", user);
 
   const {
     data: projects,
@@ -99,53 +95,57 @@ export default function StudentAssignProject() {
   }
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 bg-white shadow-lg rounded-xl relative">
-      <h1 className="text-xl font-semibold mb-4 text-center">Assign Project</h1>
+    <div className="max-w-md mx-auto mt-10 p-6  rounded-xl relative">
+      <Card className="p-6 shadow-xl hover:shadow-2xl backdrop-blur-md bg-white/40 border border-white/30 transition-all">
+        <h1 className="text-xl font-semibold mb-4 text-center">
+          Assign Project
+        </h1>
 
-      <div className="flex justify-center">
-        <Select
-          value={selectedProjectId}
-          onValueChange={(val) => setSelectedProjectId(val)}
+        <div className="flex justify-center ">
+          <Select
+            value={selectedProjectId}
+            onValueChange={(val) => setSelectedProjectId(val)}
+          >
+            <SelectTrigger className="w-74 bg-white">
+              <SelectValue placeholder="Select a Project" />
+            </SelectTrigger>
+            <SelectContent>
+              {projects?.map((p) => (
+                <SelectItem key={p._id} value={p._id}>
+                  {p.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        <Button
+          onClick={() => setShowDialog(true)}
+          className="mt-4 w-full"
+          disabled={mutation.isPending || !selectedProjectId}
         >
-          <SelectTrigger className="w-60">
-            <SelectValue placeholder="Select a Project" />
-          </SelectTrigger>
-          <SelectContent>
-            {projects?.map((p) => (
-              <SelectItem key={p._id} value={p._id}>
-                {p.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
+          {mutation.isPending ? "Assigning..." : "Assign Me to This Project"}
+        </Button>
 
-      <Button
-        onClick={() => setShowDialog(true)}
-        className="mt-4 w-full"
-        disabled={mutation.isPending || !selectedProjectId}
-      >
-        {mutation.isPending ? "Assigning..." : "Assign Me to This Project"}
-      </Button>
-
-      <Dialog open={showDialog} onOpenChange={setShowDialog}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Are you sure?</DialogTitle>
-          </DialogHeader>
-          <p>
-            You are about to join this project. This action cannot be undone.
-          </p>
-          <DialogFooter>
-            <Button variant="secondary" onClick={() => setShowDialog(false)}>
-              Cancel
-            </Button>
-            <Button onClick={handleConfirm} disabled={mutation.isPending}>
-              {mutation.isPending ? "Assigning..." : "Yes, Assign Me"}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+        <Dialog open={showDialog} onOpenChange={setShowDialog}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Are you sure?</DialogTitle>
+            </DialogHeader>
+            <p>
+              You are about to join this project. This action cannot be undone.
+            </p>
+            <DialogFooter>
+              <Button variant="secondary" onClick={() => setShowDialog(false)}>
+                Cancel
+              </Button>
+              <Button className="bg-green-600 hover:bg-green-700" onClick={handleConfirm} disabled={mutation.isPending}>
+                {mutation.isPending ? "Assigning..." : "Yes, Assign Me"}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </Card>
     </div>
   );
 }

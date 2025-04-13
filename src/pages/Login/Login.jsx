@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -8,6 +9,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import ToastMessage from "@/components/ui/ToastMessage";
 import { useAuth } from "@/context/AuthContext";
 import { useLogin } from "@/hooks/useAuth.js";
 import { loginScheme } from "@/schemas/loginSchema.js";
@@ -34,6 +36,10 @@ export function Login() {
   const loginMutation = useLogin((token) => {
     login(token);
     navigate("/dashboard");
+    ToastMessage({
+      type: "success",
+      message: "Welcome back!",
+    });
   });
 
   const onSubmit = (values) => {
@@ -43,66 +49,72 @@ export function Login() {
         const message =
           err?.response?.data?.error || "Something went wrong, try again.";
         setError(message);
+        ToastMessage({
+          type: "error",
+          message: message,
+        });
       },
     });
   };
 
   return (
     <div className="relative mx-auto w-[80%] max-w-[300px] mt-16">
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-lg">Email</FormLabel>
-                <FormControl>
-                  <Input
-                    type="email"
-                    placeholder="Enter your email"
-                    {...field}
-                    className="bg-white shadow-xl focus:ring-primary"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="password"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-lg">Password</FormLabel>
-                <FormControl>
-                  <Input
-                    type="password"
-                    placeholder="Enter your password"
-                    {...field}
-                    className="bg-white shadow-xl focus:ring-primary"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+      <Card className="p-6 shadow-xl hover:shadow-2xl backdrop-blur-md bg-white/40 border border-white/30 transition-all">
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-lg">Email</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="email"
+                      placeholder="Enter your email"
+                      {...field}
+                      className="bg-white shadow-xl focus:ring-primary"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-lg">Password</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="password"
+                      placeholder="Enter your password"
+                      {...field}
+                      className="bg-white shadow-xl focus:ring-primary"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          {error && (
-            <p className="text-red-500 text-center text-sm mt-2">{error}</p>
-          )}
+            {error && (
+              <p className="text-red-500 text-center text-sm mt-2">{error}</p>
+            )}
 
-          <div className="flex items-center justify-center mt-12">
-            <Button
-              type="submit"
-              className="text-lg shadow-lg"
-              disabled={loginMutation.isPending}
-            >
-              {loginMutation.isPending ? "Logging in..." : "Submit"}
-            </Button>
-          </div>
-        </form>
-      </Form>
+            <div className="flex items-center justify-center mt-12">
+              <Button
+                type="submit"
+                className="text-lg shadow-lg"
+                disabled={loginMutation.isPending}
+              >
+                {loginMutation.isPending ? "Logging in..." : "Submit"}
+              </Button>
+            </div>
+          </form>
+        </Form>
+      </Card>
     </div>
   );
 }

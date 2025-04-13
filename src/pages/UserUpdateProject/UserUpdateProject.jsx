@@ -91,16 +91,12 @@ export function UserUpdateProject() {
         members,
       } = projectData.project;
 
-      console.log("members", members);
-
       const internshipObj = internshipsData.find((i) => i._id === internship);
       const instructorObj = instructorsData.find((i) => i._id === instructor);
       const memberObjects = (members || []).map((id) => {
         const user = userList.find((u) => u._id === id);
         return { email: user?.email || "" }; // ✅ מחזיר email אמיתי
       });
-
-      console.log("memberObjects", memberObjects);
 
       form.reset({
         name,

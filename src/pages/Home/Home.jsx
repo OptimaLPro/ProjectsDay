@@ -79,7 +79,7 @@ const Home = () => {
               ) : hasNextPage ? (
                 <InPlaceLoader />
               ) : (
-                <div className="text-gray-400">The End</div>
+                <div className="text-gray-600">The End</div>
               )}
             </div>
           </>

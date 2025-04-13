@@ -183,19 +183,19 @@ export default function EditProjectDialog({ project, onClose, onSave }) {
             </GenericFormField>
 
             <GenericFormField
-              name="description"
-              control={form.control}
-              label="Description"
-            >
-              {(field) => <Textarea {...field} placeholder="Description" />}
-            </GenericFormField>
-
-            <GenericFormField
               name="short_description"
               control={form.control}
               label="Short Description"
             >
               {(field) => <Textarea {...field} placeholder="Brief summary" />}
+            </GenericFormField>
+
+            <GenericFormField
+              name="description"
+              control={form.control}
+              label="Description"
+            >
+              {(field) => <Textarea {...field} placeholder="Description" />}
             </GenericFormField>
 
             <GenericFormField

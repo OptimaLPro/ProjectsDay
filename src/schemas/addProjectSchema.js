@@ -11,9 +11,16 @@ export const addProjectSchema = z.object({
   description: z
     .string()
     .min(1, { message: "Description is required." })
-    .max(500, { message: "Project description must be at most 500 characters." }),
+    .max(500, {
+      message: "Project description must be at most 500 characters.",
+    }),
 
-  short_description: z.string().optional(),
+  short_description: z
+    .string()
+    .min(1, { message: "Internship is required." })
+    .max(200, {
+      message: "Project short description must be at most 200 characters.",
+    }),
 
   youtube: z.string().optional(),
 

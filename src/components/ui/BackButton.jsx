@@ -8,7 +8,7 @@ const BackButton = () => {
     <div className="flex justify-center items-center my-12">
       <ArrowLeft
         onClick={() => navigate(-1)}
-        className="mb-12 w-10 h-10 p-2 text-gray-600 bg-gray-300 rounded-full flex items-center justify-center shadow-md hover:bg-gray-300 transition pointer duration-200 cursor-pointer"
+        className="mb-12 w-10 h-10 p-2 text-white bg-zinc-600 rounded-full flex items-center justify-center shadow-md hover:bg-gray-800 transition pointer duration-200 cursor-pointer"
       />
     </div>
   );

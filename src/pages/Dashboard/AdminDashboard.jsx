@@ -55,7 +55,7 @@ const AdminDashboard = ({ onLogout }) => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {links.map(({ href, label, icon }) => (
             <Link to={href} key={href}>
-              <Card className="hover:shadow-md transition-shadow cursor-pointer h-full">
+              <Card className="p-6 shadow-xl hover:shadow-2xl backdrop-blur-md bg-white/40 border border-white/30 transition-all">
                 <CardContent className="p-6 flex flex-col items-center justify-center h-full text-center">
                   {icon}
                   <CardTitle className="text-lg font-semibold">

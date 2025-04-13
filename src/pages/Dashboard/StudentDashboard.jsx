@@ -1,46 +1,60 @@
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Edit, Link2, LogOut, Plus } from "lucide-react";
 import { Link } from "react-router";
 import UnassignProjectButton from "./UnassignProjectButton";
 
 const StudentDashboard = ({ hasProject, onLogout }) => {
+  const links = !hasProject
+    ? [
+        {
+          href: "/dashboard/add-project",
+          label: "Add Project",
+          icon: <Plus className="h-8 w-8 mb-2 text-primary" />,
+        },
+        {
+          href: "/dashboard/assign-project",
+          label: "Assign Project",
+          icon: <Link2 className="h-8 w-8 mb-2 text-green-600" />,
+        },
+      ]
+    : [
+        {
+          href: "/dashboard/update-project",
+          label: "Update Project",
+          icon: <Edit className="h-8 w-8 mb-2 text-primary" />,
+        },
+      ];
+
   return (
-    <div className="mt-5 max-w-[90%] mx-auto realtive">
-      <main className="container mx-auto px-5 lg:px-4 relative">
-        <div className="flex flex-col md:items-center justify-between mb-8 gap-4">
-          <h1 className="text-2xl font-bold text-center">Student Dashboard</h1>
-          <div className="flex gap-3 flex-col justify-center items-center mt-12">
-            {!hasProject ? (
-              <>
-                <Link to="/dashboard/add-project">
-                  <Button className="gap-2">
-                    <Plus className="h-4 w-4" />
-                    Add Project
-                  </Button>
-                </Link>
-                <Link to="/dashboard/assign-project">
-                  <Button className="gap-2 bg-green-600 hover:bg-green-700 text-white">
-                    <Link2 className="h-4 w-4" />
-                    Assign Project
-                  </Button>
-                </Link>
-              </>
-            ) : (
-              <>
-                <Link to="/dashboard/update-project">
-                  <Button className="gap-2">
-                    <Edit className="h-4 w-4" />
-                    Update Project
-                  </Button>
-                </Link>
-                <UnassignProjectButton />
-              </>
-            )}
-            <Button variant="outline" className="gap-2" onClick={onLogout}>
-              <LogOut className="h-4 w-4" />
-              Logout
-            </Button>
-          </div>
+    <div className="mt-5 max-w-6xl mx-auto relative">
+      <main className="container mx-auto px-5 lg:px-4">
+        <h1 className="text-3xl font-bold text-center mb-12">
+          Student Dashboard
+        </h1>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">
+          {links.map(({ href, label, icon }) => (
+            <Link to={href} key={href}>
+              <Card className="p-6 shadow-xl hover:shadow-2xl backdrop-blur-md bg-white/40 border border-white/30 transition-all">
+                <CardContent className="p-6 flex flex-col items-center justify-center h-full text-center">
+                  {icon}
+                  <CardTitle className="text-lg font-semibold">
+                    {label}
+                  </CardTitle>
+                </CardContent>
+              </Card>
+            </Link>
+          ))}
+
+          {hasProject && <UnassignProjectButton />}
+        </div>
+
+        <div className="flex justify-center my-12">
+          <Button variant="outline" className="gap-2" onClick={onLogout}>
+            <LogOut className="h-4 w-4" />
+            Logout
+          </Button>
         </div>
       </main>
     </div>

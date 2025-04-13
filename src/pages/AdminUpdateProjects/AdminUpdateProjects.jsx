@@ -4,7 +4,7 @@ import api from "@/api/api";
 import { Input } from "@/components/ui/input";
 import Loader from "@/components/Loader/Loader";
 import Error from "@/components/Error/Error";
-import EditProjectDialog from "./EditProjectDialog";
+import EditProjectDialog from "./AdminEditProjectDialog";
 import DeleteProjectDialog from "./DeleteProjectDialog";
 import AdminUpdateProjectsTable from "./AdminUpdateProjectsTable";
 import { useUserEmails } from "@/hooks/useUserEmails";
