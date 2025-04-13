@@ -61,7 +61,7 @@ const OpenPage = ({ setShowLightTheme, setShowWelcome }) => {
     >
       <div className="text-center">
         <motion.h1
-          className="text-4xl md:text-6xl font-bold mb-6 leading-tight"
+          className="text-5xl md:text-6xl font-bold mb-6 leading-tight"
           variants={titleVariants}
         >
           <span className="block">Colman's</span>

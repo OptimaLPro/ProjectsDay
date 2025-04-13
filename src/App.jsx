@@ -1,16 +1,35 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 import Router from "../Router";
 import Header from "./components/Header/Header";
 import Aurora from "./components/ui/Aurora";
 import NetBackground from "./components/NetBackground";
-import { Toaster } from "sonner";
-import { Button } from "./components/ui/button";
 import OpenPage from "./components/OpenPage/OpenPage";
+import { Toaster } from "sonner";
 
 function App() {
-  const [showWelcome, setShowWelcome] = useState(true);
-  const [showLightTheme, setShowLightTheme] = useState(false); // שליטה באיזה NetBackground מוצג
+  const [showWelcome, setShowWelcome] = useState(false);
+  const [showLightTheme, setShowLightTheme] = useState(false);
+
+  useEffect(() => {
+    const hasVisited = sessionStorage.getItem("hasVisited");
+    const theme = sessionStorage.getItem("theme");
+
+    if (!hasVisited) {
+      // פעם ראשונה - מציג את welcome ושומר שביקר
+      setShowWelcome(true);
+      sessionStorage.setItem("hasVisited", "true");
+    }
+
+    if (theme === "light") {
+      setShowLightTheme(true);
+    }
+  }, []);
+
+  const handleSetLightTheme = () => {
+    setShowLightTheme(true);
+    sessionStorage.setItem("theme", "light");
+  };
 
   return (
     <>
@@ -26,12 +45,14 @@ function App() {
       <NetBackground theme="dark" isVisible={!showLightTheme} />
       <NetBackground theme="light" isVisible={showLightTheme} />
 
-      {showWelcome ? (
+      {showWelcome && (
         <OpenPage
-          setShowLightTheme={setShowLightTheme}
+          setShowLightTheme={handleSetLightTheme}
           setShowWelcome={setShowWelcome}
         />
-      ) : (
+      )}
+
+      {!showWelcome && (
         <>
           <div className="lg:pt-10 pt-5 px-5">
             <Header />

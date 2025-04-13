@@ -1,16 +1,16 @@
-import { useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { unassignMyself } from "@/api/projects";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
 } from "@/components/ui/dialog";
-import { Edit } from "lucide-react";
-import { unassignMyself } from "@/api/projects";
 import ToastMessage from "@/components/ui/ToastMessage";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Unlink } from "lucide-react";
+import { useState } from "react";
 
 export default function UnassignProjectButton() {
   const [open, setOpen] = useState(false);
@@ -47,7 +47,7 @@ export default function UnassignProjectButton() {
         className="gap-2"
         onClick={() => setOpen(true)}
       >
-        <Edit className="h-4 w-4" />
+        <Unlink className="h-4 w-4" />
         Unassign Project
       </Button>
 

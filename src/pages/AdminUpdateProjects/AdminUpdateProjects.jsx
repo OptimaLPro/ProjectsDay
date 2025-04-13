@@ -50,7 +50,9 @@ export default function AdminUpdateProjects() {
       .toLowerCase()
       .includes(filterName.toLowerCase());
 
-    const internshipMatch = project.internship
+    const internshipObj = internships.find((i) => i._id === project.internship);
+    const internshipName = internshipObj?.name || "";
+    const internshipMatch = internshipName
       .toLowerCase()
       .includes(filterInternship.toLowerCase());
 

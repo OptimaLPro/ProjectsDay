@@ -21,8 +21,8 @@ import Error from "@/components/Error/Error";
 import { useMyProject } from "@/hooks/useMyProject";
 import { useAuth } from "@/context/AuthContext";
 import { useNavigate } from "react-router";
-import { toast } from "sonner";
 import ToastMessage from "@/components/ui/ToastMessage";
+import { useInternships } from "@/hooks/useInternships";
 
 export default function StudentAssignProject() {
   const { user } = useAuth();
@@ -37,22 +37,32 @@ export default function StudentAssignProject() {
     isError: errorMyProject,
   } = useMyProject();
 
+  const { data: internshipsData = [], isLoading: loadingInternships } =
+    useInternships();
+
+  const userInternshipId = user?.internship;
+
+  console.log("userInternshipId", userInternshipId);
+  console.log("myProjectData", myProjectData);
+  console.log("internshipsData", internshipsData);
+  console.log("user", user);
+
   const {
     data: projects,
     isLoading: loadingProjects,
     isError: errorProjects,
   } = useQuery({
-    queryKey: ["available-projects"],
+    queryKey: ["available-projects", userInternshipId],
     queryFn: async () => {
       const { data } = await api.get("/projects");
       return data.projects.filter(
-        (p) => p.internship === user?.internship && p.members.length < 4
+        (p) => p.internship === userInternshipId && p.members.length < 4
       );
     },
-    enabled: !!user && myProjectData?.exists === false,
+    enabled: !!userInternshipId && myProjectData?.exists === false,
   });
 
-  const isLoading = loadingMyProject || loadingProjects;
+  const isLoading = loadingMyProject || loadingProjects || loadingInternships;
   const isError = errorMyProject || errorProjects;
 
   const mutation = useMutation({
@@ -101,7 +111,7 @@ export default function StudentAssignProject() {
             <SelectValue placeholder="Select a Project" />
           </SelectTrigger>
           <SelectContent>
-            {projects.map((p) => (
+            {projects?.map((p) => (
               <SelectItem key={p._id} value={p._id}>
                 {p.name}
               </SelectItem>

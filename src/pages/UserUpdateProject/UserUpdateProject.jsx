@@ -76,7 +76,8 @@ export function UserUpdateProject() {
       !didReset &&
       projectData?.project &&
       internshipsData?.length > 0 &&
-      instructorsData?.length > 0
+      instructorsData?.length > 0 &&
+      userList.length > 0
     ) {
       const {
         name,
@@ -90,12 +91,20 @@ export function UserUpdateProject() {
         members,
       } = projectData.project;
 
+      console.log("members", members);
+
       const internshipObj = internshipsData.find((i) => i._id === internship);
       const instructorObj = instructorsData.find((i) => i._id === instructor);
+      const memberObjects = (members || []).map((id) => {
+        const user = userList.find((u) => u._id === id);
+        return { email: user?.email || "" }; // ✅ מחזיר email אמיתי
+      });
+
+      console.log("memberObjects", memberObjects);
 
       form.reset({
         name,
-        internship: internshipObj?.name ?? "",
+        internship: internship,
         description,
         short_description: short_description ?? "",
         youtube: youtube ?? "",
@@ -104,7 +113,7 @@ export function UserUpdateProject() {
         instructor: instructorObj?.name ?? "",
         year,
         image: undefined,
-        members,
+        members: memberObjects,
       });
 
       setDidReset(true);
@@ -116,6 +125,15 @@ export function UserUpdateProject() {
     const newGalleryFiles = values.newGallery || [];
     const formData = new FormData();
 
+    const emailToIdMap = {};
+    userList.forEach((user) => {
+      emailToIdMap[user.email] = user._id;
+    });
+
+    const memberIds = values.members
+      .map((m) => emailToIdMap[m.email])
+      .filter(Boolean);
+
     formData.append("name", values.name);
     formData.append("internship", values.internship);
     formData.append("description", values.description);
@@ -123,7 +141,7 @@ export function UserUpdateProject() {
     formData.append("youtube", values.youtube);
     formData.append("instructor", values.instructor);
     formData.append("year", String(values.year));
-    formData.append("members", JSON.stringify(values.members));
+    formData.append("members", JSON.stringify(memberIds));
     formData.append("gallery", JSON.stringify(values.gallery));
 
     if (imageFile) {
@@ -195,7 +213,7 @@ export function UserUpdateProject() {
                 </SelectTrigger>
                 <SelectContent>
                   {internshipsData?.map((internship) => (
-                    <SelectItem key={internship.id} value={internship.name}>
+                    <SelectItem key={internship._id} value={internship._id}>
                       {internship.name}
                     </SelectItem>
                   ))}
@@ -352,7 +370,7 @@ export function UserUpdateProject() {
                 className="mb-4 space-y-2 border p-4 rounded bg-white"
               >
                 <GenericFormField
-                  name={`members.${index}`}
+                  name={`members.${index}.email`}
                   control={form.control}
                   label="Member Email"
                 >
@@ -364,6 +382,7 @@ export function UserUpdateProject() {
                     />
                   )}
                 </GenericFormField>
+
                 <Button
                   variant="destructive"
                   type="button"
@@ -373,12 +392,12 @@ export function UserUpdateProject() {
                 </Button>
               </div>
             ))}
-            <Button type="button" onClick={() => append("")}>
+            <Button type="button" onClick={() => append({ email: "" })}>
               Add Member
             </Button>
           </div>
 
-          <div className="flex justify-center mt-8">
+          <div className="flex justify-center my-12">
             <Button type="submit" className="text-lg shadow-lg">
               <Save className="w-4 h-4 mr-2" /> Save Changes
             </Button>

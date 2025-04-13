@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Edit, LogOut, Plus } from "lucide-react";
+import { Edit, Link2, LogOut, Plus } from "lucide-react";
 import { Link } from "react-router";
 import UnassignProjectButton from "./UnassignProjectButton";
 
@@ -19,8 +19,8 @@ const StudentDashboard = ({ hasProject, onLogout }) => {
                   </Button>
                 </Link>
                 <Link to="/dashboard/assign-project">
-                  <Button className="gap-2">
-                    <Plus className="h-4 w-4" />
+                  <Button className="gap-2 bg-green-600 hover:bg-green-700 text-white">
+                    <Link2 className="h-4 w-4" />
                     Assign Project
                   </Button>
                 </Link>

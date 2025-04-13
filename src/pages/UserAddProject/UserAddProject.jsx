@@ -11,6 +11,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import ToastMessage from "@/components/ui/ToastMessage";
 import { useInstructors } from "@/hooks/useInstructors";
 import { useInternships } from "@/hooks/useInternships";
 import { useAuth } from "@/context/AuthContext";
@@ -21,6 +22,8 @@ import { useFieldArray, useForm } from "react-hook-form";
 import GenericFormField from "@/components/GenericFormField/GenericFormField";
 import { useNavigate } from "react-router";
 import api from "@/api/api";
+import EmailAutocomplete from "@/components/ui/EmailAutocomplete";
+import { useUserEmails } from "@/hooks/useUserEmails";
 
 export function UserAddProject() {
   const navigate = useNavigate();
@@ -38,16 +41,22 @@ export function UserAddProject() {
     isError: instructorsError,
   } = useInstructors();
 
+  const { data: userList = [] } = useUserEmails();
+
   const form = useForm({
     resolver: zodResolver(addProjectSchema),
     defaultValues: {
       name: "",
       internship: user?.internship || "",
       description: "",
+      short_description: "",
+      youtube: "",
+      gallery: [],
+      newGallery: undefined,
       instructor: "",
       year: new Date().getFullYear(),
       image: undefined,
-      members: [{ name: "", email: "" }],
+      members: [{ email: user?.email || "" }], // ✅ אימייל ראשון של המשתמש
     },
   });
 
@@ -57,69 +66,69 @@ export function UserAddProject() {
   });
 
   const onSubmit = async (values) => {
-    const imageFile = values.image[0];
+    const imageFile = values.image?.[0];
+    const newGalleryFiles = values.newGallery || [];
 
     const formData = new FormData();
     formData.append("name", values.name);
     formData.append("internship", values.internship);
     formData.append("description", values.description);
+    formData.append("short_description", values.short_description);
+    formData.append("youtube", values.youtube);
     formData.append("instructor", values.instructor);
     formData.append("year", String(values.year));
-    formData.append("image", imageFile);
     formData.append("members", JSON.stringify(values.members));
+    formData.append("gallery", JSON.stringify(values.gallery || []));
+
+    if (imageFile) {
+      formData.append("image", imageFile);
+    }
+
+    Array.from(newGalleryFiles).forEach((file) => {
+      formData.append("newGalleryFiles", file);
+    });
 
     try {
-      const response = await api.post("/projects/create", formData);
+      await api.post("/projects/create", formData);
       navigate("/dashboard");
+      ToastMessage({
+        type: "success",
+        message: "Project created successfully.",
+      });
     } catch (error) {
       console.error("Failed to create project:", error);
+      ToastMessage({ type: "error", message: "Failed to create project." });
     }
   };
 
-  if (internshipsLoading || instructorsLoading) {
-    return <Loader />;
-  }
+  if (internshipsLoading || instructorsLoading) return <Loader />;
+  if (internshipsError || instructorsError) return <Error />;
 
-  if (internshipsError || instructorsError) {
-    return <Error />;
-  }
+  const selectedInternship =
+    internshipsData?.find((i) => i._id === user?.internship) || null;
 
   return (
     <div className="relative mx-auto w-[80%] max-w-[600px] mt-4">
       <h1 className="text-2xl font-bold text-center mb-8">Add New Project</h1>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          <GenericFormField
-            name="name"
-            control={form.control}
-            label="Project Name"
-          >
+          <GenericFormField name="name" control={form.control} label="Project Name">
             {(field) => (
-              <Input
-                {...field}
-                placeholder="Enter project name"
-                className="bg-white shadow-xl focus:ring-primary"
-              />
+              <Input {...field} placeholder="Enter project name" className="bg-white shadow-xl" />
             )}
           </GenericFormField>
 
-          <GenericFormField
-            name="internship"
-            control={form.control}
-            label="Internship"
-          >
+          <GenericFormField name="internship" control={form.control} label="Internship">
             {(field) => (
-              <Select
-                value={field.value}
-                onValueChange={field.onChange}
-                disabled
-              >
-                <SelectTrigger className="bg-white shadow-xl focus:ring-primary">
-                  <SelectValue placeholder="Select internship" />
+              <Select value={field.value} onValueChange={field.onChange} disabled>
+                <SelectTrigger className="bg-white shadow-xl">
+                  <SelectValue placeholder="Select internship">
+                    {selectedInternship?.name || "Select internship"}
+                  </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
                   {internshipsData?.map((internship) => (
-                    <SelectItem key={internship.id} value={internship.name}>
+                    <SelectItem key={internship._id} value={internship._id}>
                       {internship.name}
                     </SelectItem>
                   ))}
@@ -128,28 +137,66 @@ export function UserAddProject() {
             )}
           </GenericFormField>
 
-          <GenericFormField
-            name="description"
-            control={form.control}
-            label="Description"
-          >
+          <GenericFormField name="description" control={form.control} label="Description">
             {(field) => (
-              <Textarea
-                {...field}
-                placeholder="Enter project description"
-                className="bg-white shadow-xl focus:ring-primary"
+              <Textarea {...field} placeholder="Description" className="bg-white shadow-xl" />
+            )}
+          </GenericFormField>
+
+          <GenericFormField name="short_description" control={form.control} label="Short Description">
+            {(field) => (
+              <Textarea {...field} placeholder="Brief summary..." className="bg-white shadow-xl" />
+            )}
+          </GenericFormField>
+
+          <GenericFormField name="youtube" control={form.control} label="YouTube Link">
+            {(field) => (
+              <Input {...field} placeholder="https://youtube.com/..." className="bg-white shadow-xl" />
+            )}
+          </GenericFormField>
+
+          <GenericFormField name="gallery" control={form.control} label="Gallery (optional)">
+            {(field) => (
+              <div className="flex flex-wrap gap-4">
+                {field.value?.map((url, index) => (
+                  <div key={index} className="relative w-32 h-20">
+                    <img
+                      src={url}
+                      alt={`gallery-${index}`}
+                      className="w-full h-full object-cover rounded shadow"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const updated = field.value.filter((_, i) => i !== index);
+                        field.onChange(updated);
+                      }}
+                      className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs"
+                    >
+                      ×
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </GenericFormField>
+
+          <GenericFormField name="newGallery" control={form.control} label="Add New Gallery Images">
+            {(field) => (
+              <Input
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={(e) => field.onChange(e.target.files)}
+                className="bg-white shadow-xl"
               />
             )}
           </GenericFormField>
 
-          <GenericFormField
-            name="instructor"
-            control={form.control}
-            label="Instructor"
-          >
+          <GenericFormField name="instructor" control={form.control} label="Instructor">
             {(field) => (
               <Select value={field.value} onValueChange={field.onChange}>
-                <SelectTrigger className="bg-white shadow-xl focus:ring-primary">
+                <SelectTrigger className="bg-white shadow-xl">
                   <SelectValue placeholder="Select instructor" />
                 </SelectTrigger>
                 <SelectContent>
@@ -165,27 +212,17 @@ export function UserAddProject() {
 
           <GenericFormField name="year" control={form.control} label="Year">
             {(field) => (
-              <Input
-                {...field}
-                type="number"
-                placeholder="Enter year"
-                disabled
-                className="bg-white shadow-xl focus:ring-primary"
-              />
+              <Input {...field} type="number" disabled className="bg-white shadow-xl" />
             )}
           </GenericFormField>
 
-          <GenericFormField
-            name="image"
-            control={form.control}
-            label="Project Image"
-          >
+          <GenericFormField name="image" control={form.control} label="Project Image">
             {(field) => (
               <Input
                 type="file"
                 accept="image/*"
                 onChange={(e) => field.onChange(e.target.files)}
-                className="bg-white shadow-xl focus:ring-primary"
+                className="bg-white shadow-xl"
               />
             )}
           </GenericFormField>
@@ -193,61 +230,39 @@ export function UserAddProject() {
           <div>
             <h2 className="text-xl font-semibold mb-2">Team Members</h2>
             {fields.map((item, index) => (
-              <div key={item.id} className="mb-4 space-y-2 border p-4 rounded">
-                <GenericFormField
-                  name={`members.${index}.name`}
-                  control={form.control}
-                  label="Member Name"
-                >
-                  {(field) => (
-                    <Input
-                      {...field}
-                      placeholder="Enter member name"
-                      className="bg-white shadow-xl focus:ring-primary"
-                    />
-                  )}
-                </GenericFormField>
-
+              <div key={item.id} className="mb-4 space-y-2 border p-4 rounded bg-white">
                 <GenericFormField
                   name={`members.${index}.email`}
                   control={form.control}
                   label="Member Email"
                 >
-                  {(field) => (
-                    <Input
-                      {...field}
-                      type="email"
-                      placeholder="Enter member email"
-                      className="bg-white shadow-xl focus:ring-primary"
-                    />
-                  )}
+                  {(field) =>
+                    index === 0 ? (
+                      <Input value={field.value} disabled className="bg-white shadow-xl" />
+                    ) : (
+                      <EmailAutocomplete
+                        users={userList}
+                        value={field.value}
+                        onChange={field.onChange}
+                      />
+                    )
+                  }
                 </GenericFormField>
 
-                <Button
-                  variant="destructive"
-                  className="mt-4"
-                  onClick={() => remove(index)}
-                >
-                  <div className="flex items-center gap-2">
-                    <Delete />
-                    Remove Member
-                  </div>
-                </Button>
+                {index > 0 && (
+                  <Button variant="destructive" type="button" onClick={() => remove(index)}>
+                    <Delete className="w-4 h-4" /> Delete Member
+                  </Button>
+                )}
               </div>
             ))}
-            <div className="flex justify-end">
-              <Button onClick={() => append({ name: "", email: "" })}>
-                <div className="flex items-center gap-2">
-                  <Plus />
-                  Add Member
-                </div>
-              </Button>
-            </div>
-            {form.formState.errors.members && (
-              <p className="mt-2 text-sm text-red-600">
-                {form.formState.errors.members.message}
-              </p>
-            )}
+
+            <Button type="button" onClick={() => append({ email: "" })}>
+              <div className="flex items-center gap-2">
+                <Plus />
+                Add Member
+              </div>
+            </Button>
           </div>
 
           <div className="flex items-center justify-center mt-12">

@@ -52,6 +52,10 @@ export const updateProjectSchema = z.object({
     .optional(),
 
   members: z
-    .array(z.string().min(1, { message: "Member is required." }))
+    .array(
+      z.object({
+        email: z.string().email({ message: "Invalid email address" }),
+      })
+    )
     .min(1, { message: "At least one member is required." }),
 });

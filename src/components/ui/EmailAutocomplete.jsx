@@ -19,23 +19,24 @@ export default function EmailAutocomplete({ users, value, onChange }) {
   const filtered = users.filter((u) =>
     u.email.toLowerCase().includes(search.toLowerCase())
   );
-  const selectedUser = users.find((u) => u._id === value);
+
+  const selectedUser = users.find((u) => u.email === value);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Input
           placeholder="Select email..."
-          value={selectedUser?.email || ""}
+          value={selectedUser?.email || search}
           onChange={(e) => {
             setSearch(e.target.value);
             setOpen(true);
-            onChange(""); // reset selection
+            onChange(""); // reset selection to empty
           }}
           onClick={() => setOpen(true)}
         />
       </PopoverTrigger>
-      <PopoverContent className="p-0 w-[300px]">
+      <PopoverContent className="p-0 w-[300px] max-h-[300px] overflow-y-auto">
         <Command>
           <CommandInput
             placeholder="Search email..."
@@ -47,7 +48,7 @@ export default function EmailAutocomplete({ users, value, onChange }) {
               <CommandItem
                 key={user._id}
                 onSelect={() => {
-                  onChange(user._id);
+                  onChange(user.email);
                   setSearch(user.email);
                   setOpen(false);
                 }}

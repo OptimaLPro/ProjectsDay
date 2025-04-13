@@ -22,7 +22,12 @@ export const AuthProvider = ({ children }) => {
 
     try {
       const decoded = jwtDecode(savedToken);
-      setUser({ email: decoded.email, id: decoded.id, role: decoded.role });
+      setUser({
+        email: decoded.email,
+        id: decoded.id,
+        role: decoded.role,
+        internship: decoded.internship,
+      });
       setToken(savedToken);
     } catch (err) {
       console.error("Invalid token");

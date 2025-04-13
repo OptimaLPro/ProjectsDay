@@ -95,7 +95,7 @@ export default function EditProjectDialog({ project, onClose, onSave }) {
         instructor: instructorObj?._id ?? "",
         year,
         image: undefined,
-        members,
+        members: mappedEmails.map((email) => ({ email })), // ✅ זה התיקון
       });
     }
   }, [project, internships, instructors, form]);
@@ -103,6 +103,15 @@ export default function EditProjectDialog({ project, onClose, onSave }) {
   const onSubmit = async (values) => {
     const imageFile = values.image?.[0];
     const newGalleryFiles = values.newGallery || [];
+
+    const emailToIdMap = {};
+    userList.forEach((user) => {
+      emailToIdMap[user.email] = user._id;
+    });
+
+    const memberIds = values.members
+      .map((m) => emailToIdMap[m.email])
+      .filter(Boolean); // remove any not found
 
     const formData = new FormData();
     formData.append("name", values.name);
@@ -112,7 +121,7 @@ export default function EditProjectDialog({ project, onClose, onSave }) {
     formData.append("youtube", values.youtube);
     formData.append("instructor", values.instructor);
     formData.append("year", String(values.year));
-    formData.append("members", JSON.stringify(values.members));
+    formData.append("members", JSON.stringify(memberIds));
     formData.append("gallery", JSON.stringify(values.gallery));
 
     if (imageFile) {
@@ -293,7 +302,7 @@ export default function EditProjectDialog({ project, onClose, onSave }) {
                   className="mb-4 space-y-2 border p-4 rounded"
                 >
                   <GenericFormField
-                    name={`members.${index}`}
+                    name={`members.${index}.email`}
                     control={form.control}
                     label="Member Email"
                   >
