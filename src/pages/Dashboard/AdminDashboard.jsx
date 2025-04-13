@@ -67,7 +67,7 @@ const AdminDashboard = ({ onLogout }) => {
           ))}
         </div>
 
-        <div className="flex justify-center mt-12">
+        <div className="flex justify-center my-12">
           <Button variant="outline" className="gap-2" onClick={onLogout}>
             <LogOut className="h-4 w-4" />
             Logout
