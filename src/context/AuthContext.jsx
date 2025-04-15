@@ -24,9 +24,17 @@ export const AuthProvider = ({ children }) => {
       const decoded = jwtDecode(savedToken);
       setUser({
         email: decoded.email,
-        id: decoded.id,
+        _id: decoded._id,
         role: decoded.role,
         internship: decoded.internship,
+        year: decoded.year,
+        first_name: decoded.first_name,
+        last_name: decoded.last_name,
+        image: decoded.image,
+        linkedin: decoded.linkedin,
+        github: decoded.github,
+        website: decoded.website,
+        about: decoded.about,
       });
       setToken(savedToken);
     } catch (err) {
@@ -55,7 +63,20 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem("token", newToken);
     setToken(newToken);
     const decoded = jwtDecode(newToken);
-    setUser({ email: decoded.email, id: decoded.id, role: decoded.role });
+    setUser({
+      email: decoded.email,
+      _id: decoded._id,
+      role: decoded.role,
+      internship: decoded.internship,
+      year: decoded.year,
+      first_name: decoded.first_name,
+      last_name: decoded.last_name,
+      image: decoded.image,
+      linkedin: decoded.linkedin,
+      github: decoded.github,
+      website: decoded.website,
+      about: decoded.about,
+    });
   };
 
   const logout = () => {

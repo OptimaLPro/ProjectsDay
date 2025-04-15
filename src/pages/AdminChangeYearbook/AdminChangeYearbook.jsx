@@ -9,16 +9,27 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import Loader from "@/components/Loader/Loader";
 import Error from "@/components/Error/Error";
+import ToastMessage from "@/components/ui/ToastMessage";
 
 export default function AdminChangeYearbook() {
   const queryClient = useQueryClient();
   const [selectedYearbookId, setSelectedYearbookId] = useState("");
   const [showDialog, setShowDialog] = useState(false);
 
-  const { data: yearbooks, isLoading, isError } = useQuery({
+  const {
+    data: yearbooks,
+    isLoading,
+    isError,
+  } = useQuery({
     queryKey: ["yearbooks"],
     queryFn: () => api.get("/yearbooks").then((res) => res.data),
   });
@@ -34,6 +45,17 @@ export default function AdminChangeYearbook() {
     onSuccess: () => {
       queryClient.invalidateQueries(["yearbooks"]);
       queryClient.invalidateQueries(["active-yearbook"]);
+      ToastMessage({
+        type: "success",
+        message: "Yearbook updated successfully",
+      });
+    },
+    onError: (error) => {
+      console.error("Error updating yearbook:", error);
+      ToastMessage({
+        type: "error",
+        message: "Failed to update yearbook",
+      });
     },
   });
 
@@ -47,7 +69,10 @@ export default function AdminChangeYearbook() {
 
   const handleConfirm = () => {
     if (selectedYearbook) {
-      mutation.mutate({ id: selectedYearbook._id, year: selectedYearbook.year });
+      mutation.mutate({
+        id: selectedYearbook._id,
+        year: selectedYearbook.year,
+      });
       setShowDialog(false);
     }
   };
@@ -57,7 +82,9 @@ export default function AdminChangeYearbook() {
 
   return (
     <div className="max-w-md mx-auto mt-10 p-6 bg-white shadow-lg rounded-xl relative">
-      <h1 className="text-xl font-semibold mb-4 text-center">Select Active Yearbook</h1>
+      <h1 className="text-xl font-semibold mb-4 text-center">
+        Select Active Yearbook
+      </h1>
 
       <div className="flex justify-center">
         <Select
@@ -81,8 +108,7 @@ export default function AdminChangeYearbook() {
         onClick={() => setShowDialog(true)}
         className="mt-4 w-full"
         disabled={
-          mutation.isPending ||
-          selectedYearbookId === activeYearbook?._id
+          mutation.isPending || selectedYearbookId === activeYearbook?._id
         }
       >
         {mutation.isPending ? "Saving..." : "Save as Current Yearbook"}
@@ -95,7 +121,8 @@ export default function AdminChangeYearbook() {
           </DialogHeader>
           <p>
             Changing the active yearbook will update the view for all users.
-            From now on, the selected yearbook will be shown throughout the website.
+            From now on, the selected yearbook will be shown throughout the
+            website.
           </p>
           <DialogFooter>
             <Button variant="secondary" onClick={() => setShowDialog(false)}>

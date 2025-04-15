@@ -115,19 +115,25 @@ const Project = () => {
                         : "/images/default.jpg";
 
                     return (
-                      <li key={user._id} className="flex items-center gap-3">
-                        <img
-                          src={image}
-                          alt={user.name}
-                          className="w-8 h-8 rounded-full object-cover shadow-lg border-[1px] border-gray-300"
-                        />
-                        <span className="font-medium">
-                          {user.first_name} {user.last_name}
-                        </span>
-                        <span className="text-sm text-muted-foreground">
-                          ({user.email})
-                        </span>
-                      </li>
+                      <Link
+                        to={`/users/${user._id}`}
+                        className="text-sm text-primary"
+                      >
+                        <li key={user._id} className="flex items-center gap-3">
+                          <img
+                            src={image}
+                            alt={user.name}
+                            className="w-8 h-8 rounded-full object-cover shadow-lg border-[1px] border-gray-300"
+                          />
+                          <span className="font-medium">
+                            {user.first_name} {user.last_name}
+                          </span>
+
+                          <span className="text-sm text-muted-foreground">
+                            ({user.email})
+                          </span>
+                        </li>
+                      </Link>
                     );
                   })}
                 </ul>

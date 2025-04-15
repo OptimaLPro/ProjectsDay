@@ -6,6 +6,7 @@ import Aurora from "./components/ui/Aurora";
 import NetBackground from "./components/NetBackground";
 import OpenPage from "./components/OpenPage/OpenPage";
 import { Toaster } from "sonner";
+import ScrollToTopButton from "./components/ui/ScrollToTopButton";
 
 function App() {
   const [showWelcome, setShowWelcome] = useState(false);
@@ -57,6 +58,7 @@ function App() {
           <div className="lg:pt-10 pt-5 px-5">
             <Header />
           </div>
+          <ScrollToTopButton />
           <Router />
         </>
       )}

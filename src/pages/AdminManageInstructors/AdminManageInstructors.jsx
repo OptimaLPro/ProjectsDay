@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import AdminInstructorTable from "./AdminInstructorTable";
 import DeleteInstructorDialog from "./DeleteInstructorDialog";
 import InstructorEditDialog from "./InstructorEditDialog";
+import ToastMessage from "@/components/ui/ToastMessage";
 
 const DEFAULT_YEARS = [2024, 2025, 2026];
 
@@ -53,6 +54,17 @@ export default function AdminManageInstructors() {
       setSelectedYears([]);
       setSelectedInternships([]);
       setImageFile(null);
+      ToastMessage({
+        type: "success",
+        message: "Instructor saved successfully",
+      });
+    },
+    onError: (error) => {
+      console.error("Error saving instructor", error);
+      ToastMessage({
+        type: "error",
+        message: "Failed to save instructor",
+      });
     },
   });
 

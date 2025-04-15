@@ -18,6 +18,7 @@ import api from "@/api/api";
 import { useState } from "react";
 import { useInternships } from "@/hooks/useInternships";
 import Loader from "@/components/Loader/Loader";
+import ToastMessage from "../ui/ToastMessage";
 
 export default function EditUserDialog({ user, onClose, onSave }) {
   const [preview, setPreview] = useState(user.image || "/images/default.jpg");
@@ -57,9 +58,16 @@ export default function EditUserDialog({ user, onClose, onSave }) {
       await api.put(`/auth/users/${user._id}`, formData);
       onSave();
       onClose();
+      ToastMessage({
+        type: "success",
+        message: "User updated successfully",
+      });
     } catch (err) {
       console.error(err);
-      alert("Error updating user");
+      ToastMessage({
+        type: "error",
+        message: "Failed to update user",
+      });
     }
   };
 

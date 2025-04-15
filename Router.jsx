@@ -20,6 +20,8 @@ import { UserUpdateProject } from "@/pages/UserUpdateProject/UserUpdateProject";
 import { useEffect } from "react";
 import { Route, Routes } from "react-router";
 import StudentAssignProject from "@/pages/Dashboard/StudentAssignProject";
+import UserEditProfile from "@/pages/UserEditProfile/UserEditProfile";
+import UserPublicProfile from "@/pages/UserPublicProfile/UserPublicProfile";
 
 const Router = () => {
   useEffect(() => {
@@ -38,6 +40,7 @@ const Router = () => {
         <Route path="/instructors" element={<Instructors />} />
         <Route path="/instructors/:id" element={<InstructorProfile />} />
         <Route path="/unauthorized" element={<Unauthorized />} />
+        <Route path="/users/:id" element={<UserPublicProfile />} />
 
         {/* Protected routes (student) */}
         <Route element={<ProtectedRoute allowedRoles={["student", "admin"]} />}>
@@ -51,6 +54,7 @@ const Router = () => {
             path="/dashboard/assign-project"
             element={<StudentAssignProject />}
           />
+          <Route path="/dashboard/edit-profile" element={<UserEditProfile />} />
         </Route>
 
         {/* Protected routes (admin) */}

@@ -8,6 +8,7 @@ import { useState } from "react";
 import AdminAwardTable from "./AdminAwardTable";
 import AwardEditDialog from "./AwardEditDialog";
 import DeleteAwardDialog from "./DeleteAwardDialog";
+import ToastMessage from "@/components/ui/ToastMessage";
 
 export default function AdminManageAwards() {
   const queryClient = useQueryClient();
@@ -38,6 +39,17 @@ export default function AdminManageAwards() {
       queryClient.invalidateQueries(["awards"]);
       setOpenDialog(false);
       setEditData(null);
+      ToastMessage({
+        type: "success",
+        message: "Award saved successfully",
+      });
+    },
+    onError: (error) => {
+      console.error("Error saving award:", error);
+      ToastMessage({
+        type: "error",
+        message: "Failed to save award",
+      });
     },
   });
 

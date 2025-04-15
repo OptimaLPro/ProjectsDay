@@ -1,6 +1,6 @@
-import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Edit, Link2, LogOut, Plus } from "lucide-react";
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
+import { Edit, Link2, LogOut, Plus, User } from "lucide-react";
 import { Link } from "react-router";
 import UnassignProjectButton from "./UnassignProjectButton";
 
@@ -33,7 +33,7 @@ const StudentDashboard = ({ hasProject, onLogout }) => {
           Student Dashboard
         </h1>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-3 gap-6">
           {links.map(({ href, label, icon }) => (
             <Link to={href} key={href}>
               <Card className="hover:scale-105 duration-300 p-6 shadow-xl hover:shadow-2xl backdrop-blur-md bg-white/40 border border-white/30 transition-all">
@@ -48,6 +48,17 @@ const StudentDashboard = ({ hasProject, onLogout }) => {
           ))}
 
           {hasProject && <UnassignProjectButton />}
+
+          <Link to="/dashboard/edit-profile">
+            <Card className="hover:scale-105 duration-300 p-6 shadow-xl hover:shadow-2xl backdrop-blur-md bg-white/40 border border-white/30 transition-all">
+              <CardContent className="p-6 flex flex-col items-center justify-center h-full text-center">
+                <User className="h-8 w-8 mb-2 text-primary" />
+                <CardTitle className="text-lg font-semibold">
+                  Edit Profile
+                </CardTitle>
+              </CardContent>
+            </Card>
+          </Link>
         </div>
 
         <div className="flex justify-center my-12">

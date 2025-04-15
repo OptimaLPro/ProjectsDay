@@ -28,6 +28,7 @@ import { useFieldArray, useForm } from "react-hook-form";
 import EmailAutocomplete from "@/components/ui/EmailAutocomplete";
 import { useUserEmails } from "@/hooks/useUserEmails";
 import { useQuery } from "@tanstack/react-query";
+import ToastMessage from "@/components/ui/ToastMessage";
 
 const fetchAwards = async () => {
   const { data } = await api.get("/awards");
@@ -149,8 +150,16 @@ export default function EditProjectDialog({ project, onClose, onSave }) {
       await api.put(`/projects/${project._id}`, formData);
       onSave();
       onClose();
+      ToastMessage({
+        type: "success",
+        message: "Project updated successfully",
+      });
     } catch (error) {
       console.error("Failed to update project:", error);
+      ToastMessage({
+        type: "error",
+        message: "Failed to update project",
+      });
     }
   };
 

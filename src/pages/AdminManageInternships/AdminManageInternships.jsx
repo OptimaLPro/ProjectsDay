@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import AdminInternshipsTable from "./AdminInternshipsTable";
 import DeleteInternshipDialog from "./DeleteInternshipDialog";
 import InternshipEditDialog from "./InternshipEditDialog";
+import ToastMessage from "@/components/ui/ToastMessage";
 
 const DEFAULT_YEARS = [2024, 2025, 2026];
 
@@ -45,6 +46,17 @@ export default function AdminManageInternships() {
       setEditData(null);
       setSelectedYears([]);
       setSelectedInstructor("");
+      ToastMessage({
+        type: "success",
+        message: "Internship saved successfully",
+      });
+    },
+    onError: (error) => {
+      console.error("Error saving internship:", error);
+      ToastMessage({
+        type: "error",
+        message: "Failed to save internship",
+      });
     },
   });
 
