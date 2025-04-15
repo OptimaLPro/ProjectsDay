@@ -1,4 +1,4 @@
-import { Search, X } from "lucide-react";
+import { Search, Trophy, X } from "lucide-react";
 import { Combobox } from "../ui/combobox";
 import { Input } from "../ui/input";
 import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
@@ -52,7 +52,9 @@ const SearchBar = ({
         <TabsList
           className="w-full grid relative"
           style={{
-            gridTemplateColumns: `repeat(${internships.length}, minmax(0, 1fr))`,
+            gridTemplateColumns: `${internships
+              .map(() => "1fr")
+              .join(" ")} 0.5fr`,
           }}
         >
           {internships.map((internship) => (
@@ -64,6 +66,10 @@ const SearchBar = ({
               {internship.name}
             </TabsTrigger>
           ))}
+
+          <TabsTrigger value="awarded" className="text-sm cursor-pointer ">
+            <Trophy className="h-4 w-4 mr-2" />
+          </TabsTrigger>
         </TabsList>
       </Tabs>
     </>

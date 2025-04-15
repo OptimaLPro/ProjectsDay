@@ -11,6 +11,8 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
 import GenericFormField from "@/components/GenericFormField/GenericFormField";
 import { Card } from "@/components/ui/card";
+import ToastMessage from "@/components/ui/ToastMessage";
+import { useNavigate } from "react-router";
 
 const schema = z.object({
   first_name: z.string().max(30).optional(),
@@ -35,7 +37,8 @@ const schema = z.object({
 });
 
 export default function UserEditProfile() {
-  const { user, refreshUser } = useAuth();
+  const { user, updateUser } = useAuth();
+  const navigate = useNavigate();
 
   console.log(user);
 
@@ -80,12 +83,23 @@ export default function UserEditProfile() {
     }
 
     try {
-      await api.put(`/auth/users/${user._id}`, formData);
-      await refreshUser();
-      alert("Profile updated successfully.");
+      const res = await api.put(`/auth/users/${user._id}`, formData);
+      const { token, user: updatedUser } = res.data;
+
+      localStorage.setItem("token", token);
+      updateUser(updatedUser); // מתוך useAuth
+
+      navigate(-1);
+      ToastMessage({
+        message: "Profile updated successfully.",
+        type: "success",
+      });
     } catch (err) {
       console.error(err);
-      alert("Failed to update profile.");
+      ToastMessage({
+        message: "Failed to update profile.",
+        type: "error",
+      });
     }
   };
 
@@ -93,9 +107,7 @@ export default function UserEditProfile() {
 
   return (
     <div className="relative mx-auto w-[80%] max-w-[600px] mt-4">
-      <h1 className="text-2xl font-bold text-center mb-8">
-        Edit Your Profile
-      </h1>
+      <h1 className="text-2xl font-bold text-center mb-8">Edit Your Profile</h1>
       <Card className="p-6 shadow-xl hover:shadow-2xl backdrop-blur-md bg-white/40 border border-white/30 transition-all">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">

@@ -63,6 +63,24 @@ export function Combobox({
                   {internship.name}
                 </CommandItem>
               ))}
+
+              {/* 🏆 Awarded Projects option */}
+              <CommandItem
+                value="awarded"
+                onSelect={() => {
+                  setActiveInternship("awarded");
+                  setValue("awarded");
+                  setOpen(false);
+                }}
+              >
+                <Check
+                  className={cn(
+                    "mr-2 h-4 w-4",
+                    value === "awarded" ? "opacity-100" : "opacity-0"
+                  )}
+                />
+                🏆 Awarded
+              </CommandItem>
             </CommandGroup>
           </CommandList>
         </Command>

@@ -3,8 +3,16 @@ import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Edit, Link2, LogOut, Plus, User } from "lucide-react";
 import { Link } from "react-router";
 import UnassignProjectButton from "./UnassignProjectButton";
+import { useAuth } from "@/context/AuthContext";
+import { use, useEffect } from "react";
 
 const StudentDashboard = ({ hasProject, onLogout }) => {
+  const { user } = useAuth();
+
+  useEffect(() => {
+    console.log(user);
+  }, [user]);
+
   const links = !hasProject
     ? [
         {
@@ -50,9 +58,13 @@ const StudentDashboard = ({ hasProject, onLogout }) => {
           {hasProject && <UnassignProjectButton />}
 
           <Link to="/dashboard/edit-profile">
-            <Card className="hover:scale-105 duration-300 p-6 shadow-xl hover:shadow-2xl backdrop-blur-md bg-white/40 border border-white/30 transition-all">
+            <Card className="hover:scale-105 duration-300 p-6 shadow-xl hover:shadow-2xl backdrop-blur-md bg-white/40 border border-white/30 transition-all h-full">
               <CardContent className="p-6 flex flex-col items-center justify-center h-full text-center">
-                <User className="h-8 w-8 mb-2 text-primary" />
+                <img
+                  src={user.image || "/images/default.jpg"}
+                  alt={user.name}
+                  className="w-14 h-14 rounded-full object-cover shadow-lg border-[1px] border-gray-300"
+                />
                 <CardTitle className="text-lg font-semibold">
                   Edit Profile
                 </CardTitle>

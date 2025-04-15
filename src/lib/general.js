@@ -14,8 +14,12 @@ export const filterProjects = (
       project.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       project.description.toLowerCase().includes(searchQuery.toLowerCase());
 
+    const isAwarded = Array.isArray(project.awards) && project.awards.length > 0;
+
     const matchesInternship =
-      activeInternship === "All" || internshipName === activeInternship;
+      activeInternship === "All" ||
+      internshipName === activeInternship ||
+      (activeInternship === "awarded" && isAwarded);
 
     return matchesSearch && matchesInternship;
   });
