@@ -168,9 +168,20 @@ export function UserAddProject() {
                   Short Description
                   <Popover>
                     <PopoverTrigger asChild>
-                      <Info className="h-4 w-4 text-muted-foreground cursor-pointer" />
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-6 w-6 p-0"
+                      >
+                        <Info className="h-4 w-4 text-muted-foreground" />
+                      </Button>
                     </PopoverTrigger>
-                    <PopoverContent className="max-w-xs text-sm">
+                    <PopoverContent
+                      className="max-w-xs text-sm"
+                      side="top"
+                      align="start"
+                      collisionPadding={10}
+                    >
                       Max 200 characters. This will be shown as a short summary
                       of your project on the main page.
                     </PopoverContent>

@@ -46,7 +46,9 @@ const StudentDashboard = ({ hasProject, onLogout }) => {
             <Link to={href} key={href}>
               <Card className="hover:scale-105 duration-300 p-6 shadow-xl hover:shadow-2xl backdrop-blur-md bg-white/40 border border-white/30 transition-all">
                 <CardContent className="p-6 flex flex-col items-center justify-center h-full text-center">
-                  {icon}
+                  <div className="h-14 flex items-center justify-center mb-2">
+                    {icon}
+                  </div>
                   <CardTitle className="text-lg font-semibold">
                     {label}
                   </CardTitle>
@@ -58,13 +60,15 @@ const StudentDashboard = ({ hasProject, onLogout }) => {
           {hasProject && <UnassignProjectButton />}
 
           <Link to="/dashboard/edit-profile">
-            <Card className="hover:scale-105 duration-300 p-6 shadow-xl hover:shadow-2xl backdrop-blur-md bg-white/40 border border-white/30 transition-all h-full">
+            <Card className="hover:scale-105 duration-300 p-6 shadow-xl hover:shadow-2xl backdrop-blur-md bg-white/40 border border-white/30 transition-all">
               <CardContent className="p-6 flex flex-col items-center justify-center h-full text-center">
-                <img
-                  src={user.image || "/images/default.jpg"}
-                  alt={user.name}
-                  className="w-14 h-14 rounded-full object-cover shadow-lg border-[1px] border-gray-300"
-                />
+                <div className="h-14 flex items-center justify-center mb-2">
+                  <img
+                    src={user.image || "/images/default.jpg"}
+                    alt={user.name}
+                    className="w-14 h-14 rounded-full object-cover shadow-lg border-[1px] border-gray-300"
+                  />
+                </div>
                 <CardTitle className="text-lg font-semibold">
                   Edit Profile
                 </CardTitle>
