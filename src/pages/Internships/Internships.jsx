@@ -39,7 +39,7 @@ export default function Internships() {
               transition={{ delay: index * 0.1 }}
             >
               <Link to={`/internships/${internship._id}`}>
-                <Card className="p-6 shadow-xl hover:shadow-2xl backdrop-blur-md bg-white/40 border border-white/30 transition-all">
+                <Card className="hover:scale-105  duration-300 p-6 shadow-xl hover:shadow-2xl backdrop-blur-md bg-white/40 border border-white/30 transition-all">
                   <h2 className="text-2xl font-semibold mb-2">
                     {internship.name}
                   </h2>

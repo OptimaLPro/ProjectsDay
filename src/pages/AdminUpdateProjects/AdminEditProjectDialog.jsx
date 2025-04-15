@@ -27,11 +27,21 @@ import { useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import EmailAutocomplete from "@/components/ui/EmailAutocomplete";
 import { useUserEmails } from "@/hooks/useUserEmails";
+import { useQuery } from "@tanstack/react-query";
+
+const fetchAwards = async () => {
+  const { data } = await api.get("/awards");
+  return data;
+};
 
 export default function EditProjectDialog({ project, onClose, onSave }) {
   const { data: internships, isLoading: loadingInternships } = useInternships();
   const { data: instructors, isLoading: loadingInstructors } = useInstructors();
   const { data: userList = [] } = useUserEmails();
+  const { data: awardsList = [] } = useQuery({
+    queryKey: ["awards"],
+    queryFn: fetchAwards,
+  });
 
   const form = useForm({
     resolver: zodResolver(updateProjectSchema),
@@ -47,6 +57,7 @@ export default function EditProjectDialog({ project, onClose, onSave }) {
       year: new Date().getFullYear(),
       image: undefined,
       members: [{ email: "" }],
+      awards: [],
     },
   });
 
@@ -67,6 +78,7 @@ export default function EditProjectDialog({ project, onClose, onSave }) {
         instructor,
         year,
         members,
+        awards,
       } = project;
 
       const internshipObj = internships.find((i) => i._id === internship);
@@ -83,7 +95,6 @@ export default function EditProjectDialog({ project, onClose, onSave }) {
           return found?.email || null;
         })
         .filter(Boolean);
-
       form.reset({
         name,
         internship: internshipObj?._id ?? "",
@@ -95,10 +106,11 @@ export default function EditProjectDialog({ project, onClose, onSave }) {
         instructor: instructorObj?._id ?? "",
         year,
         image: undefined,
-        members: mappedEmails.map((email) => ({ email })), // ✅ זה התיקון
+        members: mappedEmails.map((email) => ({ email })),
+        awards: awards?.map((a) => (typeof a === "string" ? a : a._id)) ?? [],
       });
     }
-  }, [project, internships, instructors, form]);
+  }, [project, internships, instructors, userList]);
 
   const onSubmit = async (values) => {
     const imageFile = values.image?.[0];
@@ -111,7 +123,7 @@ export default function EditProjectDialog({ project, onClose, onSave }) {
 
     const memberIds = values.members
       .map((m) => emailToIdMap[m.email])
-      .filter(Boolean); // remove any not found
+      .filter(Boolean);
 
     const formData = new FormData();
     formData.append("name", values.name);
@@ -123,6 +135,7 @@ export default function EditProjectDialog({ project, onClose, onSave }) {
     formData.append("year", String(values.year));
     formData.append("members", JSON.stringify(memberIds));
     formData.append("gallery", JSON.stringify(values.gallery));
+    formData.append("awards", JSON.stringify(values.awards ?? []));
 
     if (imageFile) {
       formData.append("image", imageFile);
@@ -327,6 +340,68 @@ export default function EditProjectDialog({ project, onClose, onSave }) {
                 Add Member
               </Button>
             </div>
+
+            <GenericFormField
+              name="awards"
+              control={form.control}
+              label="Awards"
+            >
+              {(field) => (
+                <>
+                  <Select
+                    value=""
+                    onValueChange={(value) => {
+                      if (!Array.isArray(field.value)) {
+                        field.onChange([value]);
+                      } else if (!field.value.includes(value)) {
+                        field.onChange([...field.value, value]);
+                      }
+                    }}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Add award" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {awardsList.map((award) => (
+                        <SelectItem key={award._id} value={award._id}>
+                          {award.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {field.value?.map((awardId) => {
+                      const award = awardsList.find((a) => a._id === awardId);
+                      return (
+                        <div
+                          key={awardId}
+                          className="flex items-center gap-2 bg-gray-200 px-3 py-1 rounded-full"
+                        >
+                          <img
+                            src={award?.image}
+                            alt={award?.name}
+                            className="w-6 h-6 rounded-full object-cover"
+                          />
+                          <span>{award?.name}</span>
+                          <button
+                            type="button"
+                            onClick={() =>
+                              field.onChange(
+                                field.value.filter((id) => id !== awardId)
+                              )
+                            }
+                            className="text-red-500 font-bold text-sm"
+                          >
+                            ×
+                          </button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </>
+              )}
+            </GenericFormField>
 
             <div className="flex justify-end mt-4">
               <Button type="submit" className="text-lg shadow-lg">

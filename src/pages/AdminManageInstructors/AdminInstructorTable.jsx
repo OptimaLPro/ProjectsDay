@@ -47,7 +47,7 @@ export default function AdminInstructorTable({ instructors, onEdit, onDelete }) 
                 <TableCell>{instructor.name}</TableCell>
                 <TableCell>{instructor.years?.join(", ") || "—"}</TableCell>
                 <TableCell>{internshipNames || "—"}</TableCell>
-                <TableCell className="flex gap-2 justify-center">
+                <TableCell className="flex gap-2 justify-center h-full">
                   <Button size="sm" onClick={() => onEdit(instructor)}>
                     Edit
                   </Button>

@@ -11,7 +11,9 @@ export const updateProjectSchema = z.object({
   description: z
     .string()
     .min(1, { message: "Description is required." })
-    .max(500, { message: "Project description must be at most 500 characters." }),
+    .max(500, {
+      message: "Project description must be at most 500 characters.",
+    }),
 
   short_description: z
     .string()
@@ -30,9 +32,12 @@ export const updateProjectSchema = z.object({
       (val) => (val instanceof FileList ? val : undefined),
       z
         .instanceof(FileList)
-        .refine((files) => Array.from(files).every(f => f.size <= 10 * 1024 * 1024), {
-          message: "Each gallery image must be under 10MB.",
-        })
+        .refine(
+          (files) => Array.from(files).every((f) => f.size <= 10 * 1024 * 1024),
+          {
+            message: "Each gallery image must be under 10MB.",
+          }
+        )
     )
     .optional(),
 
@@ -45,9 +50,12 @@ export const updateProjectSchema = z.object({
       (val) => (val instanceof FileList ? val : undefined),
       z
         .instanceof(FileList)
-        .refine((files) => files.length === 0 || files[0]?.size <= 30 * 1024 * 1024, {
-          message: "Image must be under 30MB.",
-        })
+        .refine(
+          (files) => files.length === 0 || files[0]?.size <= 30 * 1024 * 1024,
+          {
+            message: "Image must be under 30MB.",
+          }
+        )
     )
     .optional(),
 
@@ -58,4 +66,6 @@ export const updateProjectSchema = z.object({
       })
     )
     .min(1, { message: "At least one member is required." }),
+
+  awards: z.array(z.string()).optional(), 
 });

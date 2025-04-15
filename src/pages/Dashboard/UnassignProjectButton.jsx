@@ -45,7 +45,7 @@ export default function UnassignProjectButton() {
     <>
       <Card
         onClick={() => setOpen(true)}
-        className="p-6 shadow-xl hover:shadow-2xl backdrop-blur-md bg-white/40 border border-white/30 transition-all"
+        className="hover:scale-105 duration-300 p-6 shadow-xl hover:shadow-2xl backdrop-blur-md bg-white/40 border border-white/30 transition-all"
       >
         <CardContent className="p-6 flex flex-col items-center justify-center h-full text-center">
           <Unlink className="h-8 w-8 mb-2"  color="red " />

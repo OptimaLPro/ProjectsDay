@@ -36,7 +36,7 @@ const StudentDashboard = ({ hasProject, onLogout }) => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">
           {links.map(({ href, label, icon }) => (
             <Link to={href} key={href}>
-              <Card className="p-6 shadow-xl hover:shadow-2xl backdrop-blur-md bg-white/40 border border-white/30 transition-all">
+              <Card className="hover:scale-105 duration-300 p-6 shadow-xl hover:shadow-2xl backdrop-blur-md bg-white/40 border border-white/30 transition-all">
                 <CardContent className="p-6 flex flex-col items-center justify-center h-full text-center">
                   {icon}
                   <CardTitle className="text-lg font-semibold">

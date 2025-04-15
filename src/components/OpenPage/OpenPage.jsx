@@ -53,7 +53,7 @@ const OpenPage = ({ setShowLightTheme, setShowWelcome }) => {
 
   return (
     <motion.div
-      className="fixed top-0 left-0 w-full h-screen z-50 flex items-center justify-center text-white"
+      className="h-[100dvh] fixed top-0 left-0 w-full z-50 flex items-center justify-center text-white"
       variants={containerVariants}
       initial="hidden"
       animate="visible"
