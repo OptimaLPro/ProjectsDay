@@ -62,7 +62,7 @@ export function UserAddProject() {
       instructor: "",
       year: new Date().getFullYear(),
       image: undefined,
-      members: [{ email: user?.email || "" }], // ✅ אימייל ראשון של המשתמש
+      members: [{ email: user?.email || "" }],
     },
   });
 

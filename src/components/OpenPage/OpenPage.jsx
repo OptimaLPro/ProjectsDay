@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Button } from "../ui/button";
+import RainbowButton from "../RainbowButton";
 
 const OpenPage = ({ setShowLightTheme, setShowWelcome }) => {
   const handleEnter = () => {
@@ -66,6 +67,7 @@ const OpenPage = ({ setShowLightTheme, setShowWelcome }) => {
         >
           <span className="block">Colman's</span>
           <span className="block">Projects Day</span>
+          {/* <RainbowButton /> */}
         </motion.h1>
 
         <motion.div variants={buttonVariants}>

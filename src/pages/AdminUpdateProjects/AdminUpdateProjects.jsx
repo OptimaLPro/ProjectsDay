@@ -1,14 +1,13 @@
-import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import api from "@/api/api";
-import { Input } from "@/components/ui/input";
-import Loader from "@/components/Loader/Loader";
 import Error from "@/components/Error/Error";
-import EditProjectDialog from "./AdminEditProjectDialog";
-import DeleteProjectDialog from "./DeleteProjectDialog";
-import AdminUpdateProjectsTable from "./AdminUpdateProjectsTable";
-import { useUserEmails } from "@/hooks/useUserEmails";
+import Loader from "@/components/Loader/Loader";
+import { Input } from "@/components/ui/input";
+import useAllProjects from "@/hooks/useAllProjects";
 import { useInternships } from "@/hooks/useInternships";
+import { useUserEmails } from "@/hooks/useUserEmails";
+import { useState } from "react";
+import EditProjectDialog from "./AdminEditProjectDialog";
+import AdminUpdateProjectsTable from "./AdminUpdateProjectsTable";
+import DeleteProjectDialog from "./DeleteProjectDialog";
 
 export default function AdminUpdateProjects() {
   const [selectedProject, setSelectedProject] = useState(null);
@@ -21,11 +20,7 @@ export default function AdminUpdateProjects() {
   const { data: internships = [] } = useInternships();
   const { data: userList = [] } = useUserEmails();
 
-  const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: ["admin-projects"],
-    queryFn: () => api.get("/projects/all").then((res) => res.data),
-    staleTime: 1000 * 60 * 10,
-  });
+  const { data, isLoading, isError, refetch } = useAllProjects();
 
   const openEditDialog = (project) => {
     setSelectedProject(project);

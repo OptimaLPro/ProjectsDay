@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import {
   Command,
@@ -11,16 +11,38 @@ import {
   PopoverTrigger,
   PopoverContent,
 } from "@/components/ui/popover";
+import useAllProjects from "@/hooks/useAllProjects";
 
 export default function EmailAutocomplete({ users, value, onChange }) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
+  const [filteredUsers, setFilteredUsers] = useState([]);
 
-  const filtered = users.filter((u) =>
-    u.email.toLowerCase().includes(search.toLowerCase())
-  );
+  const { data: allProjects = [] } = useAllProjects();
+
+  useEffect(() => {
+    // שלוף את כל ה־ObjectId של חברי פרויקטים
+    const assignedIds = new Set();
+    for (const project of allProjects) {
+      for (const memberId of project.members || []) {
+        if (typeof memberId === "string") {
+          assignedIds.add(memberId);
+        } else if (typeof memberId === "object" && memberId?.$oid) {
+          assignedIds.add(memberId.$oid);
+        }
+      }
+    }
+
+    // סנן משתמשים שלא משויכים לשום פרויקט לפי _id
+    const unassignedUsers = users.filter((user) => !assignedIds.has(user._id));
+    setFilteredUsers(unassignedUsers);
+  }, [users, allProjects]);
 
   const selectedUser = users.find((u) => u.email === value);
+
+  const displayedUsers = filteredUsers.filter((u) =>
+    u.email.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -31,7 +53,7 @@ export default function EmailAutocomplete({ users, value, onChange }) {
           onChange={(e) => {
             setSearch(e.target.value);
             setOpen(true);
-            onChange(""); // reset selection to empty
+            onChange(""); // reset selection
           }}
           onClick={() => setOpen(true)}
         />
@@ -44,7 +66,7 @@ export default function EmailAutocomplete({ users, value, onChange }) {
             onValueChange={setSearch}
           />
           <CommandGroup>
-            {filtered.map((user) => (
+            {displayedUsers.map((user) => (
               <CommandItem
                 key={user._id}
                 onSelect={() => {

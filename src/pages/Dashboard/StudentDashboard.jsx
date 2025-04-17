@@ -1,10 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
-import { Edit, Link2, LogOut, Plus, User } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
+import { Edit, Link2, LogOut, Plus } from "lucide-react";
+import { useEffect } from "react";
 import { Link } from "react-router";
 import UnassignProjectButton from "./UnassignProjectButton";
-import { useAuth } from "@/context/AuthContext";
-import { use, useEffect } from "react";
 
 const StudentDashboard = ({ hasProject, onLogout }) => {
   const { user } = useAuth();

@@ -24,9 +24,9 @@ const AvatarProfile = () => {
         <Avatar className="cursor-pointer border border-gray-300">
           {user ? (
             <>
-              <AvatarImage src="" alt={user.email} />
+              <AvatarImage src={user.image || ""} alt={user.email} />
               <AvatarFallback>
-                {user.email.charAt(0).toUpperCase()}
+                {user.image ? "" : user.email.charAt(0).toUpperCase()}
               </AvatarFallback>
             </>
           ) : (

@@ -22,6 +22,7 @@ import { useState } from "react";
 import { registerSchema } from "@/schemas/registerSchema";
 import { useInternships } from "@/hooks/useInternships";
 import api from "@/api/api";
+import ToastMessage from "@/components/ui/ToastMessage";
 
 export default function AddUserForm({ onSuccess }) {
   const [error, setError] = useState("");
@@ -43,10 +44,18 @@ export default function AddUserForm({ onSuccess }) {
     onSuccess: () => {
       onSuccess?.();
       form.reset();
+      ToastMessage({
+        type: "success",
+        message: "User added successfully.",
+      });
     },
     onError: (error) => {
       const message = error?.response?.data?.error || "Something went wrong.";
       setError(message);
+      ToastMessage({
+        type: "error",
+        message: message,
+      });
     },
   });
 
@@ -56,7 +65,7 @@ export default function AddUserForm({ onSuccess }) {
   };
 
   return (
-    <div className="max-w-md mx-auto">
+    <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <FormField
