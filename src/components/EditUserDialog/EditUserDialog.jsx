@@ -6,6 +6,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectTrigger,
@@ -37,6 +38,12 @@ export default function EditUserDialog({ user, onClose, onSave }) {
       role: user.role,
       internship: user.internship,
       password: "",
+      first_name: user.first_name || "",
+      last_name: user.last_name || "",
+      linkedin: user.linkedin || "",
+      github: user.github || "",
+      website: user.website || "",
+      about: user.about || "",
       image: null,
     },
   });
@@ -50,6 +57,12 @@ export default function EditUserDialog({ user, onClose, onSave }) {
       formData.append("role", values.role);
       formData.append("internship", values.internship);
       formData.append("password", values.password);
+      formData.append("first_name", values.first_name);
+      formData.append("last_name", values.last_name);
+      formData.append("linkedin", values.linkedin);
+      formData.append("github", values.github);
+      formData.append("website", values.website);
+      formData.append("about", values.about);
 
       if (values.image?.[0]) {
         formData.append("image", values.image[0]);
@@ -94,7 +107,7 @@ export default function EditUserDialog({ user, onClose, onSave }) {
             <img
               src={preview}
               alt="Profile Preview"
-              className="w-24 h-24 rounded-full object-cover mx-auto shadow"
+              className="object-cover w-24 h-24 mx-auto rounded-full shadow"
             />
           </div>
 
@@ -118,6 +131,22 @@ export default function EditUserDialog({ user, onClose, onSave }) {
                 ))}
             </SelectContent>
           </Select>
+
+          <Input {...register("first_name")} placeholder="First Name" />
+
+          <Input {...register("last_name")} placeholder="Last Name" />
+
+          <Input {...register("linkedin")} placeholder="LinkedIn URL" />
+
+          <Input {...register("github")} placeholder="GitHub URL" />
+
+          <Input {...register("website")} placeholder="Website URL" />
+
+          <Textarea
+            {...register("about")}
+            placeholder="About"
+            className="min-h-[100px]"
+          />
 
           <Input
             {...register("password")}

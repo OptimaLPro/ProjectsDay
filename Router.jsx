@@ -1,6 +1,5 @@
 import { ProtectedRoute } from "@/hooks/ProtectedRoute";
-import AdminChangeYearbook from "@/pages/AdminChangeYearbook/AdminChangeYearbook";
-import AdminManageAwards from "@/pages/AdminManageAwards/AdminManageAwards";
+import AdminManageYearbook from "@/pages/AdminManageYearbook/AdminManageYearbook";
 import AdminManageInstructors from "@/pages/AdminManageInstructors/AdminManageInstructors";
 import AdminManageInternships from "@/pages/AdminManageInternships/AdminManageInternships";
 import AdminManageUsers from "@/pages/AdminManageUsers/AdminManageUsers";
@@ -22,6 +21,7 @@ import { Route, Routes } from "react-router";
 import StudentAssignProject from "@/pages/Dashboard/StudentAssignProject";
 import UserEditProfile from "@/pages/UserEditProfile/UserEditProfile";
 import UserPublicProfile from "@/pages/UserPublicProfile/UserPublicProfile";
+import AdminManageAwards from "@/pages/AdminManageAwards/AdminManageAwards";
 
 const Router = () => {
   useEffect(() => {
@@ -67,8 +67,8 @@ const Router = () => {
             element={<AdminUpdateProjects />}
           />
           <Route
-            path="/dashboard/change-yearbook"
-            element={<AdminChangeYearbook />}
+            path="/dashboard/manage-yearbook"
+            element={<AdminManageYearbook />}
           />
           <Route
             path="/dashboard/manage-internships"

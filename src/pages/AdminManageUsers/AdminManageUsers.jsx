@@ -8,6 +8,8 @@ import EditUserDialog from "@/components/EditUserDialog/EditUserDialog";
 import DeleteUserDialog from "@/components/DeleteUserDialog/DeleteUserDialog";
 import AdminManageUsersTable from "./AdminManageUsersTable";
 import { useInternships } from "@/hooks/useInternships";
+import { Combobox } from "@/components/ui/combobox";
+import ToastMessage from "@/components/ui/ToastMessage";
 
 export default function AdminManageUsers() {
   const [users, setUsers] = useState([]);
@@ -15,7 +17,7 @@ export default function AdminManageUsers() {
   const [selectedUser, setSelectedUser] = useState(null);
   const [dialogType, setDialogType] = useState(null);
   const [searchEmail, setSearchEmail] = useState("");
-  const [searchInternship, setSearchInternship] = useState("");
+  const [searchInternship, setSearchInternship] = useState("All");
   const fileInputRef = useRef(null);
 
   const { data: internships = [] } = useInternships();
@@ -40,12 +42,57 @@ export default function AdminManageUsers() {
       const json = XLSX.utils.sheet_to_json(sheet);
 
       try {
-        await api.post("/auth/bulk-register", json);
+        // Map internship names to their IDs
+        const usersWithInternshipIds = json.map((user) => {
+          const internship = internships.find(
+            (i) => i.name === user.internship
+          );
+          return {
+            ...user,
+            internship: internship ? internship._id : null,
+          };
+        });
+
+        const response = await api.post(
+          "/auth/bulk-register",
+          usersWithInternshipIds
+        );
+        const results = response.data;
+
+        // Show detailed results to the user
+        let message = "Upload Results:\n";
+        if (results.created.length > 0) {
+          message += `\nSuccessfully created ${results.created.length} users:\n`;
+          ToastMessage({
+            type: "success",
+            message: `Successfully created ${results.created.length} users`,
+          });
+          results.created.forEach((user) => (message += `- ${user.email}\n`));
+        }
+        if (results.skipped.length > 0) {
+          message += `\nSkipped ${results.skipped.length} users (already exist):\n`;
+          ToastMessage({
+            type: "info",
+            message: `Skipped ${results.skipped.length} users (already exist)`,
+          });
+          results.skipped.forEach((user) => (message += `- ${user.email}\n`));
+        }
+        if (results.errors.length > 0) {
+          message += `\nErrors for ${results.errors.length} users:\n`;
+          ToastMessage({
+            type: "error",
+            message: `Errors for ${results.errors.length} users`,
+          });
+          results.errors.forEach(
+            (error) => (message += `- ${error.email}: ${error.error}\n`)
+          );
+        }
+
+        console.log("Upload Results:", results);
         fetchUsers();
-        alert("Users uploaded successfully!");
       } catch (err) {
         console.error(err);
-        alert("Error uploading users");
+        alert("Error uploading users. Please check the console for details.");
       }
     };
 
@@ -72,30 +119,31 @@ export default function AdminManageUsers() {
       internships.find((i) => i._id === user.internship)?.name || "";
     return (
       user.email.toLowerCase().includes(searchEmail.toLowerCase()) &&
-      internshipName.toLowerCase().includes(searchInternship.toLowerCase())
+      (searchInternship === "All" ||
+        internshipName.toLowerCase().includes(searchInternship.toLowerCase()))
     );
   });
 
   return (
     <div className="relative max-w-6xl mx-auto mt-10">
-      <h1 className="text-2xl font-bold text-center mb-6">Authorized Users</h1>
+      <h1 className="mb-6 text-2xl font-bold text-center">Authorized Users</h1>
 
-      <div className="flex gap-4 mb-4 justify-center">
+      <div className="flex justify-center gap-4 mb-4">
         <Input
           placeholder="Search by email"
           value={searchEmail}
           onChange={(e) => setSearchEmail(e.target.value)}
           className="max-w-xs bg-white shadow-lg"
         />
-        <Input
-          placeholder="Search by internship"
-          value={searchInternship}
-          onChange={(e) => setSearchInternship(e.target.value)}
-          className="max-w-xs bg-white shadow-lg"
+        <Combobox
+          internships={internships}
+          activeInternship={searchInternship}
+          setActiveInternship={setSearchInternship}
+          hideAwarded={true}
         />
       </div>
 
-      <div className="my-8 flex gap-4 justify-center items-center">
+      <div className="flex items-center justify-center gap-4 my-8">
         <Button onClick={() => setShowAddForm((prev) => !prev)}>
           {showAddForm ? "Cancel" : "Add Single User"}
         </Button>

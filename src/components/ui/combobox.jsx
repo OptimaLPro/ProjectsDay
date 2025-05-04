@@ -21,6 +21,7 @@ export function Combobox({
   internships,
   activeInternship,
   setActiveInternship,
+  hideAwarded = false,
 }) {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState(activeInternship);
@@ -32,10 +33,10 @@ export function Combobox({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-fit justify-between bg-[#ffffffc4] shadow-md text-gray-600"
+          className="justify-between text-gray-600 bg-white shadow-md w-fit"
         >
           {activeInternship || "Filter"}
-          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          <ChevronsUpDown className="w-4 h-4 ml-2 opacity-50 shrink-0" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">
@@ -65,22 +66,24 @@ export function Combobox({
               ))}
 
               {/* 🏆 Awarded Projects option */}
-              <CommandItem
-                value="awarded"
-                onSelect={() => {
-                  setActiveInternship("awarded");
-                  setValue("awarded");
-                  setOpen(false);
-                }}
-              >
-                <Check
-                  className={cn(
-                    "mr-2 h-4 w-4",
-                    value === "awarded" ? "opacity-100" : "opacity-0"
-                  )}
-                />
-                🏆 Awarded
-              </CommandItem>
+              {!hideAwarded && (
+                <CommandItem
+                  value="awarded"
+                  onSelect={() => {
+                    setActiveInternship("awarded");
+                    setValue("awarded");
+                    setOpen(false);
+                  }}
+                >
+                  <Check
+                    className={cn(
+                      "mr-2 h-4 w-4",
+                      value === "awarded" ? "opacity-100" : "opacity-0"
+                    )}
+                  />
+                  🏆 Awarded
+                </CommandItem>
+              )}
             </CommandGroup>
           </CommandList>
         </Command>

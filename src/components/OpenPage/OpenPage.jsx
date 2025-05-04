@@ -62,7 +62,7 @@ const OpenPage = ({ setShowLightTheme, setShowWelcome }) => {
     >
       <div className="text-center">
         <motion.h1
-          className="text-5xl md:text-6xl font-bold mb-6 leading-tight"
+          className="mb-6 text-5xl font-bold leading-tight md:text-6xl"
           variants={titleVariants}
         >
           <span className="block">Colman's</span>
@@ -73,7 +73,7 @@ const OpenPage = ({ setShowLightTheme, setShowWelcome }) => {
         <motion.div variants={buttonVariants}>
           <Button
             onClick={handleEnter}
-            className="mt-4 px-6 py-3 bg-white text-black font-semibold rounded-lg hover:bg-gray-200 transition-all duration-300"
+            className="px-6 py-3 mt-4 font-semibold text-black transition-all duration-300 bg-white rounded-lg hover:bg-gray-200"
           >
             Go to Website
           </Button>
