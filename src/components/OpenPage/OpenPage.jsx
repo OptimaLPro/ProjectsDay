@@ -66,7 +66,7 @@ const OpenPage = ({ setShowLightTheme, setShowWelcome }) => {
           variants={titleVariants}
         >
           <span className="block">Colman's</span>
-          <span className="block">Projects Day</span>
+          <span className="block">Graduation Day</span>
           {/* <RainbowButton /> */}
         </motion.h1>
 

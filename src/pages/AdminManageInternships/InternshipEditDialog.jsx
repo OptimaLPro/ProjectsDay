@@ -23,6 +23,7 @@ import Loader from "@/components/Loader/Loader";
 import GenericFormField from "@/components/GenericFormField/GenericFormField";
 import { useEffect } from "react";
 import { useYearbooks } from "@/hooks/useYearbooks";
+import Error from "@/components/Error/Error";
 
 export default function InternshipEditDialog({
   open,
@@ -76,10 +77,7 @@ export default function InternshipEditDialog({
   };
 
   if (loadingInstructors || isLoadingYearbooks) return <Loader />;
-  if (isErrorYearbooks) return <div>Failed to load yearbooks</div>;
-  console.log("Raw yearbooks hook:", {
-    yearbooks,
-  });
+  if (isErrorYearbooks) return <Error />;
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>

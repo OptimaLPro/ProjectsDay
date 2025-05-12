@@ -10,8 +10,6 @@ import DeleteInstructorDialog from "./DeleteInstructorDialog";
 import InstructorEditDialog from "./InstructorEditDialog";
 import ToastMessage from "@/components/ui/ToastMessage";
 
-const DEFAULT_YEARS = [2024, 2025, 2026];
-
 export default function AdminManageInstructors() {
   const queryClient = useQueryClient();
   const [openDialog, setOpenDialog] = useState(false);
@@ -111,8 +109,8 @@ export default function AdminManageInstructors() {
   if (isError) return <Error />;
 
   return (
-    <div className="max-w-5xl mx-auto mt-10 relative">
-      <h1 className="text-2xl font-bold text-center mb-6">
+    <div className="relative max-w-5xl mx-auto mt-10">
+      <h1 className="mb-6 text-2xl font-bold text-center">
         Manage Instructors
       </h1>
 
@@ -143,7 +141,6 @@ export default function AdminManageInstructors() {
         onClose={() => setOpenDialog(false)}
         onSave={handleSave}
         instructor={editData}
-        years={DEFAULT_YEARS}
         internships={internshipsData}
         setInstructor={setEditData}
         selectedYears={selectedYears}

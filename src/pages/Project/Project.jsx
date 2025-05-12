@@ -1,16 +1,15 @@
 import AwardsBar from "@/components/AwardsBar";
 import Loader from "@/components/Loader/Loader";
 import BackButton from "@/components/ui/BackButton";
-import { Card } from "@/components/ui/card";
 import { useInstructors } from "@/hooks/useInstructors";
 import { useInternships } from "@/hooks/useInternships";
 import { useProjectById } from "@/hooks/useProjectsById";
+import { useUserEmails } from "@/hooks/useUserEmails";
 import { useUsersByEmails } from "@/hooks/useUsersByEmails";
 import { motion } from "framer-motion";
+import { useEffect } from "react";
 import { Link, useParams } from "react-router";
 import ProjectMedia from "./ProjectMedia";
-import { useUserEmails } from "@/hooks/useUserEmails";
-import { useEffect } from "react";
 
 const Project = () => {
   const { id } = useParams();
@@ -55,14 +54,14 @@ const Project = () => {
 
   return (
     <div className="mt-5 max-w-[90%] lg:max-w-[95%] mx-auto">
-      <main className="container mx-auto  relative">
+      <main className="container relative mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
           transition={{ duration: 0.3 }}
         >
-          <div className="lg:flex lg:items-center lg:justify-between lg:gap-12  bg-white/30 backdrop-blur-md border border-white/30 rounded-xl shadow-lg py-4 lg:pl-8 px-3 lg:px-0 lg:pr-2">
+          <div className="px-3 py-4 border shadow-lg lg:flex lg:items-center lg:justify-between lg:gap-12 bg-white/30 backdrop-blur-md border-white/30 rounded-xl lg:pl-8 lg:px-0 lg:pr-2">
             <div className="lg:w-1/2">
               <img
                 src={project?.image}
@@ -70,13 +69,13 @@ const Project = () => {
                 className="rounded-xl object-contain mx-auto max-h-[500px] w-auto max-w-full shadow-xl border-[1px] border-gray-300"
               />
             </div>
-            <div className="flex flex-col gap-4 lg:w-1/2  lg:mt-0 mt-4">
+            <div className="flex flex-col gap-4 mt-4 lg:w-1/2 lg:mt-0">
               <div className="flex items-center justify-between">
                 <div className="flex flex-col">
                   <h1 className="text-2xl font-bold">{project?.name}</h1>
                   <Link
                     to={`/internships/${internshipObj?._id}`}
-                    className="w-fit mt-2 inline-block px-2 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary mb-2 capitalize hover:underline transition"
+                    className="inline-block px-2 py-1 mt-2 mb-2 text-xs font-medium capitalize transition rounded-full w-fit bg-primary/10 text-primary hover:underline"
                   >
                     <span>{internshipObj?.name}</span>
                   </Link>
@@ -93,7 +92,7 @@ const Project = () => {
                   <p className="font-semibold">Instructor:</p>
                   <Link
                     to={`/instructors/${instructorObj?._id}`}
-                    className="flex items-center gap-2 hover:underline hover:text-primary transition"
+                    className="flex items-center gap-2 transition hover:underline hover:text-primary"
                   >
                     <img
                       src={instructorImage}
@@ -106,7 +105,7 @@ const Project = () => {
               </div>
 
               <div>
-                <h2 className="font-semibold mb-2">Members:</h2>
+                <h2 className="mb-2 font-semibold">Members:</h2>
                 <ul className="flex flex-col gap-3">
                   {projectMembers.map((user) => {
                     const image =

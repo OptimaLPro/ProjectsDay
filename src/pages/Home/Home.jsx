@@ -11,6 +11,7 @@ import { filterProjects } from "@/lib/general";
 import { SeparatorHorizontal, SeparatorVertical } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
+import Hero from "./Hero/Hero";
 
 const Home = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -60,6 +61,7 @@ const Home = () => {
   return (
     <div className="min-h-screen">
       <main className="container px-5 mx-auto lg:px-4">
+        <Hero />
         <div className="flex items-center justify-between gap-3 mb-12 lg:flex-row lg:gap-6">
           <SearchBar
             searchQuery={searchQuery}
