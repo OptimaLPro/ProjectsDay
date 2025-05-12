@@ -10,6 +10,22 @@ import AdminManageUsersTable from "./AdminManageUsersTable";
 import { useInternships } from "@/hooks/useInternships";
 import { Combobox } from "@/components/ui/combobox";
 import ToastMessage from "@/components/ui/ToastMessage";
+import { useYearbooks } from "@/hooks/useYearbooks";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Info } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import AdminDeleteUsersDialog from "./AdminDeleteUsersDialog";
 
 export default function AdminManageUsers() {
   const [users, setUsers] = useState([]);
@@ -18,9 +34,12 @@ export default function AdminManageUsers() {
   const [dialogType, setDialogType] = useState(null);
   const [searchEmail, setSearchEmail] = useState("");
   const [searchInternship, setSearchInternship] = useState("All");
+
   const fileInputRef = useRef(null);
 
   const { data: internships = [] } = useInternships();
+  const { data: yearbooks = [] } = useYearbooks();
+  const [searchYearbook, setSearchYearbook] = useState("All");
 
   const fetchUsers = async () => {
     const res = await api.get("/auth/users");
@@ -117,11 +136,19 @@ export default function AdminManageUsers() {
   const filteredUsers = users.filter((user) => {
     const internshipName =
       internships.find((i) => i._id === user.internship)?.name || "";
-    return (
-      user.email.toLowerCase().includes(searchEmail.toLowerCase()) &&
-      (searchInternship === "All" ||
-        internshipName.toLowerCase().includes(searchInternship.toLowerCase()))
-    );
+
+    const matchesEmail = user.email
+      .toLowerCase()
+      .includes(searchEmail.toLowerCase());
+
+    const matchesInternship =
+      searchInternship === "All" ||
+      internshipName.toLowerCase().includes(searchInternship.toLowerCase());
+
+    const matchesYearbook =
+      searchYearbook === "All" || String(user.year) === searchYearbook;
+
+    return matchesEmail && matchesInternship && matchesYearbook;
   });
 
   return (
@@ -141,6 +168,25 @@ export default function AdminManageUsers() {
           setActiveInternship={setSearchInternship}
           hideAwarded={true}
         />
+
+        <Select
+          value={searchYearbook}
+          onValueChange={(val) => setSearchYearbook(val)}
+        >
+          <SelectTrigger className="w-40 bg-white shadow-lg">
+            <SelectValue placeholder="Filter by yearbook" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="All">All Years</SelectItem>
+            {yearbooks.map((yb) => (
+              <SelectItem key={yb._id} value={yb.year.toString()}>
+                {yb.year}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
+        <AdminDeleteUsersDialog onSuccess={fetchUsers} />
       </div>
 
       <div className="flex items-center justify-center gap-4 my-8">
@@ -158,6 +204,34 @@ export default function AdminManageUsers() {
           onChange={handleExcelUpload}
           className="hidden"
         />
+
+        <Button
+          onClick={() => {
+            const link = document.createElement("a");
+            link.href = "/authusers-new.xlsx";
+            link.download = "authusers-new.xlsx";
+            link.click();
+          }}
+        >
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger>
+                <div className="flex items-center gap-1">
+                  <div>
+                    <Info />
+                  </div>
+                  <div>Excel Template</div>
+                </div>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p className="rtl">
+                  כדי להוסיף כמות של משתמשים בו זמנית בעזרת קובץ Excel יש להשתמש
+                  בתבנית הזאת. לחץ.י להורדה
+                </p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </Button>
       </div>
 
       {showAddForm && (
