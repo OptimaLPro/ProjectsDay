@@ -45,17 +45,21 @@ export default function UnassignProjectButton() {
     <>
       <Card
         onClick={() => setOpen(true)}
-        className="hover:scale-105 duration-300 p-6 shadow-xl hover:shadow-2xl backdrop-blur-md bg-white/40 border border-white/30 transition-all"
+        className="p-6 transition-all duration-300 border shadow-xl cursor-pointer hover:scale-105 hover:shadow-2xl backdrop-blur-md bg-white/40 border-white/30"
       >
-        <CardContent className="p-6 flex flex-col items-center justify-center h-full text-center">
-          <Unlink className="h-8 w-8 mb-2"  color="red " />
-          <CardTitle className="text-lg font-semibold">
+        <CardContent className="flex flex-col items-center justify-center h-full p-6 text-center">
+          <Unlink className="w-8 h-8 mb-2" color="red" />
+          <CardTitle className="mb-1 text-lg font-semibold">
             Unassign Project
           </CardTitle>
+          <p className="text-sm text-muted-foreground">
+            Leave your current project team.
+          </p>
         </CardContent>
       </Card>
+
       {/* <Button variant="destructive" className="gap-2">
-        <Unlink className="h-4 w-4" />
+        <Unlink className="w-4 h-4" />
         Unassign Project
       </Button> */}
 
