@@ -24,39 +24,72 @@ export default function InternshipProfile() {
       ? instructor.image
       : "/images/default.jpg";
 
+  const otherInstructors = instructors.filter(
+    (inst) =>
+      inst._id !== instructor?._id &&
+      Array.isArray(inst.internships) &&
+      inst.internships.includes(internship._id)
+  );
+
   return (
-    <main className="max-w-3xl mx-auto mt-12 px-6 relative">
+    <main className="relative max-w-3xl px-6 mx-auto mt-12">
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
       >
-        <Card className="backdrop-blur-md bg-white/40 border border-white/30 shadow-xl p-6">
-          <h1 className="text-4xl font-bold text-center mb-6">
+        <Card className="p-6 border shadow-xl backdrop-blur-md bg-white/40 border-white/30">
+          <h1 className="mb-6 text-4xl font-bold text-center">
             {internship.name}
           </h1>
-          <div className="flex items-center gap-4 mb-8 justify-center">
+          <div className="flex items-center justify-center gap-4 mb-8">
             <img
               src={instructorImage}
               alt={instructor?.name || "Instructor"}
-              className="w-14 h-14 object-cover rounded-full border shadow"
+              className="object-cover border rounded-full shadow w-14 h-14"
             />
             <div className="text-left">
-              <p className="text-sm text-muted-foreground mb-1">
+              <p className="mb-1 text-sm text-muted-foreground">
                 Head Instructor
               </p>
               <Link
                 to={`/instructors/${instructor?._id}`}
-                className="text-primary font-medium hover:underline"
+                className="font-medium text-primary hover:underline"
               >
                 {instructor?.name || "Unknown"}
               </Link>
             </div>
           </div>
 
-          <p className="text-gray-800 whitespace-pre-line text-justify leading-relaxed">
+          <p className="leading-relaxed text-justify text-gray-800 whitespace-pre-line">
             {internship.description}
           </p>
+
+          {otherInstructors.length > 0 && (
+            <div className="mt-10">
+              <h2 className="mb-10 text-2xl font-semibold text-center">
+                Additional Instructors
+              </h2>
+<div className="flex flex-wrap justify-center gap-6">
+                {otherInstructors.map((instructor) => (
+                  <Link
+                    key={instructor._id}
+                    to={`/instructors/${instructor._id}`}
+                    className="flex flex-col items-center transition-transform duration-300 hover:scale-105"
+                  >
+                    <img
+                      src={instructor.image || "/images/default.jpg"}
+                      alt={instructor.name}
+                      className="object-cover w-24 h-24 rounded-full shadow"
+                    />
+                    <p className="mt-2 font-medium text-center">
+                      {instructor.name}
+                    </p>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
         </Card>
       </motion.div>
       <div className="mt-4">
