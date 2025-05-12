@@ -9,8 +9,7 @@ import AdminInternshipsTable from "./AdminInternshipsTable";
 import DeleteInternshipDialog from "./DeleteInternshipDialog";
 import InternshipEditDialog from "./InternshipEditDialog";
 import ToastMessage from "@/components/ui/ToastMessage";
-
-const DEFAULT_YEARS = [2024, 2025, 2026];
+import { useYearbooks } from "@/hooks/useYearbooks";
 
 export default function AdminManageInternships() {
   const queryClient = useQueryClient();
@@ -20,6 +19,7 @@ export default function AdminManageInternships() {
   const [selectedInstructor, setSelectedInstructor] = useState("");
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [internshipToDelete, setInternshipToDelete] = useState(null);
+
   const { data: instructorsData = [], isLoading: loadingInstructors } =
     useInstructors();
 
@@ -95,9 +95,10 @@ export default function AdminManageInternships() {
 
   if (isError) return <Error />;
 
+
   return (
-    <div className="max-w-3xl mx-auto mt-10 relative">
-      <h1 className="text-2xl font-bold text-center mb-6">
+    <div className="relative max-w-3xl mx-auto mt-10">
+      <h1 className="mb-6 text-2xl font-bold text-center">
         Manage Internships
       </h1>
 
@@ -123,7 +124,7 @@ export default function AdminManageInternships() {
         onClose={() => setOpenDialog(false)}
         onSave={handleSave}
         editData={editData}
-        years={DEFAULT_YEARS}
+        // years={yearbooks}
         selectedYears={selectedYears}
         setSelectedYears={setSelectedYears}
         selectedInstructor={selectedInstructor}

@@ -13,6 +13,21 @@ import { Button } from "@/components/ui/button";
 
 const links = [
   {
+    href: "/dashboard/manage-yearbook",
+    label: "Manage Yearbook",
+    icon: <CalendarDays className="w-8 h-8 mb-2 text-primary" />,
+  },
+  {
+    href: "/dashboard/manage-internships",
+    label: "Manage Internships",
+    icon: <GraduationCap className="w-8 h-8 mb-2 text-primary" />,
+  },
+  {
+    href: "/dashboard/manage-instructors",
+    label: "Manage Instructors",
+    icon: <BookOpen className="w-8 h-8 mb-2 text-primary" />,
+  },
+  {
     href: "/dashboard/auth-users",
     label: "Manage Users",
     icon: <Users className="w-8 h-8 mb-2 text-primary" />,
@@ -23,24 +38,9 @@ const links = [
     icon: <Wrench className="w-8 h-8 mb-2 text-primary" />,
   },
   {
-    href: "/dashboard/manage-instructors",
-    label: "Manage Instructors",
-    icon: <BookOpen className="w-8 h-8 mb-2 text-primary" />,
-  },
-  {
-    href: "/dashboard/manage-internships",
-    label: "Manage Internships",
-    icon: <GraduationCap className="w-8 h-8 mb-2 text-primary" />,
-  },
-  {
     href: "/dashboard/manage-awards",
     label: "Manage Awards",
     icon: <Trophy className="w-8 h-8 mb-2 text-primary" />,
-  },
-  {
-    href: "/dashboard/manage-yearbook",
-    label: "Manage Yearbook",
-    icon: <CalendarDays className="w-8 h-8 mb-2 text-primary" />,
   },
 ];
 

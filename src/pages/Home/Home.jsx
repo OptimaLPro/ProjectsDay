@@ -8,6 +8,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useInternships } from "@/hooks/useInternships";
 import { useProjects } from "@/hooks/useProjects";
 import { filterProjects } from "@/lib/general";
+import { SeparatorHorizontal, SeparatorVertical } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 
@@ -58,8 +59,8 @@ const Home = () => {
 
   return (
     <div className="min-h-screen">
-      <main className="container mx-auto px-5 lg:px-4">
-        <div className="flex lg:flex-row gap-3 lg:gap-6 mb-12 justify-between items-center">
+      <main className="container px-5 mx-auto lg:px-4">
+        <div className="flex items-center justify-between gap-3 mb-12 lg:flex-row lg:gap-6">
           <SearchBar
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
@@ -79,7 +80,9 @@ const Home = () => {
               ) : hasNextPage ? (
                 <InPlaceLoader />
               ) : (
-                <div className="text-gray-600">The End</div>
+                <div className="flex items-center justify-center mx-auto text-gray-400 ">
+                  <SeparatorHorizontal className="w-8 h-8" />
+                </div>
               )}
             </div>
           </>

@@ -20,6 +20,7 @@ import { Input } from "@/components/ui/input";
 import Loader from "@/components/Loader/Loader";
 import Error from "@/components/Error/Error";
 import ToastMessage from "@/components/ui/ToastMessage";
+import { useYearbooks } from "@/hooks/useYearbooks";
 
 export default function AdminManageYearbook() {
   const queryClient = useQueryClient();
@@ -28,19 +29,13 @@ export default function AdminManageYearbook() {
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [newYear, setNewYear] = useState("");
 
-  const {
-    data: yearbooks,
-    isLoading,
-    isError,
-  } = useQuery({
-    queryKey: ["yearbooks"],
-    queryFn: () => api.get("/yearbooks").then((res) => res.data),
-  });
+  const { data: yearbooks, isLoading, isError } = useYearbooks();
 
-  const { data: activeYearbook } = useQuery({
-    queryKey: ["active-yearbook"],
-    queryFn: () => api.get("/yearbooks/active").then((res) => res.data),
-  });
+  const {
+    data: activeYearbook,
+    isLoadingYearbooks,
+    isErrorYearbooks,
+  } = useYearbooks();
 
   const updateMutation = useMutation({
     mutationFn: ({ id, year }) =>
@@ -101,8 +96,8 @@ export default function AdminManageYearbook() {
     }
   };
 
-  if (isLoading) return <Loader />;
-  if (isError) return <Error />;
+  if (isLoading || isLoadingYearbooks) return <Loader />;
+  if (isError || isErrorYearbooks) return <Error />;
 
   return (
     <div className="relative max-w-md p-6 mx-auto mt-10 bg-white shadow-lg rounded-xl">

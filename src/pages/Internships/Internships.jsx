@@ -18,9 +18,9 @@ export default function Internships() {
   );
 
   return (
-    <main className="max-w-6xl mx-auto mt-5 px-5 relative">
-      <h1 className="text-3xl font-bold text-center mb-10">Internships</h1>
-      <div className="grid gap-8 grid-cols-1 md:grid-cols-2">
+    <main className="relative max-w-6xl px-5 mx-auto mt-5">
+      <h1 className="mb-10 text-3xl font-bold text-center">Internships</h1>
+      <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
         {filteredInternships.map((internship, index) => {
           const instructorObj = instructors.find(
             (i) => i._id === internship.instructor
@@ -39,8 +39,8 @@ export default function Internships() {
               transition={{ delay: index * 0.1 }}
             >
               <Link to={`/internships/${internship._id}`}>
-                <Card className="hover:scale-105  duration-300 p-6 shadow-xl hover:shadow-2xl backdrop-blur-md bg-white/40 border border-white/30 transition-all">
-                  <h2 className="text-2xl font-semibold mb-2">
+                <Card className="p-6 transition-all duration-300 border shadow-xl hover:scale-105 hover:shadow-2xl backdrop-blur-md bg-white/40 border-white/30">
+                  <h2 className="mb-2 text-2xl font-semibold">
                     {internship.name}
                   </h2>
 
@@ -48,17 +48,17 @@ export default function Internships() {
                     <img
                       src={instructorImage}
                       alt={instructorObj?.name || "Instructor"}
-                      className="w-12 h-12 object-cover rounded-full border shadow"
+                      className="object-cover w-12 h-12 border rounded-full shadow"
                     />
                     <div>
-                      <p className="font-medium text-sm text-muted-foreground">
-                        Instructor
+                      <p className="text-sm font-medium text-muted-foreground">
+                        Head Instructor
                       </p>
                       <p>{instructorObj?.name || "Unknown"}</p>
                     </div>
                   </div>
 
-                  <p className="text-sm text-gray-800 whitespace-pre-line text-justify leading-relaxed">
+                  <p className="text-sm leading-relaxed text-justify text-gray-800 whitespace-pre-line">
                     {internship.description}
                   </p>
                 </Card>

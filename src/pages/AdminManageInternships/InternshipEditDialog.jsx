@@ -22,6 +22,7 @@ import { Form } from "@/components/ui/form";
 import Loader from "@/components/Loader/Loader";
 import GenericFormField from "@/components/GenericFormField/GenericFormField";
 import { useEffect } from "react";
+import { useYearbooks } from "@/hooks/useYearbooks";
 
 export default function InternshipEditDialog({
   open,
@@ -34,6 +35,12 @@ export default function InternshipEditDialog({
   mutation,
 }) {
   const { data: instructors, isLoading: loadingInstructors } = useInstructors();
+
+  const {
+    data: yearbooks = [],
+    isLoadingYearbooks,
+    isErrorYearbooks,
+  } = useYearbooks();
 
   const form = useForm({
     defaultValues: {
@@ -68,7 +75,11 @@ export default function InternshipEditDialog({
     setSelectedYears([]);
   };
 
-  if (loadingInstructors) return <Loader />;
+  if (loadingInstructors || isLoadingYearbooks) return <Loader />;
+  if (isErrorYearbooks) return <div>Failed to load yearbooks</div>;
+  console.log("Raw yearbooks hook:", {
+    yearbooks,
+  });
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
@@ -89,13 +100,25 @@ export default function InternshipEditDialog({
             })}
             className="flex flex-col gap-4"
           >
-            <GenericFormField name="name" control={form.control} label="Internship Name">
+            <GenericFormField
+              name="name"
+              control={form.control}
+              label="Internship Name"
+            >
               {(field) => (
-                <Input {...field} placeholder="Enter internship name" required />
+                <Input
+                  {...field}
+                  placeholder="Enter internship name"
+                  required
+                />
               )}
             </GenericFormField>
 
-            <GenericFormField name="instructor" control={form.control} label="Instructor">
+            <GenericFormField
+              name="instructor"
+              control={form.control}
+              label="Instructor"
+            >
               {(field) => (
                 <Select value={field.value} onValueChange={field.onChange}>
                   <SelectTrigger>
@@ -112,22 +135,26 @@ export default function InternshipEditDialog({
               )}
             </GenericFormField>
 
-            <GenericFormField name="description" control={form.control} label="Description">
+            <GenericFormField
+              name="description"
+              control={form.control}
+              label="Description"
+            >
               {(field) => (
                 <Textarea {...field} placeholder="Enter description" required />
               )}
             </GenericFormField>
 
             <div>
-              <p className="font-semibold mb-1">Years</p>
+              <p className="mb-1 font-semibold">Years</p>
               <div className="flex flex-col gap-2">
-                {years.map((year) => (
-                  <label key={year} className="flex items-center gap-2">
+                {yearbooks.map((yb) => (
+                  <label key={yb._id} className="flex items-center gap-2">
                     <Checkbox
-                      checked={selectedYears.includes(year)}
-                      onCheckedChange={() => toggleYear(year)}
+                      checked={selectedYears.includes(yb.year)}
+                      onCheckedChange={() => toggleYear(yb.year)}
                     />
-                    {year}
+                    {yb.year}
                   </label>
                 ))}
               </div>
