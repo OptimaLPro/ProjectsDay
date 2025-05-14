@@ -22,7 +22,15 @@ const Footer = () => {
       <div className="container mx-auto text-center">
         <div className="flex items-center justify-center gap-2 mb-2">
           <img className="h-4 opacity-80" src={"./ColmanDevClub Favicon.png"} />
-          <p>{new Date().getFullYear()} ColmanDevClub</p>
+          <p>
+            <a
+              href="https://colmandevclub.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {new Date().getFullYear()} ColmanDevClub
+            </a>
+          </p>
         </div>
         <div className="flex items-center justify-center gap-2 mb-2">
           <div>Contributors:</div>
@@ -43,6 +51,7 @@ const Footer = () => {
                             "noopener,noreferrer"
                           )
                         }
+                        style={{ cursor: "pointer" }}
                       />
                     </Button>
                   </TooltipTrigger>
