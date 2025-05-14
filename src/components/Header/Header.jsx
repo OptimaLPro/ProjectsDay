@@ -1,10 +1,11 @@
-import { Briefcase, House, LogIn, Users } from "lucide-react";
+import { Briefcase, ChevronDown, House, LogIn, Users } from "lucide-react";
 import { useState } from "react";
 import HeaderButton from "./HeaderButton";
 import { Link } from "react-router";
 import DrawerMenu from "../DrawerMenu/DrawerMenu";
 import AvatarProfile from "./AvatarProfile";
 import { useAuth } from "@/context/AuthContext";
+import { SelectYearbookDropDown } from "./SelectYearbookDropDown";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -33,9 +34,14 @@ const Header = () => {
           </div>
           <div className="hidden xs:block">
             <Link to="/">
-              <h1 className="text-xl font-bold lg:text-3xl">
-                Graduation Day {year}
-              </h1>
+              <div className="flex items-center gap-2">
+                <div>
+                  <h1 className="text-xl font-bold lg:text-3xl">
+                    Graduation Day {year}
+                  </h1>
+                </div>
+                <SelectYearbookDropDown />
+              </div>
             </Link>
           </div>
         </div>
