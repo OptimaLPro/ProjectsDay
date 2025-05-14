@@ -7,6 +7,7 @@ import NetBackground from "./components/NetBackground";
 import OpenPage from "./components/OpenPage/OpenPage";
 import { Toaster } from "sonner";
 import ScrollToTopButton from "./components/ui/ScrollToTopButton";
+import Footer from "./components/Footer/Footer";
 
 function App() {
   const [showWelcome, setShowWelcome] = useState(false);
@@ -55,11 +56,12 @@ function App() {
 
       {!showWelcome && (
         <>
-          <div className="lg:pt-10 pt-5 px-5">
+          <div className="px-5 pt-5 lg:pt-10">
             <Header />
           </div>
           <ScrollToTopButton />
           <Router />
+          <Footer />
         </>
       )}
 
