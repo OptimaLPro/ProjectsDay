@@ -8,6 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Palette } from "lucide-react";
 
 export default function AdminInternshipsTable({
   internships,
@@ -16,10 +17,11 @@ export default function AdminInternshipsTable({
   onDelete,
 }) {
   return (
-    <div className="rounded-md bg-white border">
+    <div className="bg-white border rounded-md">
       <Table>
         <TableHeader>
           <TableRow>
+            <TableHead>Color</TableHead>
             <TableHead>Name</TableHead>
             <TableHead>Instructor</TableHead>
             <TableHead>Years</TableHead>
@@ -31,6 +33,17 @@ export default function AdminInternshipsTable({
             .filter((intern) => intern.name !== "All")
             .map((intern) => (
               <TableRow key={intern._id}>
+                <TableCell>
+                  <div
+                    className="flex items-center justify-center w-10 h-10 rounded-full"
+                    style={{
+                      backgroundColor: `#${intern.backgroundColor}`,
+                      color: `#${intern.textColor}`,
+                    }}
+                  >
+                    <Palette size={16} />
+                  </div>
+                </TableCell>
                 <TableCell>{intern.name}</TableCell>
                 <TableCell>
                   {instructors.find((i) => i._id === intern.instructor)?.name ||

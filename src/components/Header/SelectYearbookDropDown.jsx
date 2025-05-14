@@ -14,7 +14,7 @@ import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 
 export function SelectYearbookDropDown() {
-    const { year } = useAuth();
+  const { year } = useAuth();
   const [position, setPosition] = useState(year);
 
   const { data: yearbooks, isLoading, isError } = useYearbooks();
@@ -32,7 +32,7 @@ export function SelectYearbookDropDown() {
       <DropdownMenuContent className="w-56">
         <DropdownMenuLabel>Select Yearbook</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuRadioGroup value={position} onValueChange={setPosition} >
+        <DropdownMenuRadioGroup value={position} onValueChange={setPosition}>
           {yearbooks?.map((yearbook) => (
             <DropdownMenuRadioItem
               key={yearbook._id}

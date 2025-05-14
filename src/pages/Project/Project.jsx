@@ -75,9 +75,13 @@ const Project = () => {
                   <h1 className="text-2xl font-bold">{project?.name}</h1>
                   <Link
                     to={`/internships/${internshipObj?._id}`}
-                    className="inline-block px-2 py-1 mt-2 mb-2 text-xs font-medium capitalize transition rounded-full w-fit bg-primary/10 text-primary hover:underline"
+                    className="inline-block px-2 py-1 mt-2 mb-2 text-xs font-medium capitalize transition rounded-full w-fit hover:underline"
+                    style={{
+                      backgroundColor: `#${internshipObj?.backgroundColor}`,
+                      color: `#${internshipObj?.textColor}`,
+                    }}
                   >
-                    <span>{internshipObj?.name}</span>
+                    {internshipObj?.name}
                   </Link>
                 </div>
                 <div>

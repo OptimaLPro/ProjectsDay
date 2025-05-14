@@ -48,6 +48,8 @@ export default function InternshipEditDialog({
       name: "",
       instructor: "",
       description: "",
+      textColor: "",
+      backgroundColor: "",
     },
   });
 
@@ -57,10 +59,12 @@ export default function InternshipEditDialog({
         name: editData.name || "",
         instructor: editData.instructor?._id || editData.instructor || "",
         description: editData.description || "",
+        textColor: editData.textColor || "",
+        backgroundColor: editData.backgroundColor || "",
       });
       setSelectedYears(editData.years || []);
     } else {
-      form.reset({ name: "", instructor: "", description: "" });
+      form.reset({ name: "", instructor: "", description: "", textColor: "", backgroundColor: "" });
       setSelectedYears([]);
     }
   }, [editData, form, setSelectedYears]);
@@ -140,6 +144,26 @@ export default function InternshipEditDialog({
             >
               {(field) => (
                 <Textarea {...field} placeholder="Enter description" required />
+              )}
+            </GenericFormField>
+
+            <GenericFormField
+              name="textColor"
+              control={form.control}
+              label="Text Color (HEX)"
+            >
+              {(field) => (
+                <Input {...field} placeholder="e.g. 131313" />
+              )}
+            </GenericFormField>
+
+            <GenericFormField
+              name="backgroundColor"
+              control={form.control}
+              label="Background Color (HEX)"
+            >
+              {(field) => (
+                <Input {...field} placeholder="e.g. fff000" />
               )}
             </GenericFormField>
 

@@ -21,14 +21,15 @@ const Footer = () => {
     <footer className="py-4 text-zinc-700">
       <div className="container mx-auto text-center">
         <div className="flex items-center justify-center gap-2 mb-2">
-          <img className="h-4 opacity-80" src={"./ColmanDevClub Favicon.png"} />
+          <img className="h-4 opacity-80" src={"https://res.cloudinary.com/dwgbi63rq/image/upload/v1747258721/ColmanDevClub_Favicon_olici1.png"} />
           <p>
             <a
               href="https://colmandevclub.vercel.app/"
               target="_blank"
               rel="noopener noreferrer"
             >
-              {new Date().getFullYear()} ColmanDevClub
+              {/* {new Date().getFullYear()} */}
+               ColmanDevClub
             </a>
           </p>
         </div>
@@ -41,7 +42,7 @@ const Footer = () => {
                   <TooltipTrigger>
                     <Button variant="link" className="p-0">
                       <img
-                        className="w-6 h-6 rounded-full"
+                        className="w-6 h-6 rounded-full border-[1px] border-zinc-500"
                         src={contributor.image}
                         alt={contributor.name}
                         onClick={() =>

@@ -8,10 +8,11 @@ import { useAuth } from "@/context/AuthContext";
 import { useInternships } from "@/hooks/useInternships";
 import { useProjects } from "@/hooks/useProjects";
 import { filterProjects } from "@/lib/general";
-import { SeparatorHorizontal, SeparatorVertical } from "lucide-react";
+import { SeparatorHorizontal } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import Hero from "./Hero/Hero";
+import { motion } from "framer-motion";
 
 const Home = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -61,8 +62,20 @@ const Home = () => {
   return (
     <div className="min-h-screen">
       <main className="container px-5 mx-auto lg:px-4">
-        <Hero />
-        <div className="flex items-center justify-between gap-3 mb-12 lg:flex-row lg:gap-6">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+        >
+          <Hero />
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
+          className="flex items-center justify-between gap-3 mb-12 lg:flex-row lg:gap-6"
+        >
           <SearchBar
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
@@ -70,23 +83,43 @@ const Home = () => {
             setActiveInternship={setActiveInternship}
             internships={internshipsData}
           />
-        </div>
+        </motion.div>
+
         {filteredProjects.length === 0 ? (
-          <NoFoundProjects />
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: "easeOut", delay: 0.4 }}
+          >
+            <NoFoundProjects />
+          </motion.div>
         ) : (
           <>
-            <Cards projects={filteredProjects} />
-            <div ref={ref} className="py-4 text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, ease: "easeOut", delay: 0.4 }}
+            >
+              <Cards projects={filteredProjects} />
+            </motion.div>
+
+            <motion.div
+              ref={ref}
+              className="py-4 text-center"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, ease: "easeOut", delay: 0.6 }}
+            >
               {isFetchingNextPage ? (
                 <Loader />
               ) : hasNextPage ? (
                 <InPlaceLoader />
               ) : (
-                <div className="flex items-center justify-center mx-auto text-gray-400 ">
+                <div className="flex items-center justify-center mx-auto text-gray-400">
                   <SeparatorHorizontal className="w-8 h-8" />
                 </div>
               )}
-            </div>
+            </motion.div>
           </>
         )}
       </main>

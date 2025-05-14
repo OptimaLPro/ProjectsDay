@@ -16,40 +16,46 @@ const CardItem = ({ project }) => {
 
   return (
     <Link to={`/projects/${project._id}`} className="group">
-      <Card className="overflow-hidden transition-all duration-300 hover:shadow-lg h-full flex flex-col py-0 gap-0 ">
-        <div className="relative aspect-video overflow-hidden">
+      <Card className="flex flex-col h-full gap-0 py-0 overflow-hidden transition-all duration-300 hover:shadow-lg ">
+        <div className="relative overflow-hidden aspect-video">
           <img
             src={project.image || "/placeholder.svg"}
             alt={project.name}
             className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-          <div className="absolute bottom-3 right-3 bg-primary text-primary-foreground rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <ChevronRight className="h-4 w-4" />
+          <div className="absolute inset-0 transition-opacity duration-300 opacity-0 bg-gradient-to-t from-black/60 to-transparent group-hover:opacity-100" />
+          <div className="absolute p-2 transition-opacity duration-300 rounded-full opacity-0 bottom-3 right-3 bg-primary text-primary-foreground group-hover:opacity-100">
+            <ChevronRight className="w-4 h-4" />
           </div>
         </div>
-        
+
         <CardContent className="flex-grow pt-4 ">
-          <div className="flex justify-between items-center">
+          <div className="flex items-center justify-between">
             <div className="flex flex-col">
-              <div className="mt-2 w-fit inline-block px-2 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary mb-2 capitalize">
+              <div
+                className="inline-block px-2 py-1 mt-2 mb-2 text-xs font-medium capitalize transition rounded-full w-fit hover:underline"
+                style={{
+                  backgroundColor: `#${internshipObj?.backgroundColor}`,
+                  color: `#${internshipObj?.textColor}`,
+                }}
+              >
                 {internshipName}
               </div>
-              <h3 className="font-bold text-xl">{project.name}</h3>
+              <h3 className="text-xl font-bold">{project.name}</h3>
             </div>
             <AwardsBar project={project} openDialog={false} />
           </div>
 
-          <p className="text-muted-foreground mt-2 text-sm">
+          <p className="mt-2 text-sm text-muted-foreground">
             {project.short_description?.length > 199
               ? `${project.short_description.slice(0, 199)}...`
               : project.short_description}
           </p>
         </CardContent>
 
-        <CardFooter className="pt-0 pb-4 mt-6 flex justify-end text-gray-400">
+        <CardFooter className="flex justify-end pt-0 pb-4 mt-6 text-gray-400">
           <Button variant="ghost" size="sm" className="gap-1 text-xs">
-            View Project <ExternalLink className="h-3 w-3 ml-1" />
+            View Project <ExternalLink className="w-3 h-3 ml-1" />
           </Button>
         </CardFooter>
       </Card>

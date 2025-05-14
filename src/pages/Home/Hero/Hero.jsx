@@ -9,10 +9,12 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useEffect, useState } from "react";
 import YouTube from "react-youtube";
 import BottomHero from "./BottomHero";
+import { useAuth } from "@/context/AuthContext";
 
 const Hero = () => {
   const [carouselApi, setCarouselApi] = useState(null);
   const [activeSlide, setActiveSlide] = useState(0);
+  const { year } = useAuth();
   const youtubeLinks = [
     "https://www.youtube.com/watch?v=Ax6cnEVp_bY&t=1s",
     "https://youtu.be/ygX9FeYLnKE?si=378bNzikFr2dSV0a",
@@ -46,7 +48,7 @@ const Hero = () => {
             <div className="flex flex-col px-6 py-3 text-[30px] lg:text-[50px] xl:text-[70px] font-bold text-[#131313] leading-[1.1] ">
               <span>Graduation</span>
               <span>Day</span>
-              <span>2025</span>
+              <span>{year}</span>
             </div>
             <BottomHero />
           </div>

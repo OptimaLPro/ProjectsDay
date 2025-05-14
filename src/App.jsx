@@ -60,7 +60,9 @@ function App() {
             <Header />
           </div>
           <ScrollToTopButton />
-          <Router />
+          <div className="min-h-[75vh]">
+            <Router />
+          </div>
           <Footer />
         </>
       )}
