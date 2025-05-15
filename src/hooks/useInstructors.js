@@ -10,6 +10,6 @@ export const useInstructors = () => {
     enabled: !!year,
     queryFn: () => getInstructors(year),
     refetchOnWindowFocus: false,
-    staleTime: 1000 * 60 * 60,
+    // staleTime: 1000 * 60 * 60,
   });
 };

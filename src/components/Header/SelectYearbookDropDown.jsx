@@ -20,6 +20,11 @@ export function SelectYearbookDropDown() {
   const { data: yearbooks, isLoading, isError } = useYearbooks();
   const { setYear } = useAuth();
 
+  const handleYearbookChange = (year) => {
+    console.log("Selected year:", year);
+    setYear(year);
+  };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -37,7 +42,7 @@ export function SelectYearbookDropDown() {
             <DropdownMenuRadioItem
               key={yearbook._id}
               value={yearbook.year}
-              onClick={() => setYear(yearbook.year)}
+              onClick={() => handleYearbookChange(yearbook.year)}
             >
               {yearbook.year}
             </DropdownMenuRadioItem>

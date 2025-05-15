@@ -19,6 +19,8 @@ const Instructors = () => {
 
   const grouped = {};
 
+  console.log("Instructors Data:", instructorsData);
+
   for (const instructor of instructorsData) {
     const internshipsForYear = (instructor.internships || []).filter(
       (internId) => {
@@ -47,16 +49,16 @@ const Instructors = () => {
 
   return (
     <main className="mx-auto mt-5 px-5 lg:px-4 max-w-[80%] relative">
-      <h1 className="text-3xl font-bold text-center mb-10">Instructors</h1>
+      <h1 className="mb-10 text-3xl font-bold text-center">Instructors</h1>
 
       {Object.entries(grouped).map(([internshipId, instructors], groupIdx) => (
         <div key={internshipId} className="mb-12">
           {groupIdx > 0 && <Separator className="my-8" />}
-          <h2 className="text-2xl font-semibold mb-6">
+          <h2 className="mb-6 text-2xl font-semibold">
             {getInternshipNameById(internshipId)}
           </h2>
 
-          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+          <div className="grid grid-cols-2 gap-10 sm:grid-cols-2 lg:grid-cols-4">
             {instructors.map((instructor, index) => (
               <motion.div
                 key={instructor._id}
@@ -66,15 +68,15 @@ const Instructors = () => {
               >
                 <Link
                   to={`/instructors/${instructor._id}`}
-                  className="cursor-pointer flex flex-col lg:items-center hover:scale-105 transition-transform duration-300"
+                  className="flex flex-col transition-transform duration-300 cursor-pointer lg:items-center hover:scale-105"
                 >
-                  <Card className="p-6 shadow-xl hover:shadow-2xl backdrop-blur-md bg-white/40 border border-white/30 transition-all">
+                  <Card className="p-6 transition-all border shadow-xl hover:shadow-2xl backdrop-blur-md bg-white/40 border-white/30">
                     <img
                       src={instructor.image || "/images/default.jpg"}
                       alt={instructor.name}
                       className="lg:h-48 lg:w-48 w-[140px] h-[140px] object-cover rounded-full shadow-xl border border-white/30"
                     />
-                    <div className="text-center mt-2 font-semibold text-lg flex items-center justify-center">
+                    <div className="flex items-center justify-center mt-2 text-lg font-semibold text-center">
                       {instructor.name}
                     </div>
                   </Card>
