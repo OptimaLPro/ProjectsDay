@@ -75,50 +75,50 @@ export function UserUpdateProject() {
     name: "members",
   });
 
+  const allReady =
+    projectData?.project &&
+    internshipsData &&
+    instructorsData &&
+    userList.length > 0 &&
+    !didReset;
+
   useEffect(() => {
-    if (
-      !didReset &&
-      projectData?.project &&
-      internshipsData?.length > 0 &&
-      instructorsData?.length > 0 &&
-      userList.length > 0
-    ) {
-      const {
-        name,
-        internship,
-        description,
-        short_description,
-        youtube,
-        gallery,
-        instructor,
-        year,
-        members,
-      } = projectData.project;
+    if (!allReady) return;
 
-      const internshipObj = internshipsData.find((i) => i._id === internship);
-      const instructorObj = instructorsData.find((i) => i._id === instructor);
-      const memberObjects = (members || []).map((id) => {
-        const user = userList.find((u) => u._id === id);
-        return { email: user?.email || "" };
-      });
+    const {
+      name,
+      internship,
+      description,
+      short_description,
+      youtube,
+      gallery,
+      instructor,
+      year,
+      members,
+    } = projectData.project;
 
-      form.reset({
-        name,
-        internship: internship,
-        description,
-        short_description: short_description ?? "",
-        youtube: youtube ?? "",
-        gallery: gallery ?? [],
-        newGallery: undefined,
-        instructor: instructorObj?.name ?? "",
-        year,
-        image: undefined,
-        members: memberObjects,
-      });
+    const instructorObj = instructorsData.find((i) => i._id === instructor);
+    const memberObjects = (members || []).map((id) => {
+      const user = userList.find((u) => u._id === id);
+      return { email: user?.email || "" };
+    });
 
-      setDidReset(true);
-    }
-  }, [projectData, internshipsData, instructorsData, didReset, form]);
+    form.reset({
+      name,
+      internship,
+      description,
+      short_description: short_description ?? "",
+      youtube: youtube ?? "",
+      gallery: gallery ?? [],
+      newGallery: undefined,
+      instructor: instructorObj?.name ?? "",
+      year,
+      image: undefined,
+      members: memberObjects,
+    });
+
+    setDidReset(true);
+  }, [allReady]);
 
   const onSubmit = async (values) => {
     if (isSubmitting) return;

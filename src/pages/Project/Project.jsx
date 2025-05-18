@@ -72,7 +72,7 @@ const Project = () => {
             <div className="flex flex-col gap-4 mt-4 lg:w-1/2 lg:mt-0">
               <div className="flex items-center justify-between">
                 <div className="flex flex-col">
-                  <h1 className="text-2xl font-bold">{project?.name}</h1>
+                  <h1 className="text-4xl font-bold lg:text-5xl">{project?.name}</h1>
                   <Link
                     to={`/internships/${internshipObj?._id}`}
                     className="inline-block px-2 py-1 mt-2 mb-2 text-xs font-medium capitalize transition rounded-full w-fit hover:underline"
@@ -144,9 +144,7 @@ const Project = () => {
             </div>
           </div>
 
-          {(project?.youtube || project?.gallery?.length > 0) && (
-            <ProjectMedia project={project} />
-          )}
+          <ProjectMedia project={project} />
 
           <BackButton />
         </motion.div>

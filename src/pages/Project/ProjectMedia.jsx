@@ -27,67 +27,73 @@ const ProjectMedia = ({ project }) => {
   const videoId = getYouTubeId(project.youtube);
 
   return (
-    <div className="mt-10 lg:mt-16 flex flex-col lg:flex-row gap-10">
+    <div className="flex flex-col gap-10 mt-10 lg:mt-16 lg:flex-row">
       {/* Gallery */}
-      {project?.gallery?.length > 0 && (
-        <div className="lg:w-1/2 w-full">
-          <h2 className="text-lg font-semibold mb-2 text-center lg:text-left">
-            Gallery
-          </h2>
+      <div className="w-full lg:w-1/2">
+        <h2 className="mb-2 text-lg font-semibold text-center lg:text-left">
+          Gallery
+        </h2>
 
-          <div className="overflow-hidden rounded-md shadow-md">
-            <div className="aspect-video w-full h-full">
-              <Carousel
-                className="w-full h-full"
-                opts={{ loop: true }}
-                setApi={setCarouselApi}
-              >
-                <CarouselContent className="h-full">
-                  {project.gallery.map((url, index) => (
-                    <CarouselItem key={index} className="h-full">
-                      <div className="w-full h-full">
-                        <img
-                          src={url}
-                          alt={`gallery-${index}`}
-                          className="w-full h-full object-cover rounded-md"
-                        />
-                      </div>
-                    </CarouselItem>
-                  ))}
-                </CarouselContent>
-              </Carousel>
+        {project?.gallery?.length > 0 ? (
+          <>
+            <div className="overflow-hidden rounded-md shadow-md">
+              <div className="w-full h-full aspect-video">
+                <Carousel
+                  className="w-full h-full"
+                  opts={{ loop: true }}
+                  setApi={setCarouselApi}
+                >
+                  <CarouselContent className="h-full">
+                    {project.gallery.map((url, index) => (
+                      <CarouselItem key={index} className="h-full">
+                        <div className="w-full h-full">
+                          <img
+                            src={url}
+                            alt={`gallery-${index}`}
+                            className="object-cover w-full h-full rounded-md"
+                          />
+                        </div>
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+                </Carousel>
+              </div>
             </div>
-          </div>
 
-          <div className="flex justify-center mt-4 gap-2">
-            {project.gallery.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => {
-                  if (carouselApi) {
-                    carouselApi.scrollTo(index);
-                    setActiveSlide(index);
-                  }
-                }}
-                className={`w-2 h-2 rounded-full ${
-                  index === activeSlide
-                    ? "bg-primary"
-                    : "bg-gray-400 hover:bg-gray-600"
-                } transition`}
-              />
-            ))}
+            <div className="flex justify-center gap-2 mt-4">
+              {project.gallery.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => {
+                    if (carouselApi) {
+                      carouselApi.scrollTo(index);
+                      setActiveSlide(index);
+                    }
+                  }}
+                  className={`w-2 h-2 rounded-full ${
+                    index === activeSlide
+                      ? "bg-primary"
+                      : "bg-gray-400 hover:bg-gray-600"
+                  } transition`}
+                />
+              ))}
+            </div>
+          </>
+        ) : (
+          <div className="px-3 py-4 border shadow-lg lg:flex lg:items-center lg:justify-between lg:gap-12 bg-white/30 backdrop-blur-md border-white/30 rounded-xl lg:pl-8 lg:px-0 lg:pr-2 h-[150px] ">
+            No images uploaded.
           </div>
-        </div>
-      )}
+        )}
+      </div>
 
       {/* YouTube */}
       {videoId && (
-        <div className="lg:w-1/2 w-full">
-          <h2 className="text-lg font-semibold mb-2 text-center lg:text-left">
+        <div className="w-full lg:w-1/2">
+          <h2 className="mb-2 text-lg font-semibold text-center lg:text-left">
             Project Video
           </h2>
           <div className="overflow-hidden rounded-md shadow-md">
-            <div className="aspect-video w-full h-full">
+            <div className="w-full h-full aspect-video">
               <YouTube
                 videoId={videoId}
                 opts={{

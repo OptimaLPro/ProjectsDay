@@ -41,7 +41,7 @@ const CardItem = ({ project }) => {
               >
                 {internshipName}
               </div>
-              <h3 className="text-xl font-bold">{project.name}</h3>
+              <h3 className="text-2xl font-bold">{project.name}</h3>
             </div>
             <AwardsBar project={project} openDialog={false} />
           </div>

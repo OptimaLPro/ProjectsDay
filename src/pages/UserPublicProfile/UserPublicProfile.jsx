@@ -36,7 +36,7 @@ const UserPublicProfile = () => {
 
   // Use email if first_name or last_name is null or empty
   const displayName =
-    (user.first_name && user.last_name)
+    user.first_name && user.last_name
       ? `${user.first_name} ${user.last_name}`
       : user.email;
 
@@ -55,13 +55,25 @@ const UserPublicProfile = () => {
               className="object-cover w-48 h-48 border rounded-full shadow-md border-white/30"
             />
             <div className="flex flex-col items-center gap-2">
-              <h1 className="text-3xl font-bold text-center">
+              <h1
+                className={`font-bold text-center break-words ${
+                  displayName === user.email
+                    ? "text-xl sm:text-3xl" // קטן במובייל, גדול בדסקטופ
+                    : "text-3xl"
+                }`}
+              >
                 {displayName}
               </h1>
+
               {userInternship && (
                 <Link
+                  key={userInternship._id}
                   to={`/internships/${userInternship._id}`}
-                  className="px-3 py-1 text-sm transition rounded-full bg-primary/10 text-primary hover:underline"
+                  className="inline-block px-2 py-1 mt-2 mb-2 text-xs font-medium capitalize transition rounded-full w-fit hover:underline"
+                  style={{
+                    backgroundColor: `#${userInternship.backgroundColor}`,
+                    color: `#${userInternship.textColor}`,
+                  }}
                 >
                   {userInternship.name}
                 </Link>

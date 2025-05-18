@@ -36,8 +36,11 @@ const Header = () => {
             <Link to="/">
               <div className="flex items-center gap-2">
                 <div>
-                  <h1 className="text-xl font-bold lg:text-3xl">
+                  <h1 className="hidden text-xl font-bold lg:text-3xl lg:block">
                     Graduation Day {year}
+                  </h1>
+                  <h1 className="block text-xl font-bold lg:text-3xl lg:hidden">
+                    Graduation Day
                   </h1>
                 </div>
                 <SelectYearbookDropDown />
