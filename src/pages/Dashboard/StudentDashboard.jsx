@@ -2,16 +2,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/context/AuthContext";
 import { Edit, Link2, LogOut, Plus } from "lucide-react";
-import { useEffect } from "react";
 import { Link } from "react-router";
 import UnassignProjectButton from "./UnassignProjectButton";
 
 const StudentDashboard = ({ hasProject, onLogout }) => {
   const { user } = useAuth();
-
-  useEffect(() => {
-    console.log(user);
-  }, [user]);
 
   const links = !hasProject
     ? [

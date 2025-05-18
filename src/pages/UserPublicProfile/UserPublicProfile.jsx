@@ -34,35 +34,41 @@ const UserPublicProfile = () => {
   const image =
     user.image && user.image !== "" ? user.image : "/images/default.jpg";
 
+  // Use email if first_name or last_name is null or empty
+  const displayName =
+    (user.first_name && user.last_name)
+      ? `${user.first_name} ${user.last_name}`
+      : user.email;
+
   return (
-    <main className="mx-auto mt-5 px-5 max-w-2xl relative">
+    <main className="relative max-w-2xl px-5 mx-auto mt-5">
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
       >
-        <Card className="p-6 backdrop-blur-md bg-white/40 border border-white/30 shadow-xl">
+        <Card className="p-6 border shadow-xl backdrop-blur-md bg-white/40 border-white/30">
           <div className="flex flex-col items-center gap-6">
             <img
               src={image}
-              alt={`${user.first_name} ${user.last_name}`}
-              className="h-48 w-48 object-cover rounded-full shadow-md border border-white/30"
+              alt={displayName}
+              className="object-cover w-48 h-48 border rounded-full shadow-md border-white/30"
             />
             <div className="flex flex-col items-center gap-2">
               <h1 className="text-3xl font-bold text-center">
-                {user.first_name} {user.last_name}
+                {displayName}
               </h1>
               {userInternship && (
                 <Link
                   to={`/internships/${userInternship._id}`}
-                  className="bg-primary/10 text-primary text-sm px-3 py-1 rounded-full hover:underline transition"
+                  className="px-3 py-1 text-sm transition rounded-full bg-primary/10 text-primary hover:underline"
                 >
                   {userInternship.name}
                 </Link>
               )}
             </div>
             {user.about && (
-              <p className="text-gray-700 whitespace-pre-line text-center max-w-xl">
+              <p className="max-w-xl text-center text-gray-700 whitespace-pre-line">
                 {user.about}
               </p>
             )}

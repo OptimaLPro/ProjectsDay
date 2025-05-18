@@ -21,7 +21,6 @@ export function SelectYearbookDropDown() {
   const { setYear } = useAuth();
 
   const handleYearbookChange = (year) => {
-    console.log("Selected year:", year);
     setYear(year);
   };
 

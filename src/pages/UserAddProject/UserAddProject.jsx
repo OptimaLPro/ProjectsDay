@@ -1,3 +1,4 @@
+import { useState } from "react";
 import api from "@/api/api";
 import Error from "@/components/Error/Error";
 import GenericFormField from "@/components/GenericFormField/GenericFormField";
@@ -30,10 +31,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Delete, Info, Plus } from "lucide-react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
+import { ButtonLoading } from "@/components/ui/ButtonLoading";
+import { compressImage } from "@/lib/compressImage"; // ✅ ייבוא כיווץ
 
 export function UserAddProject() {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {
     data: internshipsData,
@@ -72,29 +76,44 @@ export function UserAddProject() {
   });
 
   const onSubmit = async (values) => {
-    const imageFile = values.image?.[0];
-    const newGalleryFiles = values.newGallery || [];
+    if (isSubmitting) return;
+    setIsSubmitting(true);
 
-    const formData = new FormData();
-    formData.append("name", values.name);
-    formData.append("internship", values.internship);
-    formData.append("description", values.description);
-    formData.append("short_description", values.short_description);
-    formData.append("youtube", values.youtube);
-    formData.append("instructor", values.instructor);
-    formData.append("year", String(values.year));
-    formData.append("members", JSON.stringify(values.members));
-    formData.append("gallery", JSON.stringify(values.gallery || []));
-
-    if (imageFile) {
-      formData.append("image", imageFile);
-    }
-
-    Array.from(newGalleryFiles).forEach((file) => {
-      formData.append("newGalleryFiles", file);
-    });
+    let imageFile = values.image?.[0];
+    let newGalleryFiles = values.newGallery || [];
 
     try {
+      // 🧠 כיווץ תמונה ראשית
+      if (imageFile) {
+        imageFile = await compressImage(imageFile, 1024, 1024);
+      }
+
+      // 🧠 כיווץ גלריה
+      newGalleryFiles = await Promise.all(
+        Array.from(newGalleryFiles).map((file) =>
+          compressImage(file, 1024, 1024)
+        )
+      );
+
+      const formData = new FormData();
+      formData.append("name", values.name);
+      formData.append("internship", values.internship);
+      formData.append("description", values.description);
+      formData.append("short_description", values.short_description);
+      formData.append("youtube", values.youtube);
+      formData.append("instructor", values.instructor);
+      formData.append("year", String(values.year));
+      formData.append("members", JSON.stringify(values.members));
+      formData.append("gallery", JSON.stringify(values.gallery || []));
+
+      if (imageFile) {
+        formData.append("image", imageFile);
+      }
+
+      newGalleryFiles.forEach((file) => {
+        formData.append("newGalleryFiles", file);
+      });
+
       await api.post("/projects/create", formData);
       navigate("/dashboard");
       ToastMessage({
@@ -104,6 +123,8 @@ export function UserAddProject() {
     } catch (error) {
       console.error("Failed to create project:", error);
       ToastMessage({ type: "error", message: "Failed to create project." });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -115,8 +136,8 @@ export function UserAddProject() {
 
   return (
     <div className="relative mx-auto w-[90%] lg:w-[80%] max-w-[600px] mt-4">
-      <Card className="p-6 shadow-xl hover:shadow-2xl backdrop-blur-md bg-white/40 border border-white/30 transition-all">
-        <h1 className="text-2xl font-bold text-center mb-8">Add New Project</h1>
+      <Card className="p-6 transition-all border shadow-xl hover:shadow-2xl backdrop-blur-md bg-white/40 border-white/30">
+        <h1 className="mb-8 text-2xl font-bold text-center">Add New Project</h1>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <GenericFormField
@@ -171,9 +192,9 @@ export function UserAddProject() {
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="h-6 w-6 p-0"
+                        className="w-6 h-6 p-0"
                       >
-                        <Info className="h-4 w-4 text-muted-foreground" />
+                        <Info className="w-4 h-4 text-muted-foreground" />
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent
@@ -238,7 +259,7 @@ export function UserAddProject() {
                       <img
                         src={url}
                         alt={`gallery-${index}`}
-                        className="w-full h-full object-cover rounded shadow"
+                        className="object-cover w-full h-full rounded shadow"
                       />
                       <button
                         type="button"
@@ -248,7 +269,7 @@ export function UserAddProject() {
                           );
                           field.onChange(updated);
                         }}
-                        className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs"
+                        className="absolute top-0 right-0 flex items-center justify-center w-5 h-5 text-xs text-white bg-red-500 rounded-full"
                       >
                         ×
                       </button>
@@ -322,11 +343,11 @@ export function UserAddProject() {
             </GenericFormField>
 
             <div>
-              <h2 className="text-xl font-semibold mb-2">Team Members</h2>
+              <h2 className="mb-2 text-xl font-semibold">Team Members</h2>
               {fields.map((item, index) => (
                 <div
                   key={item.id}
-                  className="mb-4 space-y-2 border p-4 rounded bg-white rounded-lg"
+                  className="p-4 mb-4 space-y-2 bg-white border rounded rounded-lg"
                 >
                   <GenericFormField
                     name={`members.${index}.email`}
@@ -371,9 +392,13 @@ export function UserAddProject() {
             </div>
 
             <div className="flex items-center justify-center mt-12">
-              <Button type="submit" className="text-lg shadow-lg">
-                Submit
-              </Button>
+              {isSubmitting ? (
+                <ButtonLoading /> // ✅ כפתור טעינה
+              ) : (
+                <Button type="submit" className="text-lg shadow-lg">
+                  Submit
+                </Button>
+              )}
             </div>
           </form>
         </Form>

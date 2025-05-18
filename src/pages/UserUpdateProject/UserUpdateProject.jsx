@@ -20,15 +20,18 @@ import { useInstructors } from "@/hooks/useInstructors";
 import { useInternships } from "@/hooks/useInternships";
 import { useMyProject } from "@/hooks/useMyProject";
 import { useUserEmails } from "@/hooks/useUserEmails";
+import { compressImage } from "@/lib/compressImage";
 import { updateProjectSchema } from "@/schemas/updateProjectSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Delete, Save } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
+import { ButtonLoading } from "@/components/ui/ButtonLoading";
 
 export function UserUpdateProject() {
   const [didReset, setDidReset] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
   const {
     data: projectData,
@@ -96,7 +99,7 @@ export function UserUpdateProject() {
       const instructorObj = instructorsData.find((i) => i._id === instructor);
       const memberObjects = (members || []).map((id) => {
         const user = userList.find((u) => u._id === id);
-        return { email: user?.email || "" }; // ✅ מחזיר email אמיתי
+        return { email: user?.email || "" };
       });
 
       form.reset({
@@ -118,8 +121,19 @@ export function UserUpdateProject() {
   }, [projectData, internshipsData, instructorsData, didReset, form]);
 
   const onSubmit = async (values) => {
-    const imageFile = values.image?.[0];
-    const newGalleryFiles = values.newGallery || [];
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+
+    let newGalleryFiles = values.newGallery || [];
+    newGalleryFiles = await Promise.all(
+      Array.from(newGalleryFiles).map((file) => compressImage(file, 1024, 0.7))
+    );
+
+    let imageFile = values.image?.[0];
+    if (imageFile) {
+      imageFile = await compressImage(imageFile, 1024, 0.7);
+    }
+
     const formData = new FormData();
 
     const emailToIdMap = {};
@@ -165,6 +179,8 @@ export function UserUpdateProject() {
         type: "error",
         message: "Failed to update project. Please try again.",
       });
+    } finally {
+      setIsSubmitting(false); // ✅
     }
   };
 
@@ -175,10 +191,10 @@ export function UserUpdateProject() {
 
   return (
     <div className="relative mx-auto w-[80%] max-w-[600px] mt-4">
-      <h1 className="text-2xl font-bold text-center mb-8">
+      <h1 className="mb-8 text-2xl font-bold text-center">
         Update Your Project
       </h1>
-      <Card className="p-6 shadow-xl hover:shadow-2xl backdrop-blur-md bg-white/40 border border-white/30 transition-all">
+      <Card className="p-6 transition-all border shadow-xl hover:shadow-2xl backdrop-blur-md bg-white/40 border-white/30">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <GenericFormField
@@ -274,7 +290,7 @@ export function UserUpdateProject() {
                       <img
                         src={url}
                         alt={`gallery-${index}`}
-                        className="w-full h-full object-cover rounded shadow"
+                        className="object-cover w-full h-full rounded shadow"
                       />
                       <button
                         type="button"
@@ -284,7 +300,7 @@ export function UserUpdateProject() {
                           );
                           field.onChange(updated);
                         }}
-                        className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs"
+                        className="absolute top-0 right-0 flex items-center justify-center w-5 h-5 text-xs text-white bg-red-500 rounded-full"
                       >
                         ×
                       </button>
@@ -361,11 +377,11 @@ export function UserUpdateProject() {
             </GenericFormField>
 
             <div>
-              <h2 className="text-xl font-semibold mb-2">Team Members</h2>
+              <h2 className="mb-2 text-xl font-semibold">Team Members</h2>
               {fields.map((item, index) => (
                 <div
                   key={item.id}
-                  className="mb-4 space-y-2 border p-4 rounded bg-white"
+                  className="p-4 mb-4 space-y-2 bg-white border rounded"
                 >
                   <GenericFormField
                     name={`members.${index}.email`}
@@ -396,9 +412,13 @@ export function UserUpdateProject() {
             </div>
 
             <div className="flex justify-center my-12">
-              <Button type="submit" className="text-lg shadow-lg">
-                <Save className="w-4 h-4 mr-2" /> Save Changes
-              </Button>
+              {isSubmitting ? (
+                <ButtonLoading />
+              ) : (
+                <Button type="submit" className="text-lg shadow-lg">
+                  <Save className="w-4 h-4 mr-2" /> Save Changes
+                </Button>
+              )}
             </div>
           </form>
         </Form>

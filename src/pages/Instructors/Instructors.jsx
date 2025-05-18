@@ -19,8 +19,6 @@ const Instructors = () => {
 
   const grouped = {};
 
-  console.log("Instructors Data:", instructorsData);
-
   for (const instructor of instructorsData) {
     const internshipsForYear = (instructor.internships || []).filter(
       (internId) => {

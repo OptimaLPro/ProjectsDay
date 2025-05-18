@@ -107,7 +107,6 @@ export default function AdminManageUsers() {
           );
         }
 
-        console.log("Upload Results:", results);
         fetchUsers();
       } catch (err) {
         console.error(err);

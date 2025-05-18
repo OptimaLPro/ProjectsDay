@@ -49,7 +49,6 @@ export const AuthProvider = ({ children }) => {
     const fetchYearbook = async () => {
       try {
         const res = await api.get("/yearbooks/active");
-        console.log(res.data.year);
         setYear(res.data.year);
       } catch (err) {
         console.error("Failed to fetch active yearbook:", err);

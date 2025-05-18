@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -8,11 +8,13 @@ import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { ButtonLoading } from "@/components/ui/ButtonLoading"; // ✅
 import { useAuth } from "@/context/AuthContext";
 import GenericFormField from "@/components/GenericFormField/GenericFormField";
 import { Card } from "@/components/ui/card";
 import ToastMessage from "@/components/ui/ToastMessage";
 import { useNavigate } from "react-router";
+import { compressImage } from "@/lib/compressImage"; // ✅
 
 const schema = z.object({
   first_name: z.string().max(30).optional(),
@@ -39,8 +41,7 @@ const schema = z.object({
 export default function UserEditProfile() {
   const { user, updateUser } = useAuth();
   const navigate = useNavigate();
-
-  console.log(user);
+  const [isSubmitting, setIsSubmitting] = useState(false); // ✅
 
   const form = useForm({
     resolver: zodResolver(schema),
@@ -70,6 +71,9 @@ export default function UserEditProfile() {
   }, [user]);
 
   const onSubmit = async (values) => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+
     const formData = new FormData();
     formData.append("first_name", values.first_name || "");
     formData.append("last_name", values.last_name || "");
@@ -79,7 +83,9 @@ export default function UserEditProfile() {
     formData.append("about", values.about || "");
 
     if (values.image && values.image.length > 0) {
-      formData.append("image", values.image[0]);
+      const originalFile = values.image[0];
+      const compressed = await compressImage(originalFile, 1024, 0.8); // ✅
+      formData.append("image", compressed);
     }
 
     try {
@@ -87,8 +93,7 @@ export default function UserEditProfile() {
       const { token, user: updatedUser } = res.data;
 
       localStorage.setItem("token", token);
-      updateUser(updatedUser); // מתוך useAuth
-
+      updateUser(updatedUser);
       navigate(-1);
       ToastMessage({
         message: "Profile updated successfully.",
@@ -100,6 +105,8 @@ export default function UserEditProfile() {
         message: "Failed to update profile.",
         type: "error",
       });
+    } finally {
+      setIsSubmitting(false); // ✅
     }
   };
 
@@ -107,109 +114,65 @@ export default function UserEditProfile() {
 
   return (
     <div className="relative mx-auto w-[80%] max-w-[600px] mt-4">
-      <h1 className="text-2xl font-bold text-center mb-8">Edit Your Profile</h1>
-      <Card className="p-6 shadow-xl hover:shadow-2xl backdrop-blur-md bg-white/40 border border-white/30 transition-all">
+      <h1 className="mb-8 text-2xl font-bold text-center">Edit Your Profile</h1>
+      <Card className="p-6 transition-all border shadow-xl hover:shadow-2xl backdrop-blur-md bg-white/40 border-white/30">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <GenericFormField
-              name="first_name"
-              control={form.control}
-              label="First Name"
-            >
+            <GenericFormField name="first_name" control={form.control} label="First Name">
               {(field) => (
-                <Input
-                  {...field}
-                  placeholder="First Name"
-                  className="bg-white shadow-xl focus:ring-primary"
-                />
+                <Input {...field} placeholder="First Name" className="bg-white shadow-xl" />
               )}
             </GenericFormField>
 
-            <GenericFormField
-              name="last_name"
-              control={form.control}
-              label="Last Name"
-            >
+            <GenericFormField name="last_name" control={form.control} label="Last Name">
               {(field) => (
-                <Input
-                  {...field}
-                  placeholder="Last Name"
-                  className="bg-white shadow-xl focus:ring-primary"
-                />
+                <Input {...field} placeholder="Last Name" className="bg-white shadow-xl" />
               )}
             </GenericFormField>
 
-            <GenericFormField
-              name="linkedin"
-              control={form.control}
-              label="LinkedIn"
-            >
+            <GenericFormField name="linkedin" control={form.control} label="LinkedIn">
               {(field) => (
-                <Input
-                  {...field}
-                  placeholder="https://linkedin.com/in/..."
-                  className="bg-white shadow-xl focus:ring-primary"
-                />
+                <Input {...field} placeholder="https://linkedin.com/in/..." className="bg-white shadow-xl" />
               )}
             </GenericFormField>
 
-            <GenericFormField
-              name="github"
-              control={form.control}
-              label="GitHub"
-            >
+            <GenericFormField name="github" control={form.control} label="GitHub">
               {(field) => (
-                <Input
-                  {...field}
-                  placeholder="https://github.com/..."
-                  className="bg-white shadow-xl focus:ring-primary"
-                />
+                <Input {...field} placeholder="https://github.com/..." className="bg-white shadow-xl" />
               )}
             </GenericFormField>
 
-            <GenericFormField
-              name="website"
-              control={form.control}
-              label="Website"
-            >
+            <GenericFormField name="website" control={form.control} label="Website">
               {(field) => (
-                <Input
-                  {...field}
-                  placeholder="https://your-portfolio.com"
-                  className="bg-white shadow-xl focus:ring-primary"
-                />
+                <Input {...field} placeholder="https://your-portfolio.com" className="bg-white shadow-xl" />
               )}
             </GenericFormField>
 
             <GenericFormField name="about" control={form.control} label="About">
               {(field) => (
-                <Textarea
-                  {...field}
-                  placeholder="Tell us about yourself..."
-                  className="bg-white shadow-xl focus:ring-primary"
-                />
+                <Textarea {...field} placeholder="Tell us about yourself..." className="bg-white shadow-xl" />
               )}
             </GenericFormField>
 
-            <GenericFormField
-              name="image"
-              control={form.control}
-              label="Profile Picture"
-            >
+            <GenericFormField name="image" control={form.control} label="Profile Picture">
               {(field) => (
                 <Input
                   type="file"
                   accept="image/*"
                   onChange={(e) => field.onChange(e.target.files)}
-                  className="bg-white shadow-xl focus:ring-primary"
+                  className="bg-white shadow-xl"
                 />
               )}
             </GenericFormField>
 
             <div className="text-center">
-              <Button type="submit" className="text-lg shadow-md my-8">
-                Save Changes
-              </Button>
+              {isSubmitting ? (
+                <ButtonLoading />
+              ) : (
+                <Button type="submit" className="my-8 text-lg shadow-md">
+                  Save Changes
+                </Button>
+              )}
             </div>
           </form>
         </Form>
