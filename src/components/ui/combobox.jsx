@@ -33,7 +33,7 @@ export function Combobox({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="justify-between text-gray-600 bg-white shadow-md w-fit"
+          className="justify-between text-gray-600 bg-[#ffffffc4] shadow-md w-fit lg:w-full"
         >
           {activeInternship || "Filter"}
           <ChevronsUpDown className="w-4 h-4 ml-2 opacity-50 shrink-0" />

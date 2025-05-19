@@ -1,10 +1,10 @@
-import { Briefcase, ChevronDown, House, LogIn, Users } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
+import { Briefcase, House, LogIn, Users } from "lucide-react";
 import { useState } from "react";
-import HeaderButton from "./HeaderButton";
 import { Link } from "react-router";
 import DrawerMenu from "../DrawerMenu/DrawerMenu";
 import AvatarProfile from "./AvatarProfile";
-import { useAuth } from "@/context/AuthContext";
+import HeaderButton from "./HeaderButton";
 import { SelectYearbookDropDown } from "./SelectYearbookDropDown";
 
 const Header = () => {
@@ -36,10 +36,10 @@ const Header = () => {
             <Link to="/">
               <div className="flex items-center gap-2">
                 <div>
-                  <h1 className="hidden text-xl font-bold lg:text-3xl lg:block">
+                  <h1 className="hidden text-xl font-bold lg:text-3xl xl:block">
                     Graduation Day {year}
                   </h1>
-                  <h1 className="block text-xl font-bold lg:text-3xl lg:hidden">
+                  <h1 className="block text-xl font-bold lg:text-3xl xl:hidden">
                     Graduation Day
                   </h1>
                 </div>

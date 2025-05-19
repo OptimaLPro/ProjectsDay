@@ -27,7 +27,7 @@ const ProjectMedia = ({ project }) => {
   const videoId = getYouTubeId(project.youtube);
 
   return (
-    <div className="flex flex-col gap-10 mt-10 lg:mt-16 lg:flex-row">
+    <div className="flex flex-col justify-center gap-10 mt-10 lg:mt-16 lg:flex-row">
       {/* Gallery */}
       <div className="w-full lg:w-1/2">
         <h2 className="mb-2 text-lg font-semibold text-center lg:text-left">

@@ -20,8 +20,8 @@ const SearchBar = ({
 
   return (
     <>
-      <div className="relative lg:w-1/3 flex-1">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-5 w-5" />
+      <div className="relative flex-1 lg:w-1/2 xl:w-1/3">
+        <Search className="absolute w-5 h-5 -translate-y-1/2 left-3 top-1/2 text-muted-foreground" />
         <Input
           placeholder="Search..."
           className="pl-10 bg-[#ffffffc4] shadow-md"
@@ -29,7 +29,7 @@ const SearchBar = ({
           onChange={(e) => setSearchQuery(e.target.value)}
         />
         <X
-          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 h-6 w-6 opacity-70 hover:opacity-100 transition-all duration-200"
+          className="absolute w-6 h-6 text-gray-500 transition-all duration-200 -translate-y-1/2 right-3 top-1/2 opacity-70 hover:opacity-100"
           onClick={() => {
             setSearchQuery("");
             setActiveInternship("All");
@@ -37,7 +37,7 @@ const SearchBar = ({
           style={{ cursor: "pointer" }}
         />
       </div>
-      <div className="block lg:hidden relative ">
+      <div className="relative block lg:w-1/2 xl:hidden ">
         <Combobox
           internships={internships}
           activeInternship={activeInternship}
@@ -46,11 +46,11 @@ const SearchBar = ({
       </div>
       <Tabs
         value={activeInternship}
-        className="w-full lg:w-2/3 hidden lg:block"
+        className="hidden w-full lg:w-1/2 xl:w-2/3 xl:block"
         onValueChange={handleTabChange}
       >
         <TabsList
-          className="w-full grid relative"
+          className="relative grid w-full"
           style={{
             gridTemplateColumns: `${internships
               .map(() => "1fr")
@@ -61,14 +61,14 @@ const SearchBar = ({
             <TabsTrigger
               key={internship.name}
               value={internship.name}
-              className="text-sm cursor-pointer capitalize"
+              className="text-sm capitalize cursor-pointer"
             >
               {internship.name}
             </TabsTrigger>
           ))}
 
           <TabsTrigger value="awarded" className="text-sm cursor-pointer ">
-            <Trophy className="h-4 w-4 mr-2" />
+            <Trophy className="w-4 h-4 mr-2" />
           </TabsTrigger>
         </TabsList>
       </Tabs>

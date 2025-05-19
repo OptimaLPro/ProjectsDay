@@ -8,6 +8,7 @@ import { Card } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import BackButton from "@/components/ui/BackButton";
 import { useInternships } from "@/hooks/useInternships";
+import { useEffect } from "react";
 
 const UserPublicProfile = () => {
   const { id } = useParams();
@@ -23,6 +24,10 @@ const UserPublicProfile = () => {
       return res.data;
     },
   });
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const { data: internships = [], isInternshipsLoading } = useInternships();
 
