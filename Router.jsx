@@ -22,6 +22,7 @@ import StudentAssignProject from "@/pages/Dashboard/StudentAssignProject";
 import UserEditProfile from "@/pages/UserEditProfile/UserEditProfile";
 import UserPublicProfile from "@/pages/UserPublicProfile/UserPublicProfile";
 import AdminManageAwards from "@/pages/AdminManageAwards/AdminManageAwards";
+import AdminManageHomepage from "@/pages/AdminManageHomepage/AdminManageHomepage";
 
 const Router = () => {
   useEffect(() => {
@@ -81,6 +82,10 @@ const Router = () => {
           <Route
             path="/dashboard/manage-awards"
             element={<AdminManageAwards />}
+          />
+          <Route
+            path="/dashboard/manage-homepage"
+            element={<AdminManageHomepage />}
           />
         </Route>
 

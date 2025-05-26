@@ -7,6 +7,7 @@ import {
   GraduationCap,
   CalendarDays,
   Trophy,
+  MonitorPlay,
 } from "lucide-react";
 import { Link } from "react-router";
 import { Button } from "@/components/ui/button";
@@ -47,6 +48,12 @@ const links = [
     label: "Manage Awards",
     description: "Add or edit awards for projects.",
     icon: <Trophy className="w-8 h-8 mb-2 text-primary" />,
+  },
+  {
+    href: "/dashboard/manage-homepage",
+    label: "Manage Homepage",
+    description: "Add or edit content for the homepage.",
+    icon: <MonitorPlay className="w-8 h-8 mb-2 text-primary" />,
   },
 ];
 
