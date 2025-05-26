@@ -46,17 +46,17 @@ const Instructors = () => {
   };
 
   return (
-    <main className="mx-auto mt-5 px-5 lg:px-4 max-w-[80%] relative">
+    <main className="mx-auto mt-5 px-5 lg:px-4 lg:max-w-[80%] max-w-[90%] relative">
       <h1 className="mb-10 text-3xl font-bold text-center">Instructors</h1>
 
       {Object.entries(grouped).map(([internshipId, instructors], groupIdx) => (
         <div key={internshipId} className="mb-12">
-          {groupIdx > 0 && <Separator className="my-8" />}
+          {groupIdx > 0 && <Separator className="my-8 shadow-2xl bg-zinc-500" />}
           <h2 className="mb-6 text-2xl font-semibold">
             {getInternshipNameById(internshipId)}
           </h2>
 
-          <div className="grid grid-cols-2 gap-10 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-2 gap-7 sm:grid-cols-2 lg:grid-cols-4">
             {instructors.map((instructor, index) => (
               <motion.div
                 key={instructor._id}
@@ -72,9 +72,9 @@ const Instructors = () => {
                     <img
                       src={instructor.image || "/images/default.jpg"}
                       alt={instructor.name}
-                      className="lg:h-48 lg:w-48 w-[140px] h-[140px] object-cover rounded-full shadow-xl border border-white/30"
+                      className="object-cover border rounded-full shadow-xl lg:h-48 lg:w-48 aspect-square border-white/30"
                     />
-                    <div className="flex items-center justify-center mt-2 text-lg font-semibold text-center">
+                    <div className="flex items-center justify-center text-lg font-semibold text-center">
                       {instructor.name}
                     </div>
                   </Card>

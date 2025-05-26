@@ -9,6 +9,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Info } from "lucide-react";
 
 export default function AdminManageHomepage() {
   const queryClient = useQueryClient();
@@ -49,7 +56,7 @@ export default function AdminManageHomepage() {
     <div className="relative max-w-4xl mx-auto mt-10 space-y-8">
       <h1 className="text-2xl font-bold text-center">Manage Homepage</h1>
       <div className="space-y-2">
-        <Label>YouTube Links</Label>
+        <Label className="text-2xl">YouTube Links</Label>
         {youtubeLinks.map((link, index) => (
           <div key={index} className="flex items-center space-x-2">
             <Input
@@ -81,7 +88,21 @@ export default function AdminManageHomepage() {
         </Button>
       </div>
       <div className="space-y-2">
-        <Label>Hero Text (use {"\\n"} for newline)</Label>
+        <Label className="text-2xl">
+          Hero Text
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger>
+                <div className="flex items-center gap-1">
+                  <Info className="bg-white rounded-full" />
+                </div>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p className="rtl">(תשתמש ב {"n\\"} בשביל שורה חדשה), תשתמש ב {'{year}'} בשביל שנה</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </Label>
         <Textarea
           className="h-40 font-mono bg-white"
           value={herotext}

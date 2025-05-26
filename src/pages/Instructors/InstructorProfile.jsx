@@ -39,7 +39,7 @@ const InstructorProfile = () => {
             <img
               src={image}
               alt={instructor.name}
-              className="object-cover w-48 h-48 border rounded-lg shadow-md border-white/30"
+              className="object-cover w-48 h-48 border rounded-full shadow-md border-white/30"
             />
             <h1 className="text-2xl font-bold">{instructor.name}</h1>
 

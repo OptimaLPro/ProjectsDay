@@ -24,7 +24,6 @@ const Hero = () => {
 
   const youtubeLinks = youtubeRecord?.videos || [];
   const herotext = herotextRecord?.text?.replace("{year}", year) || "";
-  console.log("herotext", herotext);
 
   const [loadedVideos, setLoadedVideos] = useState(
     new Array(youtubeLinks.length).fill(false)

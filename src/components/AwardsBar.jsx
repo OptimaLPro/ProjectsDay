@@ -29,7 +29,7 @@ import {
                     src={award.image}
                     alt={award.name}
                     style={{ width: size, height: size }}
-                    className="cursor-pointer transition-transform duration-300 hover:scale-105"
+                    className="transition-transform duration-300 cursor-pointer hover:scale-105"
                     onClick={() => {
                       if (openDialog) {
                         setSelectedAward(award);
@@ -45,7 +45,7 @@ import {
   
         {openDialog && selectedAward && (
           <Dialog open={true} onOpenChange={() => setSelectedAward(null)}>
-            <DialogContent className="text-center flex flex-col items-center gap-4">
+            <DialogContent className="flex flex-col items-center gap-4 text-center">
               <img
                 src={selectedAward.image}
                 alt={selectedAward.name}
@@ -53,7 +53,7 @@ import {
               />
               <DialogHeader className="text-center">
                 <DialogTitle className="text-xl text-center">{selectedAward.name}</DialogTitle>
-                <DialogDescription className=" mt-2 whitespace-pre-line text-sm text-muted-foreground">
+                <DialogDescription className="mt-2 text-sm whitespace-pre-line text-muted-foreground">
                   {selectedAward.description}
                 </DialogDescription>
               </DialogHeader>
