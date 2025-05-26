@@ -98,7 +98,7 @@ export default function EditUserDialog({ user, onClose, onSave }) {
 
   return (
     <Dialog open onOpenChange={onClose}>
-      <DialogContent>
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Edit User</DialogTitle>
         </DialogHeader>
@@ -110,6 +110,7 @@ export default function EditUserDialog({ user, onClose, onSave }) {
               className="object-cover w-24 h-24 mx-auto rounded-full shadow"
             />
           </div>
+          <Input type="file" accept="image/*" onChange={handleImageChange} />
 
           <Input {...register("email")} placeholder="Email" />
           <Input {...register("role")} placeholder="Role" />
@@ -153,8 +154,6 @@ export default function EditUserDialog({ user, onClose, onSave }) {
             placeholder="New Password (optional)"
             type="password"
           />
-
-          <Input type="file" accept="image/*" onChange={handleImageChange} />
 
           <div className="flex justify-end gap-2">
             <Button type="button" variant="ghost" onClick={onClose}>

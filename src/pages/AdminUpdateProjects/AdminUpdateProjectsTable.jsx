@@ -17,10 +17,11 @@ export default function AdminUpdateProjectsTable({
   onDelete,
 }) {
   return (
-    <div className="rounded-md bg-white border">
+    <div className="bg-white border rounded-md">
       <Table>
         <TableHeader>
           <TableRow>
+            {/* <TableHead>ID</TableHead> */}
             <TableHead>Title</TableHead>
             <TableHead>Internship</TableHead>
             <TableHead>Year</TableHead>
@@ -46,6 +47,9 @@ export default function AdminUpdateProjectsTable({
 
             return (
               <TableRow key={project._id}>
+                {/* <TableCell>
+                  {project.project_id ? project.project_id : ""}
+                </TableCell> */}
                 <TableCell
                   className="max-w-[200px] truncate"
                   title={project.name}

@@ -166,6 +166,7 @@ export default function AdminManageUsers() {
           activeInternship={searchInternship}
           setActiveInternship={setSearchInternship}
           hideAwarded={true}
+          homePage={false}
         />
 
         <Select

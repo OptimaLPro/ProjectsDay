@@ -16,9 +16,10 @@ const Hero = () => {
   const [activeSlide, setActiveSlide] = useState(0);
   const { year } = useAuth();
   const youtubeLinks = [
-    "https://www.youtube.com/watch?v=Ax6cnEVp_bY&t=1s",
-    "https://youtu.be/ygX9FeYLnKE?si=378bNzikFr2dSV0a",
-    "https://www.youtube.com/watch?v=IwK6sYaCHPQ&feature=youtu.be",
+    "https://www.youtube.com/watch?v=yisDdo5Vs1Y",
+    "https://youtu.be/ygX9FeYLnKE?si=https://www.youtube.com/watch?v=vVHAStRQ9dU",
+    "https://www.youtube.com/watch?v=8-BJoQmZ4r8",
+    "https://www.youtube.com/watch?v=Ax6cnEVp_bY",
   ];
 
   const [loadedVideos, setLoadedVideos] = useState(

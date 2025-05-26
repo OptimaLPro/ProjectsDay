@@ -22,13 +22,14 @@ import { useInstructors } from "@/hooks/useInstructors";
 import { useInternships } from "@/hooks/useInternships";
 import { updateProjectSchema } from "@/schemas/updateProjectSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Delete, Save } from "lucide-react";
+import { Delete, Save, Info } from "lucide-react";
 import { useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import EmailAutocomplete from "@/components/ui/EmailAutocomplete";
 import { useUserEmails } from "@/hooks/useUserEmails";
 import { useQuery } from "@tanstack/react-query";
 import ToastMessage from "@/components/ui/ToastMessage";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 const fetchAwards = async () => {
   const { data } = await api.get("/awards");
@@ -47,6 +48,7 @@ export default function EditProjectDialog({ project, onClose, onSave }) {
   const form = useForm({
     resolver: zodResolver(updateProjectSchema),
     defaultValues: {
+      // project_id: "",
       name: "",
       internship: "",
       description: "",
@@ -70,6 +72,7 @@ export default function EditProjectDialog({ project, onClose, onSave }) {
   useEffect(() => {
     if (project && internships && instructors && userList.length > 0) {
       const {
+        // project_id,
         name,
         internship,
         description,
@@ -96,7 +99,9 @@ export default function EditProjectDialog({ project, onClose, onSave }) {
           return found?.email || null;
         })
         .filter(Boolean);
+
       form.reset({
+        // project_id: project_id ? project_id.toString() : "",
         name,
         internship: internshipObj?._id ?? "",
         description,
@@ -127,6 +132,7 @@ export default function EditProjectDialog({ project, onClose, onSave }) {
       .filter(Boolean);
 
     const formData = new FormData();
+    // formData.append("project_id", values.project_id); // <-- project_id
     formData.append("name", values.name);
     formData.append("internship", values.internship);
     formData.append("description", values.description);
@@ -173,6 +179,43 @@ export default function EditProjectDialog({ project, onClose, onSave }) {
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            {/* <GenericFormField
+              name="project_id"
+              control={form.control}
+              label={
+                <div className="flex items-center gap-2">
+                  Project ID
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="w-6 h-6 p-0"
+                      >
+                        <Info className="w-4 h-4 text-muted-foreground" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent
+                      className="max-w-xs text-sm"
+                      side="top"
+                      align="start"
+                      collisionPadding={10}
+                    >
+                      3-digit project ID (as in your faculty sheet)
+                    </PopoverContent>
+                  </Popover>
+                </div>
+              }
+            >
+              {(field) => (
+                <Input
+                  {...field}
+                  type="number"
+                  placeholder="Project ID (e.g. 301)"
+                  onChange={(e) => field.onChange(e.target.value)}
+                />
+              )}
+            </GenericFormField> */}
             <GenericFormField
               name="name"
               control={form.control}
@@ -242,7 +285,7 @@ export default function EditProjectDialog({ project, onClose, onSave }) {
                       <img
                         src={url}
                         alt={`gallery-${index}`}
-                        className="w-full h-full object-cover rounded shadow"
+                        className="object-cover w-full h-full rounded shadow"
                       />
                       <button
                         type="button"
@@ -252,7 +295,7 @@ export default function EditProjectDialog({ project, onClose, onSave }) {
                           );
                           field.onChange(updated);
                         }}
-                        className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs"
+                        className="absolute top-0 right-0 flex items-center justify-center w-5 h-5 text-xs text-white bg-red-500 rounded-full"
                       >
                         ×
                       </button>
@@ -317,11 +360,11 @@ export default function EditProjectDialog({ project, onClose, onSave }) {
             </GenericFormField>
 
             <div>
-              <h2 className="text-xl font-semibold mb-2">Team Members</h2>
+              <h2 className="mb-2 text-xl font-semibold">Team Members</h2>
               {fields.map((item, index) => (
                 <div
                   key={item.id}
-                  className="mb-4 space-y-2 border p-4 rounded"
+                  className="p-4 mb-4 space-y-2 border rounded"
                 >
                   <GenericFormField
                     name={`members.${index}.email`}
@@ -345,7 +388,7 @@ export default function EditProjectDialog({ project, onClose, onSave }) {
                   </Button>
                 </div>
               ))}
-              <Button type="button" onClick={() => append("")}>
+              <Button type="button" onClick={() => append({ email: "" })}>
                 Add Member
               </Button>
             </div>
@@ -385,12 +428,12 @@ export default function EditProjectDialog({ project, onClose, onSave }) {
                       return (
                         <div
                           key={awardId}
-                          className="flex items-center gap-2 bg-gray-200 px-3 py-1 rounded-full"
+                          className="flex items-center gap-2 px-3 py-1 bg-gray-200 rounded-full"
                         >
                           <img
                             src={award?.image}
                             alt={award?.name}
-                            className="w-6 h-6 rounded-full object-cover"
+                            className="object-cover w-6 h-6 rounded-full"
                           />
                           <span>{award?.name}</span>
                           <button
@@ -400,7 +443,7 @@ export default function EditProjectDialog({ project, onClose, onSave }) {
                                 field.value.filter((id) => id !== awardId)
                               )
                             }
-                            className="text-red-500 font-bold text-sm"
+                            className="text-sm font-bold text-red-500"
                           >
                             ×
                           </button>

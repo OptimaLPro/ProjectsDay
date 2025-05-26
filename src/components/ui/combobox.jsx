@@ -22,6 +22,7 @@ export function Combobox({
   activeInternship,
   setActiveInternship,
   hideAwarded = false,
+  homePage = true,
 }) {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState(activeInternship);
@@ -33,7 +34,10 @@ export function Combobox({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="justify-between text-gray-600 bg-[#ffffffc4] shadow-md w-fit lg:w-full"
+          className={cn(
+            "justify-between text-gray-600 bg-[#ffffffc4] shadow-md w-fit",
+            homePage && "lg:w-full"
+          )}
         >
           {activeInternship || "Filter"}
           <ChevronsUpDown className="w-4 h-4 ml-2 opacity-50 shrink-0" />

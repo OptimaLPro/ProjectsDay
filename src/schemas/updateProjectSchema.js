@@ -1,6 +1,14 @@
 import { z } from "zod";
 
 export const updateProjectSchema = z.object({
+  // project_id: z.preprocess(
+  //   (val) => (typeof val === "string" ? parseInt(val, 10) : val),
+  //   z
+  //     .number()
+  //     .int()
+  //     .gte(100, { message: "Project ID must be a 3-digit number." })
+  //     .lte(999, { message: "Project ID must be a 3-digit number." })
+  // ),
   name: z
     .string()
     .min(1, { message: "Project name is required." })
@@ -67,5 +75,5 @@ export const updateProjectSchema = z.object({
     )
     .min(1, { message: "At least one member is required." }),
 
-  awards: z.array(z.string()).optional(), 
+  awards: z.array(z.string()).optional(),
 });

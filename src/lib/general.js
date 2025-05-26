@@ -12,9 +12,11 @@ export const filterProjects = (
 
     const matchesSearch =
       project.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      project.description.toLowerCase().includes(searchQuery.toLowerCase());
+      project.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      project.project_id?.toString().includes(searchQuery.toLowerCase());
 
-    const isAwarded = Array.isArray(project.awards) && project.awards.length > 0;
+    const isAwarded =
+      Array.isArray(project.awards) && project.awards.length > 0;
 
     const matchesInternship =
       activeInternship === "All" ||

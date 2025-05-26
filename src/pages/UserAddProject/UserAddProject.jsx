@@ -32,7 +32,7 @@ import { Delete, Info, Plus } from "lucide-react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
 import { ButtonLoading } from "@/components/ui/ButtonLoading";
-import { compressImage } from "@/lib/compressImage"; // ✅ ייבוא כיווץ
+import { compressImage } from "@/lib/compressImage";
 
 export function UserAddProject() {
   const navigate = useNavigate();
@@ -44,18 +44,17 @@ export function UserAddProject() {
     isLoading: internshipsLoading,
     isError: internshipsError,
   } = useInternships();
-
   const {
     data: instructorsData,
     isLoading: instructorsLoading,
     isError: instructorsError,
   } = useInstructors();
-
   const { data: userList = [] } = useUserEmails();
 
   const form = useForm({
     resolver: zodResolver(addProjectSchema),
     defaultValues: {
+      // project_id: "",
       name: "",
       internship: user?.internship || "",
       description: "",
@@ -83,12 +82,10 @@ export function UserAddProject() {
     let newGalleryFiles = values.newGallery || [];
 
     try {
-      // 🧠 כיווץ תמונה ראשית
       if (imageFile) {
         imageFile = await compressImage(imageFile, 1024, 1024);
       }
 
-      // 🧠 כיווץ גלריה
       newGalleryFiles = await Promise.all(
         Array.from(newGalleryFiles).map((file) =>
           compressImage(file, 1024, 1024)
@@ -96,6 +93,7 @@ export function UserAddProject() {
       );
 
       const formData = new FormData();
+      // formData.append("project_id", values.project_id);
       formData.append("name", values.name);
       formData.append("internship", values.internship);
       formData.append("description", values.description);
@@ -120,8 +118,7 @@ export function UserAddProject() {
         type: "success",
         message: "Project created successfully.",
       });
-    } catch (error) {
-      console.error("Failed to create project:", error);
+    } catch {
       ToastMessage({ type: "error", message: "Failed to create project." });
     } finally {
       setIsSubmitting(false);
@@ -140,6 +137,45 @@ export function UserAddProject() {
         <h1 className="mb-8 text-2xl font-bold text-center">Add New Project</h1>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            {/* <GenericFormField
+              name="project_id"
+              control={form.control}
+              label={
+                <div className="flex items-center gap-2">
+                  Project ID
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="w-6 h-6 p-0"
+                      >
+                        <Info className="w-4 h-4 text-muted-foreground" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent
+                      className="max-w-xs text-sm"
+                      side="top"
+                      align="start"
+                      collisionPadding={10}
+                    >
+                      Your Project ID as in the Excel sheet from the Faculty
+                      about the groups for each internship. (i.e: 311)
+                    </PopoverContent>
+                  </Popover>
+                </div>
+              }
+            >
+              {(field) => (
+                <Input
+                  {...field}
+                  type="number"
+                  placeholder="Enter project ID"
+                  onChange={(e) => field.onChange(e.target.value)}
+                  className="bg-white shadow-xl"
+                />
+              )}
+            </GenericFormField> */}
             <GenericFormField
               name="name"
               control={form.control}
@@ -153,7 +189,6 @@ export function UserAddProject() {
                 />
               )}
             </GenericFormField>
-
             <GenericFormField
               name="internship"
               control={form.control}
@@ -180,7 +215,6 @@ export function UserAddProject() {
                 </Select>
               )}
             </GenericFormField>
-
             <GenericFormField
               name="short_description"
               control={form.control}
@@ -218,7 +252,6 @@ export function UserAddProject() {
                 />
               )}
             </GenericFormField>
-
             <GenericFormField
               name="description"
               control={form.control}
@@ -232,7 +265,6 @@ export function UserAddProject() {
                 />
               )}
             </GenericFormField>
-
             <GenericFormField
               name="youtube"
               control={form.control}
@@ -246,7 +278,6 @@ export function UserAddProject() {
                 />
               )}
             </GenericFormField>
-
             <GenericFormField
               name="gallery"
               control={form.control}
@@ -263,12 +294,11 @@ export function UserAddProject() {
                       />
                       <button
                         type="button"
-                        onClick={() => {
-                          const updated = field.value.filter(
-                            (_, i) => i !== index
-                          );
-                          field.onChange(updated);
-                        }}
+                        onClick={() =>
+                          field.onChange(
+                            field.value.filter((_, i) => i !== index)
+                          )
+                        }
                         className="absolute top-0 right-0 flex items-center justify-center w-5 h-5 text-xs text-white bg-red-500 rounded-full"
                       >
                         ×
@@ -278,7 +308,6 @@ export function UserAddProject() {
                 </div>
               )}
             </GenericFormField>
-
             <GenericFormField
               name="newGallery"
               control={form.control}
@@ -294,7 +323,6 @@ export function UserAddProject() {
                 />
               )}
             </GenericFormField>
-
             <GenericFormField
               name="instructor"
               control={form.control}
@@ -315,7 +343,6 @@ export function UserAddProject() {
                 </Select>
               )}
             </GenericFormField>
-
             <GenericFormField name="year" control={form.control} label="Year">
               {(field) => (
                 <Input
@@ -326,7 +353,6 @@ export function UserAddProject() {
                 />
               )}
             </GenericFormField>
-
             <GenericFormField
               name="image"
               control={form.control}
@@ -341,13 +367,12 @@ export function UserAddProject() {
                 />
               )}
             </GenericFormField>
-
             <div>
               <h2 className="mb-2 text-xl font-semibold">Team Members</h2>
               {fields.map((item, index) => (
                 <div
                   key={item.id}
-                  className="p-4 mb-4 space-y-2 bg-white border rounded rounded-lg"
+                  className="p-4 mb-4 space-y-2 bg-white border rounded-lg"
                 >
                   <GenericFormField
                     name={`members.${index}.email`}
@@ -370,7 +395,6 @@ export function UserAddProject() {
                       )
                     }
                   </GenericFormField>
-
                   {index > 0 && (
                     <Button
                       variant="destructive"
@@ -382,7 +406,6 @@ export function UserAddProject() {
                   )}
                 </div>
               ))}
-
               <Button type="button" onClick={() => append({ email: "" })}>
                 <div className="flex items-center gap-2">
                   <Plus />
@@ -390,10 +413,9 @@ export function UserAddProject() {
                 </div>
               </Button>
             </div>
-
             <div className="flex items-center justify-center mt-12">
               {isSubmitting ? (
-                <ButtonLoading /> // ✅ כפתור טעינה
+                <ButtonLoading />
               ) : (
                 <Button type="submit" className="text-lg shadow-lg">
                   Submit

@@ -1,6 +1,16 @@
 import { z } from "zod";
 
 export const addProjectSchema = z.object({
+  // project_id: z
+  //   .preprocess(
+  //     (val) => (typeof val === "string" ? parseInt(val, 10) : val),
+  //     z
+  //       .number()
+  //       .int()
+  //       .gte(100, { message: "Project ID must be a 3-digit number." })
+  //       .lte(999, { message: "Project ID must be a 3-digit number." })
+  //   ),
+
   name: z
     .string()
     .min(1, { message: "Project name is required." })
@@ -17,16 +27,19 @@ export const addProjectSchema = z.object({
 
   short_description: z
     .string()
-    .min(1, { message: "Internship is required." })
+    .min(1, { message: "Short description is required." })
     .max(200, {
-      message: "Project short description must be at most 200 characters.",
+      message: "Short description must be at most 200 characters.",
     }),
 
   youtube: z.string().optional(),
 
   instructor: z.string().min(1, { message: "Instructor is required." }),
 
-  year: z.coerce.number().int().min(2000, { message: "Enter a valid year." }),
+  year: z.coerce
+    .number()
+    .int()
+    .min(2000, { message: "Enter a valid year." }),
 
   image: z.preprocess(
     (val) => (val instanceof FileList ? val : undefined),
