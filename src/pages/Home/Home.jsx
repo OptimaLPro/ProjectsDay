@@ -7,16 +7,17 @@ import SearchBar from "@/components/SearchBar/SearchBar";
 import { useAuth } from "@/context/AuthContext";
 import { useInternships } from "@/hooks/useInternships";
 import { useProjects } from "@/hooks/useProjects";
-import { filterProjects } from "@/lib/general";
+import { motion } from "framer-motion";
 import { SeparatorHorizontal } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
+import { useDebounce } from "use-debounce";
 import Hero from "./Hero/Hero";
-import { motion } from "framer-motion";
 
 const Home = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeInternship, setActiveInternship] = useState("All");
+  const [debouncedSearchQuery] = useDebounce(searchQuery, 1000);
   const { isLoadingYear } = useAuth();
 
   const {
@@ -32,7 +33,7 @@ const Home = () => {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useProjects();
+  } = useProjects(debouncedSearchQuery, activeInternship);
 
   const { ref, inView } = useInView();
 
@@ -52,12 +53,12 @@ const Home = () => {
 
   const allProjects = projectsData.pages.flatMap((page) => page.projects);
 
-  const filteredProjects = filterProjects(
-    allProjects,
-    searchQuery,
-    activeInternship,
-    internshipsData
-  );
+  // const filteredProjects = filterProjects(
+  //   allProjects,
+  //   searchQuery,
+  //   activeInternship,
+  //   internshipsData
+  // );
 
   return (
     <div className="min-h-screen">
@@ -85,7 +86,7 @@ const Home = () => {
           />
         </motion.div>
 
-        {filteredProjects.length === 0 ? (
+        {allProjects.length === 0 ? (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -100,7 +101,7 @@ const Home = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, ease: "easeOut", delay: 0.4 }}
             >
-              <Cards projects={filteredProjects} />
+              <Cards projects={allProjects} />
             </motion.div>
 
             <motion.div

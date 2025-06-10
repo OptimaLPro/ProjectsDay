@@ -1,7 +1,30 @@
 import api from "@/api/api";
 
-export const getProjects = async (page = 0, year) => {
-  const res = await api.get(`/projects?page=${page}&year=${year}`);
+// export const getProjects = async (page = 0, year) => {
+//   const res = await api.get(`/projects?page=${page}&year=${year}`);
+//   return res.data;
+// };
+
+export const getProjects = async (
+  page = 0,
+  year,
+  searchQuery,
+  activeFilter
+) => {
+  const params = new URLSearchParams({
+    page,
+    year,
+  });
+
+  if (searchQuery) {
+    params.append("search", searchQuery);
+  }
+
+  if (activeFilter && activeFilter !== "All") {
+    params.append("filter", activeFilter);
+  }
+
+  const res = await api.get(`/projects?${params.toString()}`);
   return res.data;
 };
 

@@ -3,16 +3,15 @@ import { Link } from "react-router";
 import AwardsBar from "../AwardsBar";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardFooter } from "../ui/card";
-import { useInternships } from "@/hooks/useInternships";
 
 const CardItem = ({ project }) => {
-  const { data: internships = [] } = useInternships();
+  // const { data: internships = [] } = useInternships();
 
-  const internshipObj = internships.find(
-    (i) => i._id === project.internship || i._id?.$oid === project.internship
-  );
+  // const internshipObj = internships.find(
+  //   (i) => i._id === project.internship || i._id?.$oid === project.internship
+  // );
 
-  const internshipName = internshipObj?.name || "Unknown";
+  // const internship = project.internship || "Unknown";
 
   return (
     <Link to={`/projects/${project._id}`} className="group">
@@ -35,11 +34,11 @@ const CardItem = ({ project }) => {
               <div
                 className="inline-block px-2 py-1 mt-2 mb-2 text-xs font-medium capitalize transition rounded-full w-fit hover:underline"
                 style={{
-                  backgroundColor: `#${internshipObj?.backgroundColor}`,
-                  color: `#${internshipObj?.textColor}`,
+                  backgroundColor: `#${project.internship?.backgroundColor}`,
+                  color: `#${project.internship?.textColor}`,
                 }}
               >
-                {internshipName}
+                {project.internship?.name}
               </div>
               <h3 className="text-2xl font-bold">{project.name}</h3>
             </div>
