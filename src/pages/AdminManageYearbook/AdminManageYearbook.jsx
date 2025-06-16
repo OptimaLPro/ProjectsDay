@@ -24,13 +24,16 @@ import { useYearbooks } from "@/hooks/useYearbooks";
 
 export default function AdminManageYearbook() {
   const queryClient = useQueryClient();
+  const [excludeDialogOpen, setExcludeDialogOpen] = useState(false);
   const [selectedYearbookId, setSelectedYearbookId] = useState("");
   const [showDialog, setShowDialog] = useState(false);
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [newYear, setNewYear] = useState("");
+  const [allUsers, setAllUsers] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [excluded, setExcluded] = useState([]);
 
   const { data: yearbooks, isLoading, isError } = useYearbooks();
-
   const {
     data: activeYearbook,
     isLoadingYearbooks,
@@ -67,6 +70,8 @@ export default function AdminManageYearbook() {
     },
   });
 
+  const selectedYearbook = yearbooks?.find((y) => y._id === selectedYearbookId);
+
   const deleteMutation = useMutation({
     mutationFn: (id) => api.delete(`/yearbooks/${id}`),
     onSuccess: () => {
@@ -84,7 +89,20 @@ export default function AdminManageYearbook() {
     }
   }, [activeYearbook]);
 
-  const selectedYearbook = yearbooks?.find((y) => y._id === selectedYearbookId);
+  useEffect(() => {
+    if (selectedYearbook?.excludedUsers) {
+      setExcluded(selectedYearbook.excludedUsers);
+    }
+  }, [selectedYearbook]);
+
+  useEffect(() => {
+    api
+      .get("/auth/users")
+      .then((res) => setAllUsers(res.data))
+      .catch(() =>
+        ToastMessage({ type: "error", message: "Failed to fetch users" })
+      );
+  }, []);
 
   const handleConfirm = () => {
     if (selectedYearbook) {
@@ -94,6 +112,24 @@ export default function AdminManageYearbook() {
       });
       setShowDialog(false);
     }
+  };
+
+  const handleSaveExcluded = () => {
+    api
+      .put(`/yearbooks/${selectedYearbookId}`, {
+        excludedUsers: excluded,
+      })
+      .then(() => {
+        queryClient.invalidateQueries(["yearbooks"]);
+        setExcludeDialogOpen(false);
+        ToastMessage({ type: "success", message: "Excluded users updated" });
+      })
+      .catch(() =>
+        ToastMessage({
+          type: "error",
+          message: "Failed to update excluded users",
+        })
+      );
   };
 
   if (isLoading || isLoadingYearbooks) return <Loader />;
@@ -147,7 +183,47 @@ export default function AdminManageYearbook() {
         </Button>
       )}
 
-      {/* Dialogs */}
+      {selectedYearbookId && (
+        <Button
+          variant="outline"
+          className="w-full mt-2"
+          onClick={() =>
+            api
+              .put(`/yearbooks/${selectedYearbookId}`, {
+                userBlock: !selectedYearbook?.userBlock,
+              })
+              .then(() => {
+                queryClient.invalidateQueries(["yearbooks"]);
+                ToastMessage({
+                  type: "success",
+                  message: selectedYearbook?.userBlock
+                    ? "Users unblocked"
+                    : "Users blocked",
+                });
+              })
+              .catch(() => {
+                ToastMessage({
+                  type: "error",
+                  message: "Failed to update user block status",
+                });
+              })
+          }
+        >
+          {selectedYearbook?.userBlock
+            ? "Unblock All Users"
+            : "Block All Users"}
+        </Button>
+      )}
+
+      {selectedYearbook?.userBlock && (
+        <Button
+          className="w-full mt-2"
+          onClick={() => setExcludeDialogOpen(true)}
+        >
+          Manage Excluded Users
+        </Button>
+      )}
+
       <Dialog open={showDialog} onOpenChange={setShowDialog}>
         <DialogContent>
           <DialogHeader>
@@ -198,6 +274,61 @@ export default function AdminManageYearbook() {
             >
               Add
             </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={excludeDialogOpen} onOpenChange={setExcludeDialogOpen}>
+        <DialogContent className="max-w-xl">
+          <DialogHeader>
+            <DialogTitle>Exclude Users from Block</DialogTitle>
+          </DialogHeader>
+
+          <Input
+            placeholder="Search by email..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="mb-3"
+          />
+
+          <div className="space-y-2 overflow-y-auto max-h-64">
+            {allUsers
+              .filter((u) =>
+                u.email.toLowerCase().includes(searchQuery.toLowerCase())
+              )
+              .map((user) => (
+                <div
+                  key={user._id}
+                  className="flex items-center justify-between px-2 py-1 border rounded"
+                >
+                  <div className="text-sm">{user.email}</div>
+                  <Button
+                    size="sm"
+                    variant={
+                      excluded.includes(user._id) ? "destructive" : "outline"
+                    }
+                    onClick={() =>
+                      setExcluded((prev) =>
+                        prev.includes(user._id)
+                          ? prev.filter((id) => id !== user._id)
+                          : [...prev, user._id]
+                      )
+                    }
+                  >
+                    {excluded.includes(user._id) ? "Remove" : "Add"}
+                  </Button>
+                </div>
+              ))}
+          </div>
+
+          <DialogFooter className="mt-4">
+            <Button
+              variant="secondary"
+              onClick={() => setExcludeDialogOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button onClick={handleSaveExcluded}>Save</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

@@ -6,7 +6,9 @@ import { Link } from "react-router";
 import UnassignProjectButton from "./UnassignProjectButton";
 
 const StudentDashboard = ({ hasProject, onLogout }) => {
-  const { user } = useAuth();
+  const { user, userBlock, excludedUsers } = useAuth();
+
+  const isBlocked = userBlock && !excludedUsers.includes(user?._id);
 
   const links = !hasProject
     ? [
@@ -39,45 +41,55 @@ const StudentDashboard = ({ hasProject, onLogout }) => {
           Student Dashboard
         </h1>
 
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-3 lg:grid-cols-3">
-          {links.map(({ href, label, icon, description }) => (
-            <Link to={href} key={href}>
+        {!isBlocked && (
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-3 lg:grid-cols-3">
+            {links.map(({ href, label, icon, description }) => (
+              <Link to={href} key={href}>
+                <Card className="p-6 transition-all duration-300 border shadow-xl hover:scale-105 hover:shadow-2xl backdrop-blur-md bg-white/40 border-white/30">
+                  <CardContent className="flex flex-col items-center justify-center h-full p-6 text-center">
+                    <div className="flex items-center justify-center mb-2 h-14">
+                      {icon}
+                    </div>
+                    <CardTitle className="mb-1 text-lg font-semibold">
+                      {label}
+                    </CardTitle>
+                    <p className="text-sm text-muted-foreground">
+                      {description}
+                    </p>
+                  </CardContent>
+                </Card>
+              </Link>
+            ))}
+
+            {hasProject && <UnassignProjectButton />}
+
+            <Link to="/dashboard/edit-profile">
               <Card className="p-6 transition-all duration-300 border shadow-xl hover:scale-105 hover:shadow-2xl backdrop-blur-md bg-white/40 border-white/30">
                 <CardContent className="flex flex-col items-center justify-center h-full p-6 text-center">
                   <div className="flex items-center justify-center mb-2 h-14">
-                    {icon}
+                    <img
+                      src={user.image || "/images/default.jpg"}
+                      alt={user.name}
+                      className="w-14 h-14 rounded-full object-cover shadow-lg border-[1px] border-gray-300"
+                    />
                   </div>
                   <CardTitle className="mb-1 text-lg font-semibold">
-                    {label}
+                    Edit Profile
                   </CardTitle>
-                  <p className="text-sm text-muted-foreground">{description}</p>
+                  <p className="text-sm text-muted-foreground">
+                    Update your photo and details.
+                  </p>
                 </CardContent>
               </Card>
             </Link>
-          ))}
+          </div>
+        )}
 
-          {hasProject && <UnassignProjectButton />}
-
-          <Link to="/dashboard/edit-profile">
-            <Card className="p-6 transition-all duration-300 border shadow-xl hover:scale-105 hover:shadow-2xl backdrop-blur-md bg-white/40 border-white/30">
-              <CardContent className="flex flex-col items-center justify-center h-full p-6 text-center">
-                <div className="flex items-center justify-center mb-2 h-14">
-                  <img
-                    src={user.image || "/images/default.jpg"}
-                    alt={user.name}
-                    className="w-14 h-14 rounded-full object-cover shadow-lg border-[1px] border-gray-300"
-                  />
-                </div>
-                <CardTitle className="mb-1 text-lg font-semibold">
-                  Edit Profile
-                </CardTitle>
-                <p className="text-sm text-muted-foreground">
-                  Update your photo and details.
-                </p>
-              </CardContent>
-            </Card>
-          </Link>
-        </div>
+        {isBlocked && (
+          <p className="mt-4 text-xl font-bold text-center text-red-600">
+            Editing is currently disabled for your yearbook.
+          </p>
+        )}
 
         <div className="flex justify-center my-12">
           <Button variant="outline" className="gap-2" onClick={onLogout}>

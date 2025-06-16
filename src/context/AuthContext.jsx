@@ -9,7 +9,8 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(localStorage.getItem("token"));
   const [isLoadingUser, setIsLoadingUser] = useState(true);
-
+  const [userBlock, setUserBlock] = useState(false);
+  const [excludedUsers, setExcludedUsers] = useState([]);
   const [year, setYear] = useState(null);
   const [isLoadingYear, setIsLoadingYear] = useState(true);
 
@@ -50,6 +51,8 @@ export const AuthProvider = ({ children }) => {
       try {
         const res = await api.get("/yearbooks/active");
         setYear(res.data.year);
+        setUserBlock(res.data.userBlock || false);
+        setExcludedUsers(res.data.excludedUsers || []);
       } catch (err) {
         console.error("Failed to fetch active yearbook:", err);
       } finally {
@@ -105,6 +108,8 @@ export const AuthProvider = ({ children }) => {
         setYear,
         isLoadingYear,
         updateUser,
+        userBlock,
+        excludedUsers,
       }}
     >
       {children}
