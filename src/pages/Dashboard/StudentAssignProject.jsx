@@ -24,6 +24,7 @@ import { useNavigate } from "react-router";
 import ToastMessage from "@/components/ui/ToastMessage";
 import { useInternships } from "@/hooks/useInternships";
 import { Card } from "@/components/ui/card";
+import { getProjectsByInternship } from "@/api/projects";
 
 export default function StudentAssignProject() {
   const { user } = useAuth();
@@ -43,18 +44,31 @@ export default function StudentAssignProject() {
 
   const userInternshipId = user?.internship;
 
+  // const {
+  //   data: projects,
+  //   isLoading: loadingProjects,
+  //   isError: errorProjects,
+  // } = useQuery({
+  //   queryKey: ["available-projects", userInternshipId],
+  //   queryFn: async () => {
+  //     const { data } = await api.get("/projects");
+  //     console.log("Available Projects:", data.projects);
+  //     console.log("User Internship ID:", userInternshipId);
+  //     return data.projects;
+  //     // return data.projects.filter(
+  //     //   (p) => p.internship?._id?.toString() === userInternshipId?.toString()
+  //     // );
+  //   },
+  //   enabled: !!userInternshipId && myProjectData?.exists === false,
+  // });
+
   const {
     data: projects,
     isLoading: loadingProjects,
     isError: errorProjects,
   } = useQuery({
     queryKey: ["available-projects", userInternshipId],
-    queryFn: async () => {
-      const { data } = await api.get("/projects");
-      return data.projects.filter(
-        (p) => p.internship === userInternshipId && p.members.length < 4
-      );
-    },
+    queryFn: () => getProjectsByInternship(userInternshipId),
     enabled: !!userInternshipId && myProjectData?.exists === false,
   });
 
@@ -87,17 +101,17 @@ export default function StudentAssignProject() {
 
   if (myProjectData?.exists) {
     return (
-      <div className="max-w-md mx-auto mt-10 p-6 bg-white shadow-lg rounded-xl text-center">
-        <h1 className="text-xl font-semibold mb-4">Assign Project</h1>
+      <div className="max-w-md p-6 mx-auto mt-10 text-center bg-white shadow-lg rounded-xl">
+        <h1 className="mb-4 text-xl font-semibold">Assign Project</h1>
         <p>You are already assigned to a project.</p>
       </div>
     );
   }
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-6  rounded-xl relative">
-      <Card className="p-6 shadow-xl hover:shadow-2xl backdrop-blur-md bg-white/40 border border-white/30 transition-all">
-        <h1 className="text-xl font-semibold mb-4 text-center">
+    <div className="relative max-w-md p-6 mx-auto mt-10 rounded-xl">
+      <Card className="p-6 transition-all border shadow-xl hover:shadow-2xl backdrop-blur-md bg-white/40 border-white/30">
+        <h1 className="mb-4 text-xl font-semibold text-center">
           Assign Project
         </h1>
 
@@ -106,7 +120,7 @@ export default function StudentAssignProject() {
             value={selectedProjectId}
             onValueChange={(val) => setSelectedProjectId(val)}
           >
-            <SelectTrigger className="w-74 bg-white">
+            <SelectTrigger className="bg-white w-74">
               <SelectValue placeholder="Select a Project" />
             </SelectTrigger>
             <SelectContent>
@@ -121,7 +135,7 @@ export default function StudentAssignProject() {
 
         <Button
           onClick={() => setShowDialog(true)}
-          className="mt-4 w-full"
+          className="w-full mt-4"
           disabled={mutation.isPending || !selectedProjectId}
         >
           {mutation.isPending ? "Assigning..." : "Assign Me to This Project"}
@@ -139,7 +153,11 @@ export default function StudentAssignProject() {
               <Button variant="secondary" onClick={() => setShowDialog(false)}>
                 Cancel
               </Button>
-              <Button className="bg-green-600 hover:bg-green-700" onClick={handleConfirm} disabled={mutation.isPending}>
+              <Button
+                className="bg-green-600 hover:bg-green-700"
+                onClick={handleConfirm}
+                disabled={mutation.isPending}
+              >
                 {mutation.isPending ? "Assigning..." : "Yes, Assign Me"}
               </Button>
             </DialogFooter>

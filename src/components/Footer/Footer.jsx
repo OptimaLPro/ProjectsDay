@@ -11,10 +11,10 @@ import { Link } from "react-router";
 const ContributorsData = [
   {
     name: "Nati Forish",
-    id: "68176b867c9b5972730731c6",
+    id: "685c0899218605d84e34ca36",
     image:
       "https://res.cloudinary.com/dwgbi63rq/image/upload/v1747240065/Me_-_Copy_nlkvtt.jpg",
-    link: "https://graduationday.vercel.app/users/68176b867c9b5972730731c6",
+    link: "https://graduationday.vercel.app/users/685c0899218605d84e34ca36",
   },
 ];
 

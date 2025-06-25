@@ -38,6 +38,12 @@ export const getProjectById = async (id) => {
   }
 };
 
+export const getProjectsByInternship = async (internshipId) => {
+  const res = await api.get(`/projects/by-internship/${internshipId}`);
+  console.log("Projects by Internship:", res.data);
+  return res.data;
+};
+
 export const checkMyProject = async () => {
   try {
     const response = await api.get("/projects/mine/check");
