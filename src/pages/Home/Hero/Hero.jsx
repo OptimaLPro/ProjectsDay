@@ -18,7 +18,6 @@ const Hero = () => {
   const { year } = useAuth();
   const { data: homepageData, isLoading } = useHomepage();
 
-  // מציאת הרשומות לפי type
   const youtubeRecord = homepageData?.find((item) => item.type === "youtube");
   const herotextRecord = homepageData?.find((item) => item.type === "herotext");
 

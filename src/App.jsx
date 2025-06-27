@@ -18,7 +18,6 @@ function App() {
     const theme = sessionStorage.getItem("theme");
 
     if (!hasVisited) {
-      // פעם ראשונה - מציג את welcome ושומר שביקר
       setShowWelcome(true);
       sessionStorage.setItem("hasVisited", "true");
     }

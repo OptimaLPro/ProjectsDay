@@ -21,7 +21,6 @@ export default function EmailAutocomplete({ users, value, onChange }) {
   const { data: allProjects = [] } = useAllProjects();
 
   useEffect(() => {
-    // שלוף את כל ה־ObjectId של חברי פרויקטים
     const assignedIds = new Set();
     for (const project of allProjects) {
       for (const memberId of project.members || []) {
@@ -33,7 +32,6 @@ export default function EmailAutocomplete({ users, value, onChange }) {
       }
     }
 
-    // סנן משתמשים שלא משויכים לשום פרויקט לפי _id
     const unassignedUsers = users.filter((user) => !assignedIds.has(user._id));
     setFilteredUsers(unassignedUsers);
   }, [users, allProjects]);

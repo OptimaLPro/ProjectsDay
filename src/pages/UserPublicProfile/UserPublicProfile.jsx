@@ -63,7 +63,7 @@ const UserPublicProfile = () => {
               <h1
                 className={`font-bold text-center break-words ${
                   displayName === user.email
-                    ? "text-xl sm:text-3xl" // קטן במובייל, גדול בדסקטופ
+                    ? "text-xl sm:text-3xl"
                     : "text-3xl"
                 }`}
               >

@@ -5,7 +5,6 @@ import { useInstructors } from "@/hooks/useInstructors";
 import { useInternships } from "@/hooks/useInternships";
 import { useProjectById } from "@/hooks/useProjectsById";
 import { useUserEmails } from "@/hooks/useUserEmails";
-import { useUsersByEmails } from "@/hooks/useUsersByEmails";
 import { motion } from "framer-motion";
 import { useEffect } from "react";
 import { Link, useParams } from "react-router";
@@ -18,8 +17,6 @@ const Project = () => {
   const { data: instructors } = useInstructors();
   const { data: internships } = useInternships();
   const { data: userList = [] } = useUserEmails();
-  const memberEmails = project?.members?.map((m) => m.email);
-  const { data: users = [] } = useUsersByEmails(memberEmails);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -72,7 +69,9 @@ const Project = () => {
             <div className="flex flex-col gap-4 mt-4 lg:w-1/2 lg:mt-0">
               <div className="flex items-center justify-between">
                 <div className="flex flex-col">
-                  <h1 className="text-4xl font-bold lg:text-5xl">{project?.name}</h1>
+                  <h1 className="text-4xl font-bold lg:text-5xl">
+                    {project?.name}
+                  </h1>
                   <Link
                     to={`/internships/${internshipObj?._id}`}
                     className="inline-block px-2 py-1 mt-2 mb-2 text-xs font-medium capitalize transition rounded-full w-fit hover:underline"
